@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Träningslogg">
 <meta name="mobile-web-app-capable" content="yes">
-<title>Träningslogg</title>
+<title>Träningslogg v1.1</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
@@ -454,6 +454,21 @@
     font-family: 'Inter', sans-serif;
   }
   .quick-weight-input:focus, .quick-reps-input:focus{ outline: none; border-color: var(--accent); }
+  .quick-last-session{
+    color: var(--muted); font-size: 12px; line-height: 1.45;
+    background: var(--panel-2); border: 1px solid var(--line);
+    border-radius: 8px; padding: 8px 10px; margin: -1px 0 10px;
+  }
+  .quick-last-session strong{ color: var(--text); font-weight: 600; }
+  .quick-set-check{
+    width: 38px; height: 38px; flex: 0 0 38px; border-radius: 50%;
+    border: 1px solid var(--line); background: var(--panel-2); color: var(--muted);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800; cursor: pointer; padding: 0;
+  }
+  .quick-set-check.active{ background: var(--accent); border-color: var(--accent); color: #fff; }
+  .quick-set-row.completed .quick-weight-input,
+  .quick-set-row.completed .quick-reps-input{ border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
   .quick-add-set-btn{
     background: none;
     border: 1px dashed var(--line);
@@ -4020,18 +4035,32 @@ async function renderQuickLogForm(){
       const repsValue = resetKg != null ? '' : (prevSet && prevSet.reps != null ? prevSet.reps : '');
       const copyBtn = s > 1 ? `<button type="button" class="copy-set-btn quick-copy-set-btn" title="Kopiera från set ovan">↑</button>` : '<span class="copy-set-spacer"></span>';
       rowsHtml += `
-        <div class="quick-set-row">
+        <div class="quick-set-row" data-complete="0">
           <span class="pill">Set ${s}</span>
           <input type="number" step="0.5" class="quick-weight-input" placeholder="${weightPlaceholder}" value="${weightValue}">
           <input type="number" class="quick-reps-input" placeholder="${ex.reps}" value="${repsValue}">
           ${copyBtn}
+          <button type="button" class="quick-set-check" aria-label="Markera set ${s} som klart" aria-pressed="false">✓</button>
         </div>
       `;
+    }
+
+    let lastSessionHtml = '<div class="quick-last-session">Ingen tidigare loggning</div>';
+    if(lastEntry && Array.isArray(lastEntry.sets) && lastEntry.sets.length){
+      const lastDate = new Date(lastEntry.date + 'T12:00:00').toLocaleDateString('sv-SE', { day:'numeric', month:'short' });
+      const setSummary = lastEntry.sets.map(set => {
+        const kg = Number(set.weight || 0);
+        return ex.bodyweight
+          ? `${kg > 0 ? '+' + kg + ' kg · ' : ''}${set.reps} reps`
+          : `${kg} kg × ${set.reps}`;
+      }).join(' / ');
+      lastSessionHtml = `<div class="quick-last-session"><strong>Senast ${lastDate}:</strong> ${setSummary}</div>`;
     }
 
     block.innerHTML = `
       <div class="quick-ex-name">${ex.name} <span class="target">mål: ${targetLabel}</span></div>
       ${supersetTag}
+      ${lastSessionHtml}
       <div class="quick-set-rows">${rowsHtml}</div>
       <button class="quick-add-set-btn" type="button">+ Set</button>
       <input type="text" class="quick-note-input" placeholder="Kommentar (valfritt)">
@@ -4041,6 +4070,16 @@ async function renderQuickLogForm(){
 }
 
 document.getElementById('quickLogExercises').addEventListener('click', (e) => {
+  if(e.target.classList.contains('quick-set-check')){
+    const row = e.target.closest('.quick-set-row');
+    const isComplete = row.getAttribute('data-complete') === '1';
+    row.setAttribute('data-complete', isComplete ? '0' : '1');
+    row.classList.toggle('completed', !isComplete);
+    e.target.classList.toggle('active', !isComplete);
+    e.target.setAttribute('aria-pressed', String(!isComplete));
+    return;
+  }
+
   if(e.target.classList.contains('quick-copy-set-btn')){
     const row = e.target.closest('.quick-set-row');
     const prevRow = row.previousElementSibling;
@@ -4060,11 +4099,13 @@ document.getElementById('quickLogExercises').addEventListener('click', (e) => {
   const weightPlaceholder = isBW ? 'tilläggsvikt' : 'kg';
   const row = document.createElement('div');
   row.className = 'quick-set-row';
+  row.setAttribute('data-complete', '0');
   row.innerHTML = `
     <span class="pill">Set ${nextNum}</span>
     <input type="number" step="0.5" class="quick-weight-input" placeholder="${weightPlaceholder}">
     <input type="number" class="quick-reps-input" placeholder="reps">
     <button type="button" class="copy-set-btn quick-copy-set-btn" title="Kopiera från set ovan">↑</button>
+    <button type="button" class="quick-set-check" aria-label="Markera set ${nextNum} som klart" aria-pressed="false">✓</button>
   `;
   rowsWrap.appendChild(row);
 });
@@ -4077,11 +4118,12 @@ document.getElementById('quickSaveBtn').onclick = async () => {
   blocks.forEach(block => {
     const exerciseName = block.getAttribute('data-exercise');
     const isBW = block.getAttribute('data-bw') === '1';
-    const weightInputs = block.querySelectorAll('.quick-weight-input');
-    const repsInputs = block.querySelectorAll('.quick-reps-input');
+    const completedRows = block.querySelectorAll('.quick-set-row[data-complete="1"]');
     const sets = [];
-    weightInputs.forEach((w, i) => {
-      const reps = parseInt(repsInputs[i].value);
+    completedRows.forEach(row => {
+      const w = row.querySelector('.quick-weight-input');
+      const r = row.querySelector('.quick-reps-input');
+      const reps = parseInt(r.value);
       if(!isNaN(reps) && reps > 0){
         const weight = parseFloat(w.value);
         sets.push({ weight: isNaN(weight) ? 0 : weight, reps });
@@ -4095,7 +4137,7 @@ document.getElementById('quickSaveBtn').onclick = async () => {
   });
 
   if(toSave.length === 0){
-    showInlineError('quickLogFormError', 'Fyll i reps för minst en övning innan du sparar.');
+    showInlineError('quickLogFormError', 'Bocka av minst ett genomfört set innan du sparar.');
     return;
   }
 
