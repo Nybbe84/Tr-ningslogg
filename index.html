@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#14161A">
-<meta name="application-version" content="1.2.0">
-<meta name="app-version" content="1.2.0">
+<meta name="application-version" content="1.1.0">
+<meta name="app-version" content="1.1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Träningslogg">
@@ -1535,7 +1535,7 @@
 </div>
 
 <script>
-const APP_VERSION = '1.2.0';
+const APP_VERSION = '1.1.0';
 // ---------- FRISTÅENDE LOKAL LAGRING ----------
 // IndexedDB används primärt. localStorage används som reserv.
 const STORAGE_PREFIX = 'traningslogg:';
@@ -3997,111 +3997,6 @@ function refreshQuickLogIfVisible(){
   }
 }
 
-
-let quickSwapState = null;
-function allLibraryExercises(){
-  const out=[];
-  Object.keys(LIBRARY).forEach(group => LIBRARY[group].forEach(ex => out.push({...ex, group})));
-  Object.keys(PLAN).forEach(day => (PLAN[day]||[]).forEach(ex => {
-    if(!out.some(x => x.name.toLowerCase() === ex.name.toLowerCase())) out.push({name:ex.name, desc:'Övning från din plan', group:day});
-  }));
-  return out;
-}
-function exerciseGroupFor(name){
-  const n=String(name||'').toLowerCase();
-  for(const group of Object.keys(LIBRARY)){
-    if(LIBRARY[group].some(ex => ex.name.toLowerCase()===n)) return group;
-  }
-  const words=n.split(/[^a-zåäö0-9]+/).filter(x=>x.length>3);
-  for(const group of Object.keys(LIBRARY)){
-    if(LIBRARY[group].some(ex => words.some(w => ex.name.toLowerCase().includes(w)))) return group;
-  }
-  return null;
-}
-function findAnyPlannedExercise(name){
-  for(const day of Object.keys(PLAN)){
-    const found=(PLAN[day]||[]).find(ex => ex.name===name);
-    if(found) return found;
-  }
-  return null;
-}
-async function getLatestEntryForExercise(exerciseName){
-  const entries=await loadAllEntries();
-  return entries.filter(e=>e.exercise===exerciseName).sort((a,b)=>new Date(b.date)-new Date(a.date))[0]||null;
-}
-function renderSwapResults(){
-  if(!quickSwapState) return;
-  const term=(document.getElementById('swapSearch').value||'').trim().toLowerCase();
-  const all=allLibraryExercises().filter(ex => ex.name!==quickSwapState.originalName && (!term || ex.name.toLowerCase().includes(term) || (ex.desc||'').toLowerCase().includes(term)));
-  const group=exerciseGroupFor(quickSwapState.originalName);
-  const recommended=all.filter(ex=>ex.group===group).slice(0,6);
-  const make=ex=>`<button class="swap-option" data-swap-name="${ex.name.replace(/"/g,'&quot;')}">${ex.name}<small>${ex.group}${ex.desc ? ' · '+ex.desc : ''}</small></button>`;
-  document.getElementById('swapRecommendedWrap').style.display=(!term && recommended.length)?'':'none';
-  document.getElementById('swapRecommended').innerHTML=recommended.map(make).join('');
-  document.getElementById('swapAllResults').innerHTML=all.slice(0,30).map(make).join('') || '<div class="empty">Inga övningar matchar sökningen.</div>';
-}
-function openExerciseSwap(block){
-  quickSwapState={block, originalName:block.getAttribute('data-original-exercise')||block.getAttribute('data-exercise'), selectedName:null};
-  document.getElementById('swapModalTitle').textContent='Byt '+quickSwapState.originalName;
-  document.getElementById('swapSearch').value='';
-  document.getElementById('swapConfirm').style.display='none';
-  renderSwapResults();
-  const modal=document.getElementById('exerciseSwapModal'); modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
-}
-function closeExerciseSwap(){
-  const modal=document.getElementById('exerciseSwapModal'); modal.classList.remove('open'); modal.setAttribute('aria-hidden','true');
-  quickSwapState=null;
-}
-async function chooseSwapExercise(name){
-  if(!quickSwapState) return;
-  quickSwapState.selectedName=name;
-  const last=await getLatestEntryForExercise(name);
-  document.getElementById('swapConfirmText').innerHTML=`<strong style="color:var(--text)">${name}</strong><br>${last ? 'Senast '+fmtDate(last.date)+': '+formatLastSets(last) : 'Ingen tidigare logg för övningen.'}<br><br><strong>Bara idag</strong> ändrar endast detta pass. <strong>Gör permanent</strong> ersätter övningen i ${currentDay}.`;
-  document.getElementById('swapConfirm').style.display='block';
-  document.getElementById('swapConfirm').scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-async function applyExerciseSwap(permanent){
-  if(!quickSwapState || !quickSwapState.selectedName) return;
-  const {block, originalName, selectedName}=quickSwapState;
-  const source=findAnyPlannedExercise(selectedName);
-  const original=(PLAN[currentDay]||[]).find(ex=>ex.name===originalName);
-  const replacement=source ? JSON.parse(JSON.stringify(source)) : {name:selectedName,sets:original?.sets||3,reps:original?.reps||'8-12',kg:'',bodyweight:false,rest:original?.rest||90,aliases:[]};
-  replacement.name=selectedName;
-  replacement.aliases=replacement.aliases||[];
-  if(permanent){
-    const idx=(PLAN[currentDay]||[]).findIndex(ex=>ex.name===originalName);
-    if(idx>=0){ PLAN[currentDay][idx]=replacement; rebuildProgramFromPlan(); await savePlanConfig(); }
-    closeExerciseSwap();
-    renderTabs(); renderExercises(); await renderQuickLogForm(); await renderSchedule();
-  }else{
-    block.setAttribute('data-exercise',selectedName);
-    block.setAttribute('data-original-exercise',originalName);
-    block.setAttribute('data-bw',replacement.bodyweight?'1':'0');
-    await populateQuickExerciseBlock(block,replacement,await getLatestEntryForExercise(selectedName),originalName);
-    closeExerciseSwap();
-  }
-}
-document.getElementById('swapSearch').oninput=renderSwapResults;
-document.getElementById('swapCloseBtn').onclick=closeExerciseSwap;
-document.getElementById('exerciseSwapModal').addEventListener('click',e=>{ if(e.target.id==='exerciseSwapModal') closeExerciseSwap(); const opt=e.target.closest('.swap-option'); if(opt) chooseSwapExercise(opt.getAttribute('data-swap-name')); });
-document.getElementById('swapTodayBtn').onclick=()=>applyExerciseSwap(false);
-document.getElementById('swapPermanentBtn').onclick=()=>applyExerciseSwap(true);
-
-async function populateQuickExerciseBlock(block, ex, lastEntry, originalName){
-  const hasKg=ex.kg!==''&&ex.kg!=null;
-  const targetLabel=`${ex.sets}×${ex.reps}${hasKg?(ex.bodyweight?' · +'+ex.kg+'kg':' · '+ex.kg+'kg'):''}`;
-  const supersetTag=ex.supersetWith?`<span class="superset-tag">🔗 superset med ${ex.supersetWith}</span>`:'';
-  let rowsHtml='';
-  for(let s=1;s<=ex.sets;s++){
-    const prevSet=lastEntry?lastEntry.sets[s-1]:null;
-    const resetKg=planResetWeight(ex,lastEntry);
-    const weightValue=resetKg!=null?resetKg:(prevSet&&prevSet.weight!=null?prevSet.weight:(hasKg?ex.kg:''));
-    const repsValue=resetKg!=null?'':(prevSet&&prevSet.reps!=null?prevSet.reps:'');
-    rowsHtml+=`<div class="quick-set-row"><span class="pill">Set ${s}</span><input type="number" step="0.5" class="quick-weight-input" placeholder="${ex.bodyweight?'tilläggsvikt':'kg'}" value="${weightValue}"><input type="number" class="quick-reps-input" placeholder="${ex.reps}" value="${repsValue}">${s>1?'<button type="button" class="copy-set-btn quick-copy-set-btn" title="Kopiera från set ovan">↑</button>':'<span class="copy-set-spacer"></span>'}<button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button></div>`;
-  }
-  block.innerHTML=`<div class="quick-ex-title-row"><div class="quick-ex-name">${ex.name} <span class="target">mål: ${targetLabel}</span></div><button type="button" class="quick-swap-btn">Byt övning</button></div>${originalName&&originalName!==ex.name?`<div class="quick-swapped-note">Ersätter ${originalName} endast i detta pass</div>`:''}${lastEntry?`<div class="quick-last">Senast ${fmtDate(lastEntry.date)}: ${formatLastSets(lastEntry)}</div>`:'<div class="quick-last">Ingen tidigare logg</div>'}${progressionSuggestion(ex,lastEntry)?`<div class="quick-progression">↗ ${progressionSuggestion(ex,lastEntry)}</div>`:''}${supersetTag}<div class="quick-set-rows">${rowsHtml}</div><button class="quick-add-set-btn" type="button">+ Set</button><input type="text" class="quick-note-input" placeholder="Kommentar (valfritt)">`;
-}
-
 let quickLogRenderToken = 0;
 function formatLastSets(entry){
   if(!entry || !entry.sets || !entry.sets.length) return '';
@@ -4137,22 +4032,51 @@ async function renderQuickLogForm(){
   const container = document.getElementById('quickLogExercises');
   container.innerHTML = '';
 
-    for(let exIdx=0; exIdx<exercises.length; exIdx++){
-      const ex=exercises[exIdx];
-      const block=document.createElement('div');
-      block.className='quick-ex-block';
-      block.setAttribute('data-exercise',ex.name);
-      block.setAttribute('data-original-exercise',ex.name);
-      block.setAttribute('data-bw',ex.bodyweight?'1':'0');
-      await populateQuickExerciseBlock(block,ex,lastEntries[exIdx],null);
-      container.appendChild(block);
+  exercises.forEach((ex, exIdx) => {
+    const lastEntry = lastEntries[exIdx];
+    const block = document.createElement('div');
+    block.className = 'quick-ex-block';
+    block.setAttribute('data-exercise', ex.name);
+    block.setAttribute('data-bw', ex.bodyweight ? '1' : '0');
+
+    const hasKg = ex.kg !== '' && ex.kg != null;
+    const targetLabel = `${ex.sets}×${ex.reps}${hasKg ? (ex.bodyweight ? ' · +' + ex.kg + 'kg' : ' · ' + ex.kg + 'kg') : ''}`;
+    const supersetTag = ex.supersetWith ? `<span class="superset-tag">🔗 superset med ${ex.supersetWith}</span>` : '';
+
+    let rowsHtml = '';
+    for(let s = 1; s <= ex.sets; s++){
+      const weightPlaceholder = ex.bodyweight ? 'tilläggsvikt' : 'kg';
+      const prevSet = lastEntry ? lastEntry.sets[s-1] : null;
+      const resetKg = planResetWeight(ex, lastEntry);
+      const weightValue = resetKg != null ? resetKg : (prevSet && prevSet.weight != null ? prevSet.weight : (hasKg ? ex.kg : ''));
+      const repsValue = resetKg != null ? '' : (prevSet && prevSet.reps != null ? prevSet.reps : '');
+      const copyBtn = s > 1 ? `<button type="button" class="copy-set-btn quick-copy-set-btn" title="Kopiera från set ovan">↑</button>` : '<span class="copy-set-spacer"></span>';
+      rowsHtml += `
+        <div class="quick-set-row">
+          <span class="pill">Set ${s}</span>
+          <input type="number" step="0.5" class="quick-weight-input" placeholder="${weightPlaceholder}" value="${weightValue}">
+          <input type="number" class="quick-reps-input" placeholder="${ex.reps}" value="${repsValue}">
+          ${copyBtn}
+          <button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button>
+        </div>
+      `;
     }
 
+    block.innerHTML = `
+      <div class="quick-ex-name">${ex.name} <span class="target">mål: ${targetLabel}</span></div>
+      ${lastEntry ? `<div class="quick-last">Senast ${fmtDate(lastEntry.date)}: ${formatLastSets(lastEntry)}</div>` : `<div class="quick-last">Ingen tidigare logg</div>`}
+      ${progressionSuggestion(ex,lastEntry) ? `<div class="quick-progression">↗ ${progressionSuggestion(ex,lastEntry)}</div>` : ''}
+      ${supersetTag}
+      <div class="quick-set-rows">${rowsHtml}</div>
+      <button class="quick-add-set-btn" type="button">+ Set</button>
+      <input type="text" class="quick-note-input" placeholder="Kommentar (valfritt)">
+    `;
+    container.appendChild(block);
+  });
 }
 
 document.getElementById('quickLogExercises').addEventListener('click', (e) => {
-  if(e.target.classList.contains('quick-swap-btn')){ openExerciseSwap(e.target.closest('.quick-ex-block')); return; }
-    if(e.target.classList.contains('quick-set-done-btn')){
+  if(e.target.classList.contains('quick-set-done-btn')){
     const row=e.target.closest('.quick-set-row');
     const reps=row.querySelector('.quick-reps-input');
     if(!reps.value){ reps.focus(); return; }
@@ -4216,7 +4140,7 @@ document.getElementById('quickSaveBtn').onclick = async () => {
     if(sets.length > 0){
       const noteInput = block.querySelector('.quick-note-input');
       const note = noteInput ? noteInput.value.trim() : '';
-      toSave.push({ exercise: exerciseName, originalExercise: block.getAttribute('data-original-exercise') || exerciseName, sets, isBodyweight: isBW, note });
+      toSave.push({ exercise: exerciseName, sets, isBodyweight: isBW, note });
     }
   });
 
