@@ -4,11 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#14161A">
+<meta name="app-version" content="1.1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Träningslogg">
 <meta name="mobile-web-app-capable" content="yes">
-<title>Träningslogg v1.1</title>
+<title>Träningslogg</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
@@ -454,21 +455,6 @@
     font-family: 'Inter', sans-serif;
   }
   .quick-weight-input:focus, .quick-reps-input:focus{ outline: none; border-color: var(--accent); }
-  .quick-last-session{
-    color: var(--muted); font-size: 12px; line-height: 1.45;
-    background: var(--panel-2); border: 1px solid var(--line);
-    border-radius: 8px; padding: 8px 10px; margin: -1px 0 10px;
-  }
-  .quick-last-session strong{ color: var(--text); font-weight: 600; }
-  .quick-set-check{
-    width: 38px; height: 38px; flex: 0 0 38px; border-radius: 50%;
-    border: 1px solid var(--line); background: var(--panel-2); color: var(--muted);
-    display: inline-flex; align-items: center; justify-content: center;
-    font-size: 18px; font-weight: 800; cursor: pointer; padding: 0;
-  }
-  .quick-set-check.active{ background: var(--accent); border-color: var(--accent); color: #fff; }
-  .quick-set-row.completed .quick-weight-input,
-  .quick-set-row.completed .quick-reps-input{ border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
   .quick-add-set-btn{
     background: none;
     border: 1px dashed var(--line);
@@ -1173,6 +1159,14 @@
     .nav-item{ font-size: 10px; }
     h2{ font-size: 24px; }
   }
+
+
+  /* v1.1 live-träningsvy */
+  .quick-last{font-size:12px;color:var(--muted);margin:5px 0 9px;line-height:1.45}
+  .quick-progression{font-size:12px;color:var(--good);margin:0 0 9px;font-weight:700}
+  .quick-set-row.done{opacity:.7;background:#27ae6012;border-radius:9px}
+  .quick-set-done-btn{width:34px;height:34px;flex:0 0 34px;border:1px solid var(--line);border-radius:9px;background:var(--surface2);color:var(--muted);font-weight:900;font-size:16px;padding:0}
+  .quick-set-done-btn.done{background:var(--good);border-color:var(--good);color:#fff}
 
 </style>
 </head>
@@ -4002,6 +3996,27 @@ function refreshQuickLogIfVisible(){
 }
 
 let quickLogRenderToken = 0;
+function formatLastSets(entry){
+  if(!entry || !entry.sets || !entry.sets.length) return '';
+  return entry.sets.map(x => `${x.weight || 0}×${x.reps}`).join(' / ');
+}
+function parseRepRange(v){
+  const nums=String(v||'').match(/\d+/g) || [];
+  if(!nums.length) return null;
+  return {min:Number(nums[0]), max:Number(nums[1] || nums[0])};
+}
+function progressionSuggestion(ex,lastEntry){
+  if(!lastEntry || !lastEntry.sets || !lastEntry.sets.length || ex.bodyweight) return '';
+  const range=parseRepRange(ex.reps); if(!range) return '';
+  const sets=lastEntry.sets;
+  const allTop=sets.length >= Number(ex.sets||sets.length) && sets.every(x => Number(x.reps)>=range.max);
+  const anyLow=sets.some(x => Number(x.reps)<range.min);
+  const w=Math.max(...sets.map(x=>Number(x.weight)||0)); if(!w) return '';
+  const step=w>=50 ? 2.5 : 1;
+  if(allTop) return `Förslag idag: ${Math.round((w+step)*10)/10} kg · ${range.min}–${range.max} reps`;
+  if(anyLow) return `Förslag idag: behåll ${w} kg tills alla set når minst ${range.min} reps`;
+  return `Förslag idag: behåll ${w} kg och bygg mot ${range.max} reps i alla set`;
+}
 async function renderQuickLogForm(){
   const myToken = ++quickLogRenderToken;
   document.getElementById('quickLogDayLabel').textContent = currentDay;
@@ -4035,32 +4050,21 @@ async function renderQuickLogForm(){
       const repsValue = resetKg != null ? '' : (prevSet && prevSet.reps != null ? prevSet.reps : '');
       const copyBtn = s > 1 ? `<button type="button" class="copy-set-btn quick-copy-set-btn" title="Kopiera från set ovan">↑</button>` : '<span class="copy-set-spacer"></span>';
       rowsHtml += `
-        <div class="quick-set-row" data-complete="0">
+        <div class="quick-set-row">
           <span class="pill">Set ${s}</span>
           <input type="number" step="0.5" class="quick-weight-input" placeholder="${weightPlaceholder}" value="${weightValue}">
           <input type="number" class="quick-reps-input" placeholder="${ex.reps}" value="${repsValue}">
           ${copyBtn}
-          <button type="button" class="quick-set-check" aria-label="Markera set ${s} som klart" aria-pressed="false">✓</button>
+          <button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button>
         </div>
       `;
     }
 
-    let lastSessionHtml = '<div class="quick-last-session">Ingen tidigare loggning</div>';
-    if(lastEntry && Array.isArray(lastEntry.sets) && lastEntry.sets.length){
-      const lastDate = new Date(lastEntry.date + 'T12:00:00').toLocaleDateString('sv-SE', { day:'numeric', month:'short' });
-      const setSummary = lastEntry.sets.map(set => {
-        const kg = Number(set.weight || 0);
-        return ex.bodyweight
-          ? `${kg > 0 ? '+' + kg + ' kg · ' : ''}${set.reps} reps`
-          : `${kg} kg × ${set.reps}`;
-      }).join(' / ');
-      lastSessionHtml = `<div class="quick-last-session"><strong>Senast ${lastDate}:</strong> ${setSummary}</div>`;
-    }
-
     block.innerHTML = `
       <div class="quick-ex-name">${ex.name} <span class="target">mål: ${targetLabel}</span></div>
+      ${lastEntry ? `<div class="quick-last">Senast ${fmtDate(lastEntry.date)}: ${formatLastSets(lastEntry)}</div>` : `<div class="quick-last">Ingen tidigare logg</div>`}
+      ${progressionSuggestion(ex,lastEntry) ? `<div class="quick-progression">↗ ${progressionSuggestion(ex,lastEntry)}</div>` : ''}
       ${supersetTag}
-      ${lastSessionHtml}
       <div class="quick-set-rows">${rowsHtml}</div>
       <button class="quick-add-set-btn" type="button">+ Set</button>
       <input type="text" class="quick-note-input" placeholder="Kommentar (valfritt)">
@@ -4070,16 +4074,20 @@ async function renderQuickLogForm(){
 }
 
 document.getElementById('quickLogExercises').addEventListener('click', (e) => {
-  if(e.target.classList.contains('quick-set-check')){
-    const row = e.target.closest('.quick-set-row');
-    const isComplete = row.getAttribute('data-complete') === '1';
-    row.setAttribute('data-complete', isComplete ? '0' : '1');
-    row.classList.toggle('completed', !isComplete);
-    e.target.classList.toggle('active', !isComplete);
-    e.target.setAttribute('aria-pressed', String(!isComplete));
+  if(e.target.classList.contains('quick-set-done-btn')){
+    const row=e.target.closest('.quick-set-row');
+    const reps=row.querySelector('.quick-reps-input');
+    if(!reps.value){ reps.focus(); return; }
+    const nowDone=!e.target.classList.contains('done');
+    e.target.classList.toggle('done',nowDone); row.classList.toggle('done',nowDone);
+    if(nowDone){
+      e.target.textContent='✓';
+      startRestTimer(120);
+      const next=row.nextElementSibling;
+      if(next){ const input=next.querySelector('.quick-reps-input'); if(input) input.focus({preventScroll:true}); next.scrollIntoView({behavior:'smooth',block:'center'}); }
+    }
     return;
   }
-
   if(e.target.classList.contains('quick-copy-set-btn')){
     const row = e.target.closest('.quick-set-row');
     const prevRow = row.previousElementSibling;
@@ -4099,13 +4107,12 @@ document.getElementById('quickLogExercises').addEventListener('click', (e) => {
   const weightPlaceholder = isBW ? 'tilläggsvikt' : 'kg';
   const row = document.createElement('div');
   row.className = 'quick-set-row';
-  row.setAttribute('data-complete', '0');
   row.innerHTML = `
     <span class="pill">Set ${nextNum}</span>
     <input type="number" step="0.5" class="quick-weight-input" placeholder="${weightPlaceholder}">
     <input type="number" class="quick-reps-input" placeholder="reps">
     <button type="button" class="copy-set-btn quick-copy-set-btn" title="Kopiera från set ovan">↑</button>
-    <button type="button" class="quick-set-check" aria-label="Markera set ${nextNum} som klart" aria-pressed="false">✓</button>
+    <button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button>
   `;
   rowsWrap.appendChild(row);
 });
@@ -4118,12 +4125,11 @@ document.getElementById('quickSaveBtn').onclick = async () => {
   blocks.forEach(block => {
     const exerciseName = block.getAttribute('data-exercise');
     const isBW = block.getAttribute('data-bw') === '1';
-    const completedRows = block.querySelectorAll('.quick-set-row[data-complete="1"]');
+    const weightInputs = block.querySelectorAll('.quick-weight-input');
+    const repsInputs = block.querySelectorAll('.quick-reps-input');
     const sets = [];
-    completedRows.forEach(row => {
-      const w = row.querySelector('.quick-weight-input');
-      const r = row.querySelector('.quick-reps-input');
-      const reps = parseInt(r.value);
+    weightInputs.forEach((w, i) => {
+      const reps = parseInt(repsInputs[i].value);
       if(!isNaN(reps) && reps > 0){
         const weight = parseFloat(w.value);
         sets.push({ weight: isNaN(weight) ? 0 : weight, reps });
@@ -4137,7 +4143,7 @@ document.getElementById('quickSaveBtn').onclick = async () => {
   });
 
   if(toSave.length === 0){
-    showInlineError('quickLogFormError', 'Bocka av minst ett genomfört set innan du sparar.');
+    showInlineError('quickLogFormError', 'Fyll i reps för minst en övning innan du sparar.');
     return;
   }
 
@@ -4165,7 +4171,7 @@ document.getElementById('quickSaveBtn').onclick = async () => {
       bodyweightUsed: item.isBodyweight ? bwValue : null,
       note: item.note || ''
     };
-    if(checkForPR(entry, priorEntries)) prExercises.push({ name: entry.exercise, weight: maxWeight(entry) });
+    { const prs=getPRs(entry, priorEntries); if(prs.length) prExercises.push({ name: entry.exercise, prs }); }
     try{
       await upsertEntry(entry);
       savedCount++;
@@ -4292,7 +4298,7 @@ document.getElementById('saveBtn').onclick = async () => {
     setTimeout(()=>{ btn.textContent = 'Spara pass'; btn.disabled = false; }, 1200);
     document.getElementById('strengthNote').value = '';
     renderSets();
-    if(isPR) showPRCelebration(entry.exercise, maxWeight(entry));
+    if(isPR) showPRCelebration(entry.exercise, getPRs(entry, priorEntries));
     try{
       await renderHistory();
       await refreshDayTabCompletion();
@@ -4303,28 +4309,43 @@ document.getElementById('saveBtn').onclick = async () => {
   }catch(e){
     console.error('Kunde inte spara pass:', e);
     addPending('entry', entry, `${entry.exercise} (${entry.day})`);
-    showInlineError('strengthFormError', 'Kunde inte spara i molnet just nu — passet är sparat lokalt i väntan, se bannern högst upp för att ladda ner eller försöka igen.');
+    showInlineError('strengthFormError', 'Kunde inte spara lokalt just nu — passet är sparat lokalt i väntan, se bannern högst upp för att ladda ner eller försöka igen.');
     renderSets();
     btn.textContent = 'Spara pass';
     btn.disabled = false;
   }
 };
 
-function checkForPR(newEntry, priorEntries){
-  const newMax = maxWeight(newEntry);
-  if(!newMax || newMax <= 0) return false;
-  const sameExercise = priorEntries.filter(e => e.exercise === newEntry.exercise);
-  if(sameExercise.length === 0) return false; // first-ever log isn't a "PR" to celebrate
-  const priorBest = Math.max(...sameExercise.map(e => maxWeight(e)));
-  return newMax > priorBest;
+function estimated1RMForSet(entry,set){
+  const w=effectiveWeight(entry,set), reps=Number(set.reps)||0;
+  return reps>0 ? w*(1+reps/30) : 0;
 }
+function entryVolume(entry){ return entry.sets.reduce((a,x)=>a+effectiveWeight(entry,x)*(Number(x.reps)||0),0); }
+function getPRs(newEntry, priorEntries){
+  const prior=priorEntries.filter(e=>e.exercise===newEntry.exercise);
+  if(!prior.length) return [];
+  const newWeight=maxWeight(newEntry);
+  const oldWeight=Math.max(...prior.map(maxWeight));
+  const newE1=Math.max(...newEntry.sets.map(x=>estimated1RMForSet(newEntry,x)));
+  const oldE1=Math.max(...prior.flatMap(e=>e.sets.map(x=>estimated1RMForSet(e,x))));
+  const newVol=entryVolume(newEntry), oldVol=Math.max(...prior.map(entryVolume));
+  const oldRepBest={}; prior.forEach(e=>e.sets.forEach(x=>{const w=effectiveWeight(e,x); oldRepBest[x.reps]=Math.max(oldRepBest[x.reps]||0,w)}));
+  const repPR=newEntry.sets.filter(x=>effectiveWeight(newEntry,x)>(oldRepBest[x.reps]||Infinity)).sort((a,b)=>b.reps-a.reps)[0];
+  const prs=[];
+  if(newWeight>oldWeight) prs.push(`Vikt-PR ${Math.round(newWeight*10)/10} kg`);
+  if(repPR) prs.push(`${repPR.reps}RM-PR ${Math.round(effectiveWeight(newEntry,repPR)*10)/10} kg`);
+  if(newE1>oldE1+0.05) prs.push(`e1RM-PR ${Math.round(newE1*10)/10} kg`);
+  if(newVol>oldVol+0.05) prs.push(`Volym-PR ${Math.round(newVol)} kg`);
+  return prs;
+}
+function checkForPR(newEntry, priorEntries){ return getPRs(newEntry,priorEntries).length>0; }
 
-function showPRCelebration(exerciseName, weight){
+function showPRCelebration(exerciseName, details){
   const toast = document.getElementById('prToast');
   if(!toast) return;
-  const text = weight
-    ? `Nytt personbästa! ${exerciseName} — ${weight} kg`
-    : `Nya personbästan i ${exerciseName}!`;
+  const text = Array.isArray(details) && details.length
+    ? `${exerciseName}: ${details.join(' · ')}`
+    : `Nytt personbästa i ${exerciseName}!`;
   document.getElementById('prToastText').textContent = text;
   toast.classList.add('show');
   clearTimeout(toast._hideTimeout);
@@ -4831,7 +4852,7 @@ document.getElementById('saveRunBtn').onclick = async () => {
     document.getElementById('runDistance').value = '';
     document.getElementById('runTime').value = '';
     document.getElementById('runNote').value = '';
-    showInlineError('runFormError', 'Kunde inte spara i molnet just nu — löppasset är sparat lokalt i väntan, se bannern högst upp för att ladda ner eller försöka igen.');
+    showInlineError('runFormError', 'Kunde inte spara lokalt just nu — löppasset är sparat lokalt i väntan, se bannern högst upp för att ladda ner eller försöka igen.');
     btn.textContent = 'Spara löppass';
     btn.disabled = false;
   }
