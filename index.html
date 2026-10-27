@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#14161A">
+<meta name="application-version" content="1.1.0">
 <meta name="app-version" content="1.1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -1534,6 +1535,7 @@
 </div>
 
 <script>
+const APP_VERSION = '1.1.0';
 // ---------- FRISTÅENDE LOKAL LAGRING ----------
 // IndexedDB används primärt. localStorage används som reserv.
 const STORAGE_PREFIX = 'traningslogg:';
@@ -4188,13 +4190,13 @@ document.getElementById('quickSaveBtn').onclick = async () => {
     btn.textContent = 'Sparat ✓';
     setTimeout(() => { btn.textContent = 'Spara hela passet'; btn.disabled = false; }, 1200);
   } else {
-    showInlineError('quickLogFormError', `${savedCount} övningar sparades, men ${failedCount} kunde inte sparas i molnet — de ligger nu i väntande-bannern högst upp så du kan ladda ner eller försöka igen.`);
+    showInlineError('quickLogFormError', `${savedCount} övningar sparades, men ${failedCount} kunde inte sparas lokalt — de ligger nu i väntande-bannern högst upp så du kan ladda ner eller försöka igen.`);
     btn.textContent = 'Spara hela passet';
     btn.disabled = false;
   }
 
   if(prExercises.length === 1){
-    showPRCelebration(prExercises[0].name, prExercises[0].weight);
+    showPRCelebration(prExercises[0].name, prExercises[0].prs);
   } else if(prExercises.length > 1){
     showPRCelebration(`${prExercises.length} övningar`, '');
   }
@@ -4330,7 +4332,7 @@ function getPRs(newEntry, priorEntries){
   const oldE1=Math.max(...prior.flatMap(e=>e.sets.map(x=>estimated1RMForSet(e,x))));
   const newVol=entryVolume(newEntry), oldVol=Math.max(...prior.map(entryVolume));
   const oldRepBest={}; prior.forEach(e=>e.sets.forEach(x=>{const w=effectiveWeight(e,x); oldRepBest[x.reps]=Math.max(oldRepBest[x.reps]||0,w)}));
-  const repPR=newEntry.sets.filter(x=>effectiveWeight(newEntry,x)>(oldRepBest[x.reps]||Infinity)).sort((a,b)=>b.reps-a.reps)[0];
+  const repPR=newEntry.sets.filter(x=>oldRepBest[x.reps] != null && effectiveWeight(newEntry,x)>oldRepBest[x.reps]).sort((a,b)=>b.reps-a.reps)[0];
   const prs=[];
   if(newWeight>oldWeight) prs.push(`Vikt-PR ${Math.round(newWeight*10)/10} kg`);
   if(repPR) prs.push(`${repPR.reps}RM-PR ${Math.round(effectiveWeight(newEntry,repPR)*10)/10} kg`);
