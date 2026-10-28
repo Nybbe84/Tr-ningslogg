@@ -1169,6 +1169,9 @@
   .quick-set-done-btn{width:34px;height:34px;flex:0 0 34px;border:1px solid var(--line);border-radius:9px;background:var(--surface2);color:var(--muted);font-weight:900;font-size:16px;padding:0}
   .quick-set-done-btn.done{background:var(--good);border-color:var(--good);color:#fff}
 
+
+/* v1.2: Byt övning */
+.quick-ex-header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.quick-ex-header .quick-ex-name{flex:1}.swap-ex-btn{width:auto;min-height:34px;margin:0;padding:6px 10px;border-radius:18px;background:var(--panel-2);border:1px solid var(--line);color:var(--library);font-size:12px;font-weight:700}.swap-note{font-size:11px;color:var(--library);margin:3px 0 7px}.exercise-swap-modal{display:none;position:fixed;inset:0;z-index:3000;background:#000b;align-items:flex-end;justify-content:center}.exercise-swap-modal.open{display:flex}.exercise-swap-sheet{width:100%;max-width:640px;max-height:88dvh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:18px 18px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom))}.swap-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.swap-top h2{margin:0}.swap-close{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--panel-2);color:var(--text);font-size:20px}.swap-list{display:flex;flex-direction:column;gap:7px;margin-top:8px}.swap-section{font-size:12px;color:var(--muted);font-weight:700;margin-top:14px}.swap-option{width:100%;text-align:left;background:var(--panel-2);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px}.swap-option small{display:block;color:var(--muted);margin-top:3px}.swap-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.swap-actions .btn{margin-top:0}
 </style>
 </head>
 <body>
@@ -1530,12 +1533,15 @@
       <input type="file" id="importDataFile" accept="application/json" style="display:none;">
       <div class="form-error" id="dataBackupError" style="display:none;"></div>
       <div class="chart-note" id="dataBackupStatus"></div>
+      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 1.2.1</div>
     </div>
   </div>
 </div>
 
+
+<div class="exercise-swap-modal" id="exerciseSwapModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 id="swapTitle">Byt övning</h2><button class="swap-close" id="swapClose">×</button></div><input id="swapSearch" type="search" placeholder="Sök bland alla övningar..." style="margin-top:12px"><div id="swapRecommendedWrap"><div class="swap-section">Rekommenderade alternativ</div><div class="swap-list" id="swapRecommended"></div></div><div class="swap-section">Alla matchningar</div><div class="swap-list" id="swapResults"></div><div id="swapConfirm" style="display:none"><div class="chart-note" id="swapConfirmText" style="margin-top:14px"></div><div class="swap-actions"><button class="btn" id="swapToday">Bara idag</button><button class="btn secondary" id="swapPermanent">Gör permanent</button></div></div></div></div>
 <script>
-const APP_VERSION = '1.1.0';
+const APP_VERSION = '1.2.1';
 // ---------- FRISTÅENDE LOKAL LAGRING ----------
 // IndexedDB används primärt. localStorage används som reserv.
 const STORAGE_PREFIX = 'traningslogg:';
@@ -3997,6 +4003,67 @@ function refreshQuickLogIfVisible(){
   }
 }
 
+
+let exerciseSwapState=null;
+function swapLibraryItems(){
+  const a=[];
+  Object.entries(LIBRARY).forEach(([group,items])=>items.forEach(x=>a.push({...x,group})));
+  return a;
+}
+function swapGroupFor(name){
+  const n=String(name||'').toLowerCase();
+  for(const [g,items] of Object.entries(LIBRARY)) if(items.some(x=>x.name.toLowerCase()===n)) return g;
+  const words=n.split(/[^a-zåäö0-9]+/).filter(x=>x.length>=4);
+  for(const [g,items] of Object.entries(LIBRARY)) if(items.some(x=>words.some(w=>x.name.toLowerCase().includes(w)))) return g;
+  return null;
+}
+async function latestEntryAnyDay(name){
+  const all=await loadAllEntries();
+  return all.filter(x=>x.exercise===name).sort((a,b)=>new Date(b.date)-new Date(a.date))[0]||null;
+}
+function renderSwapOptions(){
+  if(!exerciseSwapState)return;
+  const q=(document.getElementById('swapSearch').value||'').trim().toLowerCase();
+  const all=swapLibraryItems().filter(x=>x.name!==exerciseSwapState.original && (!q||x.name.toLowerCase().includes(q)||(x.desc||'').toLowerCase().includes(q)));
+  const group=swapGroupFor(exerciseSwapState.original);
+  const rec=all.filter(x=>x.group===group).slice(0,6);
+  const html=x=>`<button class="swap-option" data-name="${x.name.replace(/"/g,'&quot;')}">${x.name}<small>${x.group} · ${x.desc||''}</small></button>`;
+  document.getElementById('swapRecommendedWrap').style.display=(!q&&rec.length)?'':'none';
+  document.getElementById('swapRecommended').innerHTML=rec.map(html).join('');
+  document.getElementById('swapResults').innerHTML=all.slice(0,40).map(html).join('')||'<div class="empty">Inga träffar.</div>';
+}
+function openSwap(block){
+  exerciseSwapState={block,original:block.dataset.originalExercise||block.dataset.exercise,selected:null};
+  document.getElementById('swapTitle').textContent='Byt '+exerciseSwapState.original;
+  document.getElementById('swapSearch').value=''; document.getElementById('swapConfirm').style.display='none'; renderSwapOptions();
+  document.getElementById('exerciseSwapModal').classList.add('open');
+}
+function closeSwap(){document.getElementById('exerciseSwapModal').classList.remove('open');exerciseSwapState=null;}
+async function chooseSwap(name){
+  exerciseSwapState.selected=name; const last=await latestEntryAnyDay(name);
+  document.getElementById('swapConfirmText').innerHTML=`<strong style="color:var(--text)">${name}</strong><br>${last?'Senast '+fmtDate(last.date)+': '+formatLastSets(last):'Ingen tidigare logg för övningen.'}<br><br><strong>Bara idag</strong> påverkar endast detta pass. <strong>Gör permanent</strong> ersätter ${exerciseSwapState.original} i ${currentDay}.`;
+  document.getElementById('swapConfirm').style.display='block';
+}
+function planExerciseFromLibrary(name,old){
+  for(const day of Object.keys(PLAN)){const x=(PLAN[day]||[]).find(e=>e.name===name);if(x)return JSON.parse(JSON.stringify(x));}
+  return {name,sets:old?.sets||3,reps:old?.reps||'8-12',kg:'',bodyweight:false,rest:old?.rest||90,aliases:[]};
+}
+async function fillSwappedBlock(block, ex, last, original){
+  block.dataset.exercise=ex.name; block.dataset.originalExercise=original; block.dataset.bw=ex.bodyweight?'1':'0';
+  const target=`${ex.sets}×${ex.reps}${ex.kg!==''&&ex.kg!=null?(ex.bodyweight?' · +'+ex.kg+'kg':' · '+ex.kg+'kg'):''}`;
+  let rows=''; for(let i=1;i<=Number(ex.sets||3);i++){const ps=last?.sets?.[i-1]; const w=ps?.weight??ex.kg??''; const r=ps?.reps??''; rows+=`<div class="quick-set-row"><span class="pill">Set ${i}</span><input type="number" step="0.5" class="quick-weight-input" placeholder="${ex.bodyweight?'tilläggsvikt':'kg'}" value="${w}"><input type="number" class="quick-reps-input" placeholder="${ex.reps}" value="${r}">${i>1?'<button type="button" class="copy-set-btn quick-copy-set-btn" title="Kopiera från set ovan">↑</button>':'<span class="copy-set-spacer"></span>'}<button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button></div>`;}
+  block.innerHTML=`<div class="quick-ex-header"><div class="quick-ex-name">${ex.name} <span class="target">mål: ${target}</span></div><button type="button" class="swap-ex-btn">Byt övning</button></div><div class="swap-note">Ersätter ${original} endast idag</div>${last?`<div class="quick-last">Senast ${fmtDate(last.date)}: ${formatLastSets(last)}</div>`:'<div class="quick-last">Ingen tidigare logg</div>'}<div class="quick-set-rows">${rows}</div><button class="quick-add-set-btn" type="button">+ Set</button><input type="text" class="quick-note-input" placeholder="Kommentar (valfritt)">`;
+}
+async function applySwap(permanent){
+  if(!exerciseSwapState?.selected)return; const {block,original,selected}=exerciseSwapState; const old=(PLAN[currentDay]||[]).find(x=>x.name===original); const ex=planExerciseFromLibrary(selected,old); ex.name=selected;
+  if(permanent){const i=(PLAN[currentDay]||[]).findIndex(x=>x.name===original); if(i>=0){PLAN[currentDay][i]=ex; rebuildProgramFromPlan(); await savePlanConfig();} closeSwap();renderTabs();renderExercises();await renderQuickLogForm();await renderSchedule();}
+  else {const last=await latestEntryAnyDay(selected); await fillSwappedBlock(block,ex,last,original); closeSwap();}
+}
+document.getElementById('swapSearch').addEventListener('input',renderSwapOptions);
+document.getElementById('swapClose').onclick=closeSwap;
+document.getElementById('exerciseSwapModal').addEventListener('click',e=>{if(e.target.id==='exerciseSwapModal')closeSwap();const b=e.target.closest('.swap-option');if(b)chooseSwap(b.dataset.name);});
+document.getElementById('swapToday').onclick=()=>applySwap(false); document.getElementById('swapPermanent').onclick=()=>applySwap(true);
+
 let quickLogRenderToken = 0;
 function formatLastSets(entry){
   if(!entry || !entry.sets || !entry.sets.length) return '';
@@ -4037,6 +4104,7 @@ async function renderQuickLogForm(){
     const block = document.createElement('div');
     block.className = 'quick-ex-block';
     block.setAttribute('data-exercise', ex.name);
+    block.setAttribute('data-original-exercise', ex.name);
     block.setAttribute('data-bw', ex.bodyweight ? '1' : '0');
 
     const hasKg = ex.kg !== '' && ex.kg != null;
@@ -4063,7 +4131,7 @@ async function renderQuickLogForm(){
     }
 
     block.innerHTML = `
-      <div class="quick-ex-name">${ex.name} <span class="target">mål: ${targetLabel}</span></div>
+      <div class="quick-ex-header"><div class="quick-ex-name">${ex.name} <span class="target">mål: ${targetLabel}</span></div><button type="button" class="swap-ex-btn">Byt övning</button></div>
       ${lastEntry ? `<div class="quick-last">Senast ${fmtDate(lastEntry.date)}: ${formatLastSets(lastEntry)}</div>` : `<div class="quick-last">Ingen tidigare logg</div>`}
       ${progressionSuggestion(ex,lastEntry) ? `<div class="quick-progression">↗ ${progressionSuggestion(ex,lastEntry)}</div>` : ''}
       ${supersetTag}
@@ -4076,6 +4144,8 @@ async function renderQuickLogForm(){
 }
 
 document.getElementById('quickLogExercises').addEventListener('click', (e) => {
+  const swapBtn = e.target.closest('.swap-ex-btn');
+  if(swapBtn){ openSwap(swapBtn.closest('.quick-ex-block')); return; }
   if(e.target.classList.contains('quick-set-done-btn')){
     const row=e.target.closest('.quick-set-row');
     const reps=row.querySelector('.quick-reps-input');
@@ -4126,6 +4196,7 @@ document.getElementById('quickSaveBtn').onclick = async () => {
 
   blocks.forEach(block => {
     const exerciseName = block.getAttribute('data-exercise');
+    const originalExercise = block.getAttribute('data-original-exercise') || exerciseName;
     const isBW = block.getAttribute('data-bw') === '1';
     const weightInputs = block.querySelectorAll('.quick-weight-input');
     const repsInputs = block.querySelectorAll('.quick-reps-input');
@@ -4140,7 +4211,7 @@ document.getElementById('quickSaveBtn').onclick = async () => {
     if(sets.length > 0){
       const noteInput = block.querySelector('.quick-note-input');
       const note = noteInput ? noteInput.value.trim() : '';
-      toSave.push({ exercise: exerciseName, sets, isBodyweight: isBW, note });
+      toSave.push({ exercise: exerciseName, originalExercise, sets, isBodyweight: isBW, note });
     }
   });
 
@@ -4171,7 +4242,8 @@ document.getElementById('quickSaveBtn').onclick = async () => {
       sets: item.sets,
       isBodyweight: item.isBodyweight,
       bodyweightUsed: item.isBodyweight ? bwValue : null,
-      note: item.note || ''
+      note: item.note || '',
+      originalExercise: item.originalExercise !== item.exercise ? item.originalExercise : null
     };
     { const prs=getPRs(entry, priorEntries); if(prs.length) prExercises.push({ name: entry.exercise, prs }); }
     try{
