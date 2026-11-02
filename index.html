@@ -1533,7 +1533,7 @@
       <input type="file" id="importDataFile" accept="application/json" style="display:none;">
       <div class="form-error" id="dataBackupError" style="display:none;"></div>
       <div class="chart-note" id="dataBackupStatus"></div>
-      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 1.2.1</div>
+      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 1.2.2</div>
     </div>
   </div>
 </div>
@@ -1541,7 +1541,7 @@
 
 <div class="exercise-swap-modal" id="exerciseSwapModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 id="swapTitle">Byt övning</h2><button class="swap-close" id="swapClose">×</button></div><input id="swapSearch" type="search" placeholder="Sök bland alla övningar..." style="margin-top:12px"><div id="swapRecommendedWrap"><div class="swap-section">Rekommenderade alternativ</div><div class="swap-list" id="swapRecommended"></div></div><div class="swap-section">Alla matchningar</div><div class="swap-list" id="swapResults"></div><div id="swapConfirm" style="display:none"><div class="chart-note" id="swapConfirmText" style="margin-top:14px"></div><div class="swap-actions"><button class="btn" id="swapToday">Bara idag</button><button class="btn secondary" id="swapPermanent">Gör permanent</button></div></div></div></div>
 <script>
-const APP_VERSION = '1.2.1';
+const APP_VERSION = '1.2.2';
 // ---------- FRISTÅENDE LOKAL LAGRING ----------
 // IndexedDB används primärt. localStorage används som reserv.
 const STORAGE_PREFIX = 'traningslogg:';
@@ -3578,6 +3578,7 @@ const LIBRARY = {
     { name: "Flyes med hantlar", desc: "Bågrörelse som sträcker ut och kontraherar bröstmuskeln utan att triceps hjälper till lika mycket." }
   ],
   "Rygg": [
+    { name: "Sälrodd", desc: "Liggande rodd på hög bänk (seal row). Bröstet vilar mot bänken, så ländryggen avlastas helt och ryggen gör allt jobb. Neutralt grepp med armbågarna i ca 45° träffar både lats och övre rygg." },
     { name: "Marklyft", desc: "Helkroppslyft med fokus på nedre rygg, säte och baksida lår — grunden i de flesta styrkeprogram." },
     { name: "Chins/Pull-ups", desc: "Kroppsviktsövning som bygger bredd i ryggen (latissimus) och styrka i biceps." },
     { name: "Latsdrag", desc: "Maskinvariant av chins — bra för att bygga volym innan du klarar fler kroppsviktsdrag." },
