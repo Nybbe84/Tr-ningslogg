@@ -1197,6 +1197,38 @@
 .summary-head{font:700 26px 'Barlow Condensed',sans-serif;margin:0}
 .summary-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
 .summary-list{font-size:14px;line-height:1.8;margin:6px 0 0}
+
+/* v1.3.1 utkast */
+.draft-notice{display:none;align-items:center;gap:8px;flex-wrap:wrap;background:#3b82f61a;border:1px solid #3b82f655;border-radius:10px;padding:9px 11px;margin-top:12px;font-size:13px}
+.draft-notice.show{display:flex}
+.draft-notice span{flex:1;min-width:150px}
+.draft-notice button{border:1px solid var(--line);background:var(--panel-2);color:var(--text);border-radius:999px;padding:6px 11px;font-size:12px;font-weight:700}
+.draft-notice button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.draft-saved{font-size:11px;color:var(--muted);text-align:right;margin-top:6px;min-height:14px}
+
+/* v1.3.2 ta bort set */
+.quick-set-actions{display:flex;gap:8px;align-items:center}
+.quick-remove-set-btn{background:none;border:1px dashed var(--line);color:var(--muted);font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;cursor:pointer}
+.quick-remove-set-btn:disabled{opacity:.35;cursor:default}
+
+/* v1.4 dashboard */
+.dash{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.dash-sub{font-size:12px;color:var(--muted);margin-top:4px}
+.dash-sec{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:11px 12px}
+.dash-title{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.dash-row{display:flex;align-items:baseline;justify-content:space-between;gap:10px;font-size:14px;line-height:1.6}
+.dash-row strong{font-family:'Barlow Condensed',sans-serif;font-size:19px;color:var(--text)}
+.dash-tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px}
+.dash-tag.ahead{color:var(--good);background:var(--good-dim)}
+.dash-tag.ontrack{color:var(--library);background:#4FA6A622}
+.dash-tag.behind{color:var(--accent);background:var(--accent-dim)}
+.dash-bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin:4px 0 6px}
+.dash-bar>div{height:100%;background:var(--good)}
+.dash-up{color:var(--good);font-weight:700}
+.dash-down{color:var(--accent);font-weight:700}
+.dash-pr{font-size:13px;line-height:1.7}
+.dash-pr span{color:var(--muted)}
+.dash-empty{font-size:13px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -1258,7 +1290,12 @@
         <div class="lbl" id="todayLbl">Idag, måndag</div>
         <div class="plan" id="todayPlan">Push</div>
       </div>
-      <button class="today-btn" id="todayBtn">Logga dagens pass</button>
+      <button class="today-btn" id="todayBtn">Starta pass</button>
+    </div>
+    <div class="dash-sub" id="dashLastSame"></div>
+    <div class="dash" id="dashboard">
+      <div class="dash-sec"><div class="dash-title">Veckan</div><div id="dashWeek"><div class="dash-empty">Laddar…</div></div></div>
+      <div class="dash-sec"><div class="dash-title">Utveckling</div><div id="dashProgress"><div class="dash-empty">Laddar…</div></div></div>
     </div>
 
     <div class="card-collapse-header" id="scheduleCollapseHeader">
@@ -1344,7 +1381,10 @@
       <label>Datum</label>
       <input type="date" id="quickLogDate">
       <div class="chart-note" style="margin-top:6px;">Förifyllt med planerade set och målvikt — justera det som avviker och spara hela passet på en gång. Lämna en övning tom om du inte körde den.</div>
+      <div class="draft-notice" id="draftNotice"></div>
+      <div class="draft-notice" id="otherDraftNotice"></div>
       <div id="quickLogExercises" style="margin-top:14px;"></div>
+      <div class="draft-saved" id="draftSavedLabel"></div>
       <button class="btn" id="quickSaveBtn">Spara hela passet</button>
       <div class="form-error" id="quickLogFormError" style="display:none;"></div>
     </div>
@@ -1571,7 +1611,7 @@
       <div class="form-error" id="dataBackupError" style="display:none;"></div>
       <div class="chart-note" id="dataBackupStatus"></div>
       <div class="chart-note" id="lastBackupLabel" style="margin-top:8px;"></div>
-      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 1.3.0</div>
+      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 1.4.0</div>
     </div>
   </div>
 </div>
@@ -1581,7 +1621,7 @@
 <div class="exercise-swap-modal" id="sessionSummaryModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 class="summary-head" id="summaryTitle">Pass klart ✓</h2><button class="swap-close" id="summaryClose">×</button></div><div class="summary-stats" id="summaryStats"></div><div id="summaryBody"></div><button class="btn" id="summaryOk" style="margin-top:14px;">Klar</button></div></div>
 <div class="exercise-swap-modal" id="exerciseSwapModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 id="swapTitle">Byt övning</h2><button class="swap-close" id="swapClose">×</button></div><input id="swapSearch" type="search" placeholder="Sök bland alla övningar..." style="margin-top:12px"><div id="swapRecommendedWrap"><div class="swap-section">Rekommenderade alternativ</div><div class="swap-list" id="swapRecommended"></div></div><div class="swap-section">Alla matchningar</div><div class="swap-list" id="swapResults"></div><div id="swapConfirm" style="display:none"><div class="chart-note" id="swapConfirmText" style="margin-top:14px"></div><div class="swap-actions"><button class="btn" id="swapToday">Bara idag</button><button class="btn secondary" id="swapPermanent">Gör permanent</button></div></div></div></div>
 <script>
-const APP_VERSION = '1.3.0';
+const APP_VERSION = '1.4.0';
 // ---------- FRISTÅENDE LOKAL LAGRING ----------
 // IndexedDB används primärt. localStorage används som reserv.
 const STORAGE_PREFIX = 'traningslogg:';
@@ -2620,6 +2660,8 @@ async function renderWeekProgress(){
   barFillEl.style.width = Math.min(100, Math.round(sessionsRatio * 100)) + '%';
   chipsEl.innerHTML = chips.join('');
   kmEl.textContent = `${kmDone.toFixed(1)} / ${kmTarget} km löpning denna vecka`;
+  window._weekStats = { completedCount, totalCount, pacingText, pacingClass, kmDone, kmTarget, sessionsRatio };
+  try{ await renderDashboard(); }catch(err){ console.error('Dashboard kunde inte ritas:', err); }
 }
 
 async function renderSchedule(){
@@ -2645,7 +2687,7 @@ async function renderSchedule(){
     const mins = estimateSessionMinutes(PLAN[today.label]);
     plan.textContent = `${today.label} · ~${mins} min` + (today.hasRun ? ` · + ${runInfoFor(today.name).type} ${runInfoFor(today.name).km}` : '');
     plan.className = 'plan strength-color';
-    btn.textContent = doneToday ? 'Loggat ✓ — logga mer' : 'Logga dagens pass';
+    btn.textContent = doneToday ? 'Loggat ✓ — logga mer' : 'Starta pass';
     btn.className = 'today-btn';
   } else if(today.mode === 'run'){
     const info = runInfoFor(today.name);
@@ -2666,6 +2708,8 @@ async function renderSchedule(){
       currentDay = today.label;
       renderTabs();
       renderExercises();
+      setLogMode('quick');
+      document.getElementById('quickLogCard').scrollIntoView({behavior:'smooth', block:'start'});
     } else if(today.mode === 'run'){
       modeRunBtn.click();
       const info = runInfoFor(today.name);
@@ -4093,12 +4137,12 @@ async function fillSwappedBlock(block, ex, last, original){
   block.dataset.exercise=ex.name; block.dataset.originalExercise=original; block.dataset.bw=ex.bodyweight?'1':'0'; block.dataset.rest=String(ex.rest||90);
   const target=`${ex.sets}×${ex.reps}${ex.kg!==''&&ex.kg!=null?(ex.bodyweight?' · +'+ex.kg+'kg':' · '+ex.kg+'kg'):''}`;
   let rows=''; for(let i=1;i<=Number(ex.sets||3);i++){const ps=last?.sets?.[i-1]; const w=ps?.weight??ex.kg??''; const r=ps?.reps??''; rows+=`<div class="quick-set-row"><span class="pill">Set ${i}</span><input type="number" step="0.5" class="quick-weight-input" placeholder="${ex.bodyweight?'tilläggsvikt':'kg'}" value="${w}"><input type="number" class="quick-reps-input" placeholder="${ex.reps}" value="${r}">${i>1?'<button type="button" class="copy-set-btn quick-copy-set-btn" title="Kopiera från set ovan">↑</button>':'<span class="copy-set-spacer"></span>'}<button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button></div>`;}
-  block.innerHTML=`<div class="quick-ex-header"><div class="quick-ex-name">${ex.name} <span class="target">mål: ${target}</span></div><button type="button" class="swap-ex-btn">Byt övning</button></div><div class="swap-note">Ersätter ${original} endast idag</div>${last?`<div class="quick-last">Senast ${fmtDate(last.date)}: ${formatLastSets(last)}</div>`:'<div class="quick-last">Ingen tidigare logg</div>'}<div class="quick-set-rows">${rows}</div><button class="quick-add-set-btn" type="button">+ Set</button><input type="text" class="quick-note-input" placeholder="Kommentar (valfritt)">`;
+  block.innerHTML=`<div class="quick-ex-header"><div class="quick-ex-name">${ex.name} <span class="target">mål: ${target}</span></div><button type="button" class="swap-ex-btn">Byt övning</button></div><div class="swap-note">Ersätter ${original} endast idag</div>${last?`<div class="quick-last">Senast ${fmtDate(last.date)}: ${formatLastSets(last)}</div>`:'<div class="quick-last">Ingen tidigare logg</div>'}<div class="quick-set-rows">${rows}</div><div class="quick-set-actions"><button class="quick-add-set-btn" type="button">+ Set</button><button class="quick-remove-set-btn" type="button">− Set</button></div><input type="text" class="quick-note-input" placeholder="Kommentar (valfritt)">`;
 }
 async function applySwap(permanent){
   if(!exerciseSwapState?.selected)return; const {block,original,selected}=exerciseSwapState; const old=(PLAN[currentDay]||[]).find(x=>x.name===original); const ex=planExerciseFromLibrary(selected,old); ex.name=selected;
   if(permanent){const i=(PLAN[currentDay]||[]).findIndex(x=>x.name===original); if(i>=0){PLAN[currentDay][i]=ex; rebuildProgramFromPlan(); await savePlanConfig();} closeSwap();renderTabs();renderExercises();await renderQuickLogForm();await renderSchedule();}
-  else {const last=await latestEntryAnyDay(selected); await fillSwappedBlock(block,ex,last,original); closeSwap();}
+  else {const last=await latestEntryAnyDay(selected); await fillSwappedBlock(block,ex,last,original); closeSwap(); markQuickDirty();}
 }
 document.getElementById('swapSearch').addEventListener('input',renderSwapOptions);
 document.getElementById('swapClose').onclick=closeSwap;
@@ -4336,6 +4380,249 @@ async function renderPRCard(exerciseName){
 }
 
 
+
+// ================= v1.3.1: utkastsparning =================
+const DRAFT_PREFIX = 'draft:quick:';
+const DRAFT_MAX_AGE_DAYS = 7;
+let quickDraftDirty = false, quickDraftTimer = null;
+
+function addQuickRow(block){
+  const rowsWrap = block.querySelector('.quick-set-rows');
+  const isBW = block.getAttribute('data-bw') === '1';
+  const n = rowsWrap.querySelectorAll('.quick-set-row').length + 1;
+  const row = document.createElement('div');
+  row.className = 'quick-set-row';
+  row.innerHTML = `<span class="pill">Set ${n}</span><input type="number" step="0.5" class="quick-weight-input" placeholder="${isBW ? 'tilläggsvikt' : 'kg'}"><input type="number" class="quick-reps-input" placeholder="reps">${n > 1 ? '<button type="button" class="copy-set-btn quick-copy-set-btn" title="Kopiera från set ovan">↑</button>' : '<span class="copy-set-spacer"></span>'}<button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button>`;
+  rowsWrap.appendChild(row);
+  updateRemoveSetButtons(block);
+  return row;
+}
+
+function serializeQuickDraft(){
+  const blocks = [...document.querySelectorAll('#quickLogExercises .quick-ex-block')].map(b => ({
+    exercise: b.dataset.exercise,
+    original: b.dataset.originalExercise || b.dataset.exercise,
+    ssPartner: b.dataset.ssPartner || null,
+    planSuperset: !!b.querySelector('.superset-tag'),
+    note: (b.querySelector('.quick-note-input') || {}).value || '',
+    rows: [...b.querySelectorAll('.quick-set-row')].map(r => ({
+      w: r.querySelector('.quick-weight-input').value,
+      r: r.querySelector('.quick-reps-input').value,
+      done: r.classList.contains('done')
+    }))
+  }));
+  return { v:1, day: currentDay, date: quickLogDate.value || todayStr(), savedAt: Date.now(), start: quickSessionStart, blocks };
+}
+function draftHasProgress(d){
+  return d && d.blocks && d.blocks.some(b => b.exercise !== b.original || b.note || (b.ssPartner && !b.planSuperset) || b.rows.some(r => r.done));
+}
+function markQuickDirty(){
+  quickDraftDirty = true;
+  clearTimeout(quickDraftTimer);
+  quickDraftTimer = setTimeout(flushQuickDraft, 500);
+}
+async function flushQuickDraft(){
+  clearTimeout(quickDraftTimer); quickDraftTimer = null;
+  if(!quickDraftDirty) return;
+  quickDraftDirty = false;
+  if(!document.querySelector('#quickLogExercises .quick-ex-block')) return;
+  const d = serializeQuickDraft();
+  try{
+    if(draftHasProgress(d)){
+      await window.storage.set(DRAFT_PREFIX + d.day, JSON.stringify(d));
+      const lbl = document.getElementById('draftSavedLabel');
+      if(lbl) lbl.textContent = 'Utkast sparat ' + new Date().toLocaleTimeString('sv-SE', {hour:'2-digit', minute:'2-digit'});
+    } else {
+      await window.storage.delete(DRAFT_PREFIX + d.day);
+    }
+  }catch(e){ console.warn('Kunde inte spara utkast:', e); }
+}
+async function readQuickDraft(day){
+  try{
+    const r = await window.storage.get(DRAFT_PREFIX + day);
+    if(!r || !r.value) return null;
+    const d = JSON.parse(r.value);
+    if(Date.now() - d.savedAt > DRAFT_MAX_AGE_DAYS*86400000){ await window.storage.delete(DRAFT_PREFIX + day); return null; }
+    return d;
+  }catch(e){ return null; }
+}
+async function discardQuickDraft(day, rerender){
+  clearTimeout(quickDraftTimer); quickDraftTimer = null; quickDraftDirty = false;
+  try{ await window.storage.delete(DRAFT_PREFIX + day); }catch(e){}
+  const lbl = document.getElementById('draftSavedLabel'); if(lbl) lbl.textContent = '';
+  if(rerender){ quickSessionStart = null; await renderQuickLogForm(); }
+}
+
+async function applyDraftToForm(d){
+  const container = document.getElementById('quickLogExercises');
+  const rendered = [...container.querySelectorAll('.quick-ex-block')];
+  const used = new Set(), ordered = [];
+  for(const db of d.blocks){
+    const block = rendered.find(b => !used.has(b) && (b.dataset.originalExercise || b.dataset.exercise) === db.original);
+    if(!block) continue;
+    used.add(block);
+    if(db.exercise !== db.original){
+      const old = (PLAN[currentDay] || []).find(x => x.name === db.original);
+      const ex = planExerciseFromLibrary(db.exercise, old); ex.name = db.exercise;
+      await fillSwappedBlock(block, ex, await latestEntryAnyDay(db.exercise), db.original);
+    }
+    let rows = [...block.querySelectorAll('.quick-set-row')];
+    while(rows.length < db.rows.length){ addQuickRow(block); rows = [...block.querySelectorAll('.quick-set-row')]; }
+    rows.slice(db.rows.length).forEach(r => r.remove());
+    updateRemoveSetButtons(block);
+    rows = [...block.querySelectorAll('.quick-set-row')];
+    db.rows.forEach((dr, i) => {
+      const row = rows[i];
+      row.querySelector('.quick-weight-input').value = dr.w;
+      row.querySelector('.quick-reps-input').value = dr.r;
+      row.classList.toggle('done', !!dr.done);
+      row.querySelector('.quick-set-done-btn').classList.toggle('done', !!dr.done);
+    });
+    const note = block.querySelector('.quick-note-input'); if(note) note.value = db.note || '';
+    ordered.push({block, db});
+  }
+  [...ordered.map(o => o.block), ...rendered.filter(b => !used.has(b))].forEach(b => container.appendChild(b));
+  // återaktivera supersets som valdes under passet
+  const done = new Set();
+  ordered.forEach(({block, db}) => {
+    if(!db.ssPartner || db.planSuperset || done.has(db.exercise)) return;
+    done.add(db.exercise); done.add(db.ssPartner);
+    activateSuperset(block, db.ssPartner);
+  });
+  if(d.start) quickSessionStart = d.start;
+}
+
+function setNotice(id, html){
+  const el = document.getElementById(id); if(!el) return;
+  el.innerHTML = html || ''; el.classList.toggle('show', !!html);
+}
+async function restoreQuickDraft(token){
+  setNotice('draftNotice', ''); setNotice('otherDraftNotice', '');
+  const lbl = document.getElementById('draftSavedLabel'); if(lbl) lbl.textContent = '';
+  const d = await readQuickDraft(currentDay);
+  if(token !== quickLogRenderToken) return;
+  const formDate = quickLogDate.value || todayStr();
+  if(d && d.date === formDate){
+    await applyDraftToForm(d);
+    if(token !== quickLogRenderToken) return;
+    const t = new Date(d.savedAt).toLocaleTimeString('sv-SE', {hour:'2-digit', minute:'2-digit'});
+    setNotice('draftNotice', `<span>↺ Pågående pass återställt (sparat ${t})</span><button type="button" id="draftDiscardBtn">Släng utkast</button>`);
+  } else if(d){
+    setNotice('draftNotice', `<span>Du har ett påbörjat ${d.day}-pass från ${fmtDate(d.date)}.</span><button type="button" class="primary" id="draftResumeBtn">Fortsätt</button><button type="button" id="draftDiscardBtn">Släng</button>`);
+  }
+  // utkast för andra dagar
+  try{
+    const list = await window.storage.list(DRAFT_PREFIX);
+    const others = [];
+    for(const k of (list.keys || [])){
+      const day = k.slice(DRAFT_PREFIX.length);
+      if(day === currentDay) continue;
+      const od = await readQuickDraft(day);
+      if(od) others.push(od);
+    }
+    if(token !== quickLogRenderToken) return;
+    if(others.length){
+      const o = others.sort((a,b) => b.savedAt - a.savedAt)[0];
+      setNotice('otherDraftNotice', `<span>Du har även ett påbörjat ${o.day}-pass.</span><button type="button" class="primary" data-open-draft-day="${o.day}">Öppna</button>`);
+    }
+  }catch(e){}
+}
+
+document.getElementById('quickLogCard').addEventListener('click', async e => {
+  if(e.target.id === 'draftDiscardBtn'){
+    if(confirm('Släng det påbörjade passet? Ifyllda set som inte sparats försvinner.')) await discardQuickDraft(currentDay, true);
+  } else if(e.target.id === 'draftResumeBtn'){
+    const d = await readQuickDraft(currentDay);
+    if(d){ quickLogDate.value = d.date; await renderQuickLogForm(); }
+  } else if(e.target.dataset && e.target.dataset.openDraftDay){
+    const tab = document.querySelector(`.day-tab[data-day="${e.target.dataset.openDraftDay}"]`);
+    if(tab) tab.click();
+  }
+});
+document.getElementById('quickLogExercises').addEventListener('input', markQuickDirty);
+document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'hidden') flushQuickDraft(); });
+window.addEventListener('pagehide', () => { flushQuickDraft(); });
+
+function updateRemoveSetButtons(block){
+  if(!block) return;
+  const btn = block.querySelector('.quick-remove-set-btn');
+  if(btn) btn.disabled = block.querySelectorAll('.quick-set-row').length <= 1;
+}
+
+// ================= v1.4: dashboard =================
+function dashDaysAgo(dateStr){
+  const d = Math.round((new Date(todayStr()+'T12:00:00') - new Date(dateStr+'T12:00:00')) / 86400000);
+  return d === 0 ? 'idag' : d === 1 ? 'igår' : `${d} dagar sedan`;
+}
+async function renderDashboard(){
+  const weekEl = document.getElementById('dashWeek'), progEl = document.getElementById('dashProgress'), lastEl = document.getElementById('dashLastSame');
+  if(!weekEl) return;
+  const entries = await loadAllEntries();
+  const today = SCHEDULE[todayIndex()];
+
+  // --- Idag: senast samma pass ---
+  const label = today.mode === 'strength' ? today.label : (today.extra || null);
+  if(label){
+    const prev = entries.filter(e => e.day === label && e.date < todayStr()).map(e => e.date).sort().pop();
+    lastEl.textContent = prev ? `Senast ${label}: ${dashDaysAgo(prev)} (${fmtDate(prev)})` : `Inget ${label}-pass loggat ännu`;
+  } else lastEl.textContent = '';
+
+  // --- Veckan ---
+  const ws = window._weekStats || {};
+  const monday = getMondayOfCurrentWeek();
+  const lastMonday = new Date(monday); lastMonday.setDate(monday.getDate() - 7);
+  const idx = todayIndex();
+  const inRange = (d, from, days) => { const t = new Date(d+'T12:00:00'); const end = new Date(from); end.setDate(from.getDate()+days); return t >= from && t < end; };
+  const volThis = entries.filter(e => inRange(e.date, monday, 7)).reduce((a,e) => a + entryVolume(e), 0);
+  const volLastSame = entries.filter(e => inRange(e.date, lastMonday, idx+1)).reduce((a,e) => a + entryVolume(e), 0);
+  let volCmp = '';
+  if(volLastSame > 0 && volThis > 0){
+    const d = (volThis - volLastSame) / volLastSame * 100;
+    volCmp = ` <span class="${d >= 0 ? 'dash-up' : 'dash-down'}">${d >= 0 ? '+' : ''}${d.toFixed(0)} %</span>`;
+  }
+  const pct = Math.min(100, Math.round((ws.sessionsRatio || 0) * 100));
+  weekEl.innerHTML = `
+    <div class="dash-row"><span><strong>${ws.completedCount ?? 0}/${ws.totalCount ?? 0}</strong> pass</span><span class="dash-tag ${ws.pacingClass || 'ontrack'}">${ws.pacingText || '–'}</span></div>
+    <div class="dash-bar"><div style="width:${pct}%"></div></div>
+    <div class="dash-row"><span>Löpning</span><span><strong>${(ws.kmDone || 0).toFixed(1)}</strong> / ${ws.kmTarget ?? 0} km</span></div>
+    <div class="dash-row"><span>Styrkevolym</span><span><strong>${Math.round(volThis).toLocaleString('sv-SE')}</strong> kg${volCmp}</span></div>
+    ${volLastSame > 0 ? '<div class="dash-empty" style="font-size:11px;">Jämfört med förra veckan vid samma veckodag.</div>' : ''}`;
+
+  // --- Utveckling: senaste rekord + trend ---
+  const byEx = {};
+  [...entries].filter(e => e.sets && e.sets.length).sort((a,b) => a.date.localeCompare(b.date)).forEach(e => (byEx[e.exercise] = byEx[e.exercise] || []).push(e));
+  const records = [];
+  Object.entries(byEx).forEach(([name, list]) => {
+    let best = 0, first = true;
+    list.forEach(e => {
+      const b = Math.max(...e.sets.map(st => estimated1RMForSet(e, st)));
+      if(b > best + 0.05){
+        if(!first){
+          const top = e.sets.reduce((x, st) => estimated1RMForSet(e, st) > estimated1RMForSet(e, x) ? st : x, e.sets[0]);
+          records.push({ name, date: e.date, w: effectiveWeight(e, top), r: top.reps });
+        }
+        best = b;
+      }
+      first = false;
+    });
+  });
+  records.sort((a,b) => b.date.localeCompare(a.date));
+  const prHtml = records.slice(0,3).map(r => `🏆 ${r.name}: <strong style="color:var(--text)">${Math.round(r.w*10)/10} kg × ${r.r}</strong> <span>· ${fmtDate(r.date)}</span>`).join('<br>');
+
+  const wk = 7*86400000, now = Date.now();
+  const mains = [...new Set(Object.values(PLAN).flat().map(x => x.name))].filter(n => exerciseClass(n) === 'heavy' && byEx[n]);
+  let up = 0, compared = 0;
+  mains.forEach(n => {
+    const bestIn = (a, b) => Math.max(0, ...byEx[n].filter(e => { const t = new Date(e.date+'T12:00:00').getTime(); return t > now - a && t <= now - b; }).flatMap(e => e.sets.map(st => estimated1RMForSet(e, st))));
+    const rec = bestIn(8*wk, 0), prev = bestIn(16*wk, 8*wk);
+    if(rec && prev){ compared++; if(rec >= prev) up++; }
+  });
+  const trendHtml = compared
+    ? `<div class="dash-row" style="margin-top:6px;"><span>e1RM senaste 8 v</span><span><strong>${up}/${compared}</strong> huvudövningar <span class="${up/compared >= 0.5 ? 'dash-up' : 'dash-down'}">${up/compared >= 0.5 ? '↑' : '↓'}</span></span></div>`
+    : '<div class="dash-empty" style="margin-top:6px;">Trend visas när det finns minst 8 veckors historik.</div>';
+  progEl.innerHTML = (prHtml ? `<div class="dash-pr">${prHtml}</div>` : '<div class="dash-empty">Inga personbästan ännu. De dyker upp här när du slår ett tidigare resultat.</div>') + trendHtml;
+}
+
 let quickLogRenderToken = 0;
 function formatLastSets(entry){
   if(!entry || !entry.sets || !entry.sets.length) return '';
@@ -4359,6 +4646,7 @@ function progressionSuggestion(ex,lastEntry){
   return `Förslag idag: behåll ${w} kg och bygg mot ${range.max} reps i alla set`;
 }
 async function renderQuickLogForm(){
+  await flushQuickDraft();
   const myToken = ++quickLogRenderToken;
   document.getElementById('quickLogDayLabel').textContent = currentDay;
   const exercises = PLAN[currentDay] || [];
@@ -4411,15 +4699,29 @@ async function renderQuickLogForm(){
       ${supersetTag}
       <div class="ss-slot"></div>
       <div class="quick-set-rows">${rowsHtml}</div>
-      <button class="quick-add-set-btn" type="button">+ Set</button>
+      <div class="quick-set-actions"><button class="quick-add-set-btn" type="button">+ Set</button><button class="quick-remove-set-btn" type="button">− Set</button></div>
       <input type="text" class="quick-note-input" placeholder="Kommentar (valfritt)">
     `;
     container.appendChild(block);
   });
   renderSupersetSuggestions();
+  try{ await restoreQuickDraft(myToken); }catch(err){ console.error('Utkast kunde inte återställas:', err); }
+  document.querySelectorAll('#quickLogExercises .quick-ex-block').forEach(updateRemoveSetButtons);
 }
 
 document.getElementById('quickLogExercises').addEventListener('click', (e) => {
+  if(e.target.closest('.quick-set-done-btn, .quick-copy-set-btn, .quick-add-set-btn, .quick-remove-set-btn, .ss-activate-btn')) setTimeout(markQuickDirty, 0);
+  const removeBtn = e.target.closest('.quick-remove-set-btn');
+  if(removeBtn){
+    const blk = removeBtn.closest('.quick-ex-block');
+    const rows = blk.querySelectorAll('.quick-set-row');
+    if(rows.length <= 1) return;
+    const last = rows[rows.length - 1];
+    if(last.classList.contains('done') && !confirm('Sista setet är redan avbockat. Ta bort det ändå?')) return;
+    last.remove();
+    updateRemoveSetButtons(blk);
+    return;
+  }
   const swapBtn = e.target.closest('.swap-ex-btn');
   if(swapBtn){ openSwap(swapBtn.closest('.quick-ex-block')); return; }
   if(e.target.classList.contains('quick-set-done-btn')){
@@ -4464,6 +4766,7 @@ document.getElementById('quickLogExercises').addEventListener('click', (e) => {
     <button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button>
   `;
   rowsWrap.appendChild(row);
+  updateRemoveSetButtons(block);
 });
 
 document.getElementById('quickSaveBtn').onclick = async () => {
@@ -4539,6 +4842,7 @@ document.getElementById('quickSaveBtn').onclick = async () => {
     try{ showSessionSummary(toSave, priorEntries, prExercises, bwValue); }catch(err){ console.error('Sammanfattning misslyckades:', err); }
   }
   quickSessionStart = null;
+  if(failedCount === 0 && savedCount > 0){ await discardQuickDraft(currentDay, false); }
 
   if(failedCount === 0){
     btn.textContent = 'Sparat ✓';
