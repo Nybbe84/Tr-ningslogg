@@ -1,5 +1,5 @@
 // Träningslogg service worker. Höj VERSION vid varje ny release.
-const VERSION = 'traningslogg-v1.4.0';
+const VERSION = 'traningslogg-v1.4.1';
 const APP_SHELL = ['./','./index.html','./manifest.webmanifest','./icons/apple-touch-icon.png','./icons/icon-192.png','./icons/icon-512.png','./icons/icon-maskable-512.png'];
 const CDN_HOSTS = ['cdnjs.cloudflare.com','fonts.googleapis.com','fonts.gstatic.com'];
 self.addEventListener('install', e => {
