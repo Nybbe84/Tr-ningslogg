@@ -1657,7 +1657,7 @@
       <div class="form-error" id="dataBackupError" style="display:none;"></div>
       <div class="chart-note" id="dataBackupStatus"></div>
       <div class="chart-note" id="lastBackupLabel" style="margin-top:8px;"></div>
-      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 1.5.0</div>
+      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 1.5.1</div>
     </div>
   </div>
 </div>
@@ -1667,7 +1667,7 @@
 <div class="exercise-swap-modal" id="sessionSummaryModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 class="summary-head" id="summaryTitle">Pass klart ✓</h2><button class="swap-close" id="summaryClose">×</button></div><div class="summary-stats" id="summaryStats"></div><div id="summaryBody"></div><button class="btn" id="summaryOk" style="margin-top:14px;">Klar</button></div></div>
 <div class="exercise-swap-modal" id="exerciseSwapModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 id="swapTitle">Byt övning</h2><button class="swap-close" id="swapClose">×</button></div><input id="swapSearch" type="search" placeholder="Sök bland alla övningar..." style="margin-top:12px"><div id="swapRecommendedWrap"><div class="swap-section">Rekommenderade alternativ</div><div class="swap-list" id="swapRecommended"></div></div><div class="swap-section">Alla matchningar</div><div class="swap-list" id="swapResults"></div><div id="swapConfirm" style="display:none"><div class="chart-note" id="swapConfirmText" style="margin-top:14px"></div><div class="swap-actions"><button class="btn" id="swapToday">Bara idag</button><button class="btn secondary" id="swapPermanent">Gör permanent</button></div></div></div></div>
 <script>
-const APP_VERSION = '1.5.0';
+const APP_VERSION = '1.5.1';
 // ---------- FRISTÅENDE LOKAL LAGRING ----------
 // IndexedDB används primärt. localStorage används som reserv.
 const STORAGE_PREFIX = 'traningslogg:';
@@ -1905,7 +1905,7 @@ const DEFAULT_PLAN = {
     {name:"Hammarcurl", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60}
   ],
   "Ben": [
-    {name:"Knäböj", sets:4, reps:"6-8", kg:"", bodyweight:false, rest:150},
+    {name:"Hack squat", sets:4, reps:"8-12", kg:"", bodyweight:false, rest:120},
     {name:"Rumänsk marklyft", sets:3, reps:"8-10", kg:"", bodyweight:false, rest:120},
     {name:"Benspark", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
     {name:"Liggande lårcurl", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
@@ -1922,8 +1922,8 @@ const DEFAULT_PLAN = {
     {name:"Russian twist", sets:3, reps:"15-20 per sida", kg:"", bodyweight:true, rest:45}
   ],
   "Lower": [
-    {name:"Höftlyft", sets:4, reps:"8-10", kg:"", bodyweight:false, rest:120},
-    {name:"Benpress", sets:4, reps:"10-12", kg:"", bodyweight:false, rest:90},
+    {name:"Benpress", sets:4, reps:"8-12", kg:"", bodyweight:false, rest:120},
+    {name:"Höftlyft", sets:4, reps:"8-12", kg:"", bodyweight:false, rest:120},
     {name:"Utfallssteg", sets:3, reps:"10-12 per ben", kg:"", bodyweight:false, rest:90},
     {name:"Bulgarian split squat", sets:3, reps:"10-12 per ben", kg:"", bodyweight:false, rest:90},
     {name:"Sittande lårcurl", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60, supersetWith:"Stående vadlyft"},
@@ -2455,6 +2455,57 @@ async function applyHypertrophyUXMigration(){
  tune('Upper','Lutande skivstångspress',{reps:'6-10'});tune('Upper','Kabeldrag',{reps:'8-12'});tune('Upper','Militärpress',{reps:'8-12'});tune('Upper','Reverse pec-deck',{reps:'12-20'});
  tune('Lower','Benpress',{reps:'8-12',rest:120});tune('Lower','Höftlyft',{reps:'8-12'});tune('Lower','Sittande lårcurl',{reps:'10-15'});tune('Lower','Stående vadlyft',{reps:'10-20'});
  rebuildProgramFromPlan();await savePlanConfig();resolvedWeekCache.clear();try{await window.storage.set(K,'done')}catch(e){}
+}
+
+async function applyHackSquatAndLegPressMigration(){
+  const FLAG_KEY = 'migration:v11-hack-squat-leg-press';
+  try{
+    const res = await window.storage.get(FLAG_KEY);
+    if(res && res.value === 'done') return;
+  }catch(e){}
+
+  let changed = false;
+  const replace = (cat, names, fields) => {
+    const list = PLAN[cat] || [];
+    const i = list.findIndex(ex => names.includes(ex.name));
+    if(i < 0) return;
+    const old = list[i];
+    list[i] = {
+      ...old,
+      ...fields,
+      aliases: [...new Set([...(old.aliases || []), old.name].filter(n => n !== fields.name))]
+    };
+    changed = true;
+  };
+  const tune = (cat, name, fields) => {
+    const ex = (PLAN[cat] || []).find(e => e.name === name);
+    if(ex){ Object.assign(ex, fields); changed = true; }
+  };
+  const moveFirst = (cat, name) => {
+    const list = PLAN[cat] || [];
+    const i = list.findIndex(e => e.name === name);
+    if(i > 0){ const [ex] = list.splice(i, 1); list.unshift(ex); changed = true; }
+  };
+
+  // Ben: Hack squat replaces free barbell squat as the main hypertrophy lift.
+  replace('Ben', ['Knäböj', 'Knäböj (skivstång)'], {
+    name: 'Hack squat', sets: 4, reps: '8-12', kg: '', bodyweight: false,
+    rest: 120, kgResetDate: todayStr()
+  });
+  tune('Ben', 'Hack squat', { sets: 4, reps: '8-12', rest: 120 });
+  moveFirst('Ben', 'Hack squat');
+
+  // Lower: Leg press leads the session, followed by hip thrust.
+  tune('Lower', 'Benpress', { sets: 4, reps: '8-12', rest: 120 });
+  tune('Lower', 'Höftlyft', { sets: 4, reps: '8-12', rest: 120 });
+  moveFirst('Lower', 'Benpress');
+
+  if(changed){
+    rebuildProgramFromPlan();
+    await savePlanConfig();
+    resolvedWeekCache.clear();
+  }
+  try{ await window.storage.set(FLAG_KEY, 'done'); }catch(e){}
 }
 
 async function savePlanConfig(){
@@ -3745,6 +3796,7 @@ const LIBRARY = {
     { name: "Frontböj", desc: "Mer upprätt hållning ger större fokus på quadriceps och bålstabilitet." },
     { name: "Benspark (leg extension)", desc: "Isolationsövning för quadriceps — bra komplement till tunga baslyft." },
     { name: "Bulgarian split squat", desc: "Enbensövning som bygger styrka och balans, ofta skonsammare mot ryggen." },
+    { name: "Hack squat", desc: "Guidad knäböjsvariant med ryggstöd. Stabil rörelse som gör det lättare att belasta quadriceps nära failure med mindre krav på balans och bål." },
     { name: "Hack squat (maskin)", desc: "Guidad rörelse som tillåter tunga vikter med mindre krav på balans." }
   ],
   "Baksida lår & säte": [
@@ -6630,6 +6682,7 @@ document.getElementById('weekTodayBtn').onclick = () => navigateWeek(0, true);
   await applyBackReliefMigration();
   await applyRepRangeTuneMigration();
   await applyHypertrophyUXMigration();
+    await applyHackSquatAndLegPressMigration();
   const todaysPlan = SCHEDULE[todayIndex()];
   if(todaysPlan.mode === 'strength'){ currentDay = todaysPlan.label; }
   viewedWeekMonday = getMondayOfCurrentWeek();
