@@ -1636,7 +1636,7 @@
       <div class="form-error" id="dataBackupError" style="display:none;"></div>
       <div class="chart-note" id="dataBackupStatus"></div>
       <div class="chart-note" id="lastBackupLabel" style="margin-top:8px;"></div>
-      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 1.4.2</div>
+      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 1.4.3</div>
     </div>
   </div>
 </div>
@@ -1646,7 +1646,7 @@
 <div class="exercise-swap-modal" id="sessionSummaryModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 class="summary-head" id="summaryTitle">Pass klart ✓</h2><button class="swap-close" id="summaryClose">×</button></div><div class="summary-stats" id="summaryStats"></div><div id="summaryBody"></div><button class="btn" id="summaryOk" style="margin-top:14px;">Klar</button></div></div>
 <div class="exercise-swap-modal" id="exerciseSwapModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 id="swapTitle">Byt övning</h2><button class="swap-close" id="swapClose">×</button></div><input id="swapSearch" type="search" placeholder="Sök bland alla övningar..." style="margin-top:12px"><div id="swapRecommendedWrap"><div class="swap-section">Rekommenderade alternativ</div><div class="swap-list" id="swapRecommended"></div></div><div class="swap-section">Alla matchningar</div><div class="swap-list" id="swapResults"></div><div id="swapConfirm" style="display:none"><div class="chart-note" id="swapConfirmText" style="margin-top:14px"></div><div class="swap-actions"><button class="btn" id="swapToday">Bara idag</button><button class="btn secondary" id="swapPermanent">Gör permanent</button></div></div></div></div>
 <script>
-const APP_VERSION = '1.4.2';
+const APP_VERSION = '1.4.3';
 // ---------- FRISTÅENDE LOKAL LAGRING ----------
 // IndexedDB används primärt. localStorage används som reserv.
 const STORAGE_PREFIX = 'traningslogg:';
@@ -1866,47 +1866,47 @@ async function downloadPendingQueue(){
 
 const DEFAULT_PLAN = {
   "Push": [
-    {name:"Bänkpress", sets:4, reps:"6-8", kg:72.5, bodyweight:false, rest:120},
-    {name:"Hantelpress axlar", sets:3, reps:"8-10", kg:17.5, bodyweight:false, rest:90},
+    {name:"Smith-bänkpress", sets:4, reps:"6-10", kg:"", bodyweight:false, rest:120},
+    {name:"Hantelpress axlar", sets:3, reps:"8-12", kg:17.5, bodyweight:false, rest:90},
     {name:"Lutande hantelpress", sets:3, reps:"10-12", kg:17.5, bodyweight:false, rest:90},
-    {name:"Sidolyft", sets:3, reps:"12-15", kg:6, bodyweight:false, rest:60, supersetWith:"Triceps pushdown"},
-    {name:"Triceps pushdown", sets:3, reps:"12-15", kg:27.5, bodyweight:false, rest:60, supersetWith:"Sidolyft"},
+    {name:"Sidolyft", sets:3, reps:"12-20", kg:6, bodyweight:false, rest:60, supersetWith:"Triceps pushdown"},
+    {name:"Triceps pushdown", sets:3, reps:"10-15", kg:27.5, bodyweight:false, rest:60, supersetWith:"Sidolyft"},
     {name:"Dips", sets:3, reps:"8-12", kg:"", bodyweight:true, rest:90},
     {name:"Cable crunch", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
     {name:"Russian twist", sets:3, reps:"15-20 per sida", kg:"", bodyweight:true, rest:45}
   ],
   "Pull": [
-    {name:"Marklyft", sets:4, reps:"5-6", kg:"", bodyweight:false, rest:150},
-    {name:"Chins/latsdrag", sets:4, reps:"8-10", kg:"", bodyweight:true, rest:90},
-    {name:"Stående rodd", sets:3, reps:"8-10", kg:"", bodyweight:false, rest:90},
-    {name:"Facepulls", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60, supersetWith:"Hantelcurl"},
-    {name:"Hantelcurl", sets:3, reps:"10-12", kg:"", bodyweight:false, rest:60, supersetWith:"Facepulls"},
-    {name:"Hammarcurl", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60}
+    {name:"Marklyft", sets:3, reps:"5-6", kg:"", bodyweight:false, rest:150},
+    {name:"Chins/latsdrag", sets:4, reps:"8-12", kg:"", bodyweight:true, rest:90},
+    {name:"Sälrodd", sets:3, reps:"8-12", kg:"", bodyweight:false, rest:90},
+    {name:"Facepulls", sets:3, reps:"12-20", kg:"", bodyweight:false, rest:60, supersetWith:"Hantelcurl"},
+    {name:"Hantelcurl", sets:3, reps:"10-15", kg:"", bodyweight:false, rest:60, supersetWith:"Facepulls"},
+    {name:"Hammarcurl", sets:3, reps:"10-15", kg:"", bodyweight:false, rest:60}
   ],
   "Ben": [
-    {name:"Knäböj", sets:4, reps:"6-8", kg:"", bodyweight:false, rest:150},
-    {name:"Rumänsk marklyft", sets:3, reps:"8-10", kg:"", bodyweight:false, rest:120},
-    {name:"Benspark", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
-    {name:"Liggande lårcurl", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
-    {name:"Vadpress", sets:4, reps:"12-15", kg:"", bodyweight:false, rest:60}
+    {name:"Knäböj", sets:4, reps:"6-10", kg:"", bodyweight:false, rest:150},
+    {name:"Rumänsk marklyft", sets:3, reps:"8-12", kg:"", bodyweight:false, rest:120},
+    {name:"Benspark", sets:3, reps:"10-15", kg:"", bodyweight:false, rest:60},
+    {name:"Liggande lårcurl", sets:3, reps:"10-15", kg:"", bodyweight:false, rest:60},
+    {name:"Vadpress", sets:4, reps:"10-20", kg:"", bodyweight:false, rest:60}
   ],
   "Upper": [
-    {name:"Lutande skivstångspress", sets:4, reps:"6-8", kg:"", bodyweight:false, rest:120},
-    {name:"Kabeldrag", sets:3, reps:"10-12", kg:"", bodyweight:false, rest:60},
-    {name:"Militärpress", sets:3, reps:"8-10", kg:"", bodyweight:false, rest:90},
-    {name:"Cross-over/flyes", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
-    {name:"Reverse pec-deck", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
+    {name:"Lutande skivstångspress", sets:4, reps:"6-10", kg:"", bodyweight:false, rest:120},
+    {name:"Kabeldrag", sets:3, reps:"8-12", kg:"", bodyweight:false, rest:75},
+    {name:"Militärpress", sets:3, reps:"8-12", kg:"", bodyweight:false, rest:90},
+    {name:"Cross-over/flyes", sets:3, reps:"10-15", kg:"", bodyweight:false, rest:60},
+    {name:"Reverse pec-deck", sets:3, reps:"12-20", kg:"", bodyweight:false, rest:60},
     {name:"Triceps/biceps superset", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
     {name:"Cable crunch", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
     {name:"Russian twist", sets:3, reps:"15-20 per sida", kg:"", bodyweight:true, rest:45}
   ],
   "Lower": [
-    {name:"Höftlyft", sets:4, reps:"8-10", kg:"", bodyweight:false, rest:120},
-    {name:"Benpress", sets:4, reps:"10-12", kg:"", bodyweight:false, rest:90},
+    {name:"Höftlyft", sets:4, reps:"8-12", kg:"", bodyweight:false, rest:120},
+    {name:"Benpress", sets:4, reps:"8-12", kg:"", bodyweight:false, rest:120},
     {name:"Utfallssteg", sets:3, reps:"10-12 per ben", kg:"", bodyweight:false, rest:90},
     {name:"Bulgarian split squat", sets:3, reps:"10-12 per ben", kg:"", bodyweight:false, rest:90},
-    {name:"Sittande lårcurl", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60, supersetWith:"Stående vadlyft"},
-    {name:"Stående vadlyft", sets:4, reps:"15-20", kg:"", bodyweight:true, rest:60, supersetWith:"Sittande lårcurl"},
+    {name:"Sittande lårcurl", sets:3, reps:"10-15", kg:"", bodyweight:false, rest:60, supersetWith:"Stående vadlyft"},
+    {name:"Stående vadlyft", sets:4, reps:"10-20", kg:"", bodyweight:true, rest:60, supersetWith:"Sittande lårcurl"},
     {name:"Plankan", sets:3, reps:"30-45 sek", kg:"", bodyweight:true, rest:45}
   ]
 };
@@ -2420,6 +2420,86 @@ async function applyRepRangeTuneMigration(){
     rebuildProgramFromPlan();
     await savePlanConfig();
   }
+  try{ await window.storage.set(FLAG_KEY, 'done'); }catch(e){}
+}
+
+async function applyHypertrophyPlanMigration(){
+  const FLAG_KEY = 'migration:v10-hypertrophy-plan';
+  try{
+    const res = await window.storage.get(FLAG_KEY);
+    if(res && res.value === 'done') return;
+  }catch(e){}
+
+  const replaceExercise = (cat, oldNames, replacement) => {
+    if(!PLAN[cat]) return;
+    const names = Array.isArray(oldNames) ? oldNames : [oldNames];
+    const i = PLAN[cat].findIndex(e => names.includes(e.name));
+    if(i === -1) return;
+    const old = PLAN[cat][i];
+    PLAN[cat][i] = { ...old, ...replacement, aliases: [...new Set([...(old.aliases || []), old.name].filter(n => n !== replacement.name))] };
+  };
+  const tune = (cat, name, fields) => {
+    const ex = PLAN[cat] && PLAN[cat].find(e => e.name === name);
+    if(ex) Object.assign(ex, fields);
+  };
+  const moveBefore = (cat, name, before) => {
+    if(!PLAN[cat]) return;
+    const a = PLAN[cat].findIndex(e => e.name === name), b = PLAN[cat].findIndex(e => e.name === before);
+    if(a < 0 || b < 0 || a < b) return;
+    const [item] = PLAN[cat].splice(a, 1);
+    PLAN[cat].splice(PLAN[cat].findIndex(e => e.name === before), 0, item);
+  };
+
+  // Push: prioritera stabil bröstpress och fler hypertrofivänliga repintervall.
+  replaceExercise('Push', ['Bänkpress','Bänkpress (skivstång)'], { name:'Smith-bänkpress', sets:4, reps:'6-10', kg:'', bodyweight:false, rest:120, kgResetDate:todayStr() });
+  tune('Push','Hantelpress axlar',{reps:'8-12'});
+  tune('Push','Lutande hantelpress',{reps:'8-12'});
+  tune('Push','Dips',{sets:3,reps:'8-12'});
+  tune('Push','Sidolyft',{reps:'12-20'});
+  tune('Push','Triceps pushdown',{reps:'10-15'});
+  moveBefore('Push','Dips','Sidolyft');
+
+  // Pull: mindre styrkespecifik marklyftsvolym, mer muskelvänliga drag/curls.
+  tune('Pull','Marklyft',{sets:3,reps:'5-6'});
+  tune('Pull','Chins/latsdrag',{reps:'8-12'});
+  replaceExercise('Pull', ['Stående rodd','Bröststödd hantelrodd'], { name:'Sälrodd', sets:3, reps:'8-12', kg:'', bodyweight:false, rest:90, kgResetDate:todayStr() });
+  tune('Pull','Sälrodd',{reps:'8-12'});
+  tune('Pull','Facepulls',{reps:'12-20'});
+  tune('Pull','Hantelcurl',{reps:'10-15'});
+  tune('Pull','Hammarcurl',{reps:'10-15'});
+
+  // Ben: behåll avlastande Hack squat om den redan finns; annars knäböj.
+  tune('Ben','Knäböj',{reps:'6-10'});
+  tune('Ben','Hack squat',{reps:'8-12'});
+  tune('Ben','Rumänsk marklyft',{reps:'8-12'});
+  tune('Ben','Liggande lårcurl',{reps:'10-15'});
+  tune('Ben','Benspark',{reps:'10-15'});
+  tune('Ben','Vadpress',{reps:'10-20'});
+  moveBefore('Ben','Liggande lårcurl','Benspark');
+
+  // Upper: press/drag alterneras, sedan isolationsarbete.
+  tune('Upper','Lutande skivstångspress',{reps:'6-10'});
+  tune('Upper','Kabeldrag',{reps:'8-12',rest:75});
+  tune('Upper','Militärpress',{reps:'8-12'});
+  tune('Upper','Maskinflyes',{reps:'10-15'});
+  tune('Upper','Cross-over/flyes',{reps:'10-15'});
+  tune('Upper','Reverse pec-deck',{reps:'12-20'});
+  if(PLAN.Upper && PLAN.Upper.some(e=>e.name==='Maskinflyes')) moveBefore('Upper','Reverse pec-deck','Maskinflyes');
+  else moveBefore('Upper','Reverse pec-deck','Cross-over/flyes');
+
+  // Lower: tung knädominant övning först, sedan höftdominant och unilateral träning.
+  tune('Lower','Benpress',{reps:'8-12',rest:120});
+  tune('Lower','Höftlyft',{reps:'8-12'});
+  tune('Lower','Bulgarian split squat',{reps:'10-12 per ben'});
+  tune('Lower','Utfallssteg',{reps:'10-12 per ben'});
+  tune('Lower','Sittande lårcurl',{reps:'10-15'});
+  tune('Lower','Stående vadlyft',{reps:'10-20'});
+  moveBefore('Lower','Benpress','Höftlyft');
+  moveBefore('Lower','Bulgarian split squat','Utfallssteg');
+
+  rebuildProgramFromPlan();
+  await savePlanConfig();
+  resolvedWeekCache.clear();
   try{ await window.storage.set(FLAG_KEY, 'done'); }catch(e){}
 }
 
@@ -3680,6 +3760,8 @@ document.getElementById('addCategoryBtn').onclick = async () => {
 // ---------- EXERCISE LIBRARY ----------
 const LIBRARY = {
   "Bröst": [
+    { name: "Smith-bänkpress", desc: "Stabil bröstpress i Smith-maskin. Den guidade banan minskar balanskravet och gör det lätt att träna nära failure med bröstet som begränsande muskel." },
+    { name: "Lutande Smith-bänkpress", desc: "Smith-press med bänken lätt lutad, cirka 30 grader. Stabil variant för övre bröstet med låg balansbegränsning." },
     { name: "Bänkpress (skivstång)", desc: "Klassiskt baslyft för bröst, främre axlar och triceps. Sänk stången kontrollerat till bröstet och pressa upp explosivt." },
     { name: "Hantelpress", desc: "Som bänkpress men med hantlar — större rörelseomfång och mer träning av stabiliserande muskler." },
     { name: "Lutande bänkpress", desc: "Bänken lutas 30–45 grader för att lägga extra fokus på övre bröstet." },
@@ -6574,6 +6656,7 @@ document.getElementById('weekTodayBtn').onclick = () => navigateWeek(0, true);
   await repairScheduleLabels();
   await applyBackReliefMigration();
   await applyRepRangeTuneMigration();
+  await applyHypertrophyPlanMigration();
   const todaysPlan = SCHEDULE[todayIndex()];
   if(todaysPlan.mode === 'strength'){ currentDay = todaysPlan.label; }
   viewedWeekMonday = getMondayOfCurrentWeek();
