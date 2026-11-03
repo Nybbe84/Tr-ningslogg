@@ -1252,6 +1252,23 @@
 .warm-panel .muted{color:var(--muted);font-size:11px}
 .warm-plates{color:var(--muted)}
 .dash-close{background:none;border:none;color:var(--muted);font-size:16px;float:right;cursor:pointer;padding:0 2px}
+
+/* v1.5 UX */
+.bottom-nav-btn.home.active .bnav-label{color:var(--good)}
+.bottom-nav-btn.more.active .bnav-label{color:var(--settings)}
+.home-greeting{font:700 30px 'Barlow Condensed',sans-serif;margin:4px 2px 10px;color:var(--text)}
+.home-draft{background:linear-gradient(135deg,var(--accent),#b93c14);color:#fff;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 8px 24px #0005}
+.home-draft strong{display:block;font:700 23px 'Barlow Condensed',sans-serif}.home-draft button{width:100%;margin-top:10px;border:0;border-radius:9px;padding:11px;background:#fff;color:#17191d;font-weight:800}
+.more-grid{display:grid;gap:10px}.more-link{display:grid;grid-template-columns:42px 1fr;column-gap:10px;text-align:left;align-items:center;background:var(--panel-2);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:14px}.more-link span{font-size:25px;grid-row:1/3}.more-link strong{font-size:15px}.more-link small{color:var(--muted)}
+.quick-set-done-btn{width:46px!important;height:46px!important;flex:0 0 46px!important;font-size:21px!important;border-radius:13px!important}
+.quick-ex-block.current{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent-dim)}
+.quick-ex-block.current:before{content:'NU';display:inline-block;font-size:10px;font-weight:800;color:var(--accent);margin-bottom:5px;letter-spacing:.08em}
+.quick-ex-block.complete{padding:10px 12px;opacity:.9}.quick-ex-block.complete .quick-last,.quick-ex-block.complete .quick-progression,.quick-ex-block.complete .superset-tag,.quick-ex-block.complete .ss-slot,.quick-ex-block.complete .warm-slot,.quick-ex-block.complete .quick-set-rows,.quick-ex-block.complete .quick-set-actions,.quick-ex-block.complete .quick-note-input,.quick-ex-block.complete .swap-ex-btn{display:none!important}
+.quick-ex-block.complete .quick-ex-header{margin:0}.quick-ex-block.complete .quick-ex-name:before{content:'✓ ';color:var(--good)}.quick-ex-block.complete .quick-ex-name:after{content:' · klart';color:var(--muted);font-size:12px}.quick-ex-block.complete.expanded .quick-last,.quick-ex-block.complete.expanded .quick-progression,.quick-ex-block.complete.expanded .superset-tag,.quick-ex-block.complete.expanded .ss-slot,.quick-ex-block.complete.expanded .warm-slot,.quick-ex-block.complete.expanded .quick-set-rows,.quick-ex-block.complete.expanded .quick-set-actions,.quick-ex-block.complete.expanded .quick-note-input,.quick-ex-block.complete.expanded .swap-ex-btn{display:initial!important}
+.quick-ex-block.complete.expanded{padding:14px}
+.workout-head{position:sticky;top:calc(env(safe-area-inset-top,0px) + 4px);z-index:80;background:rgba(24,26,30,.96);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:10px 0;backdrop-filter:blur(10px)}.workout-head>div:first-child{display:flex;justify-content:space-between}.workout-head strong{font-size:14px}.workout-head span{font-size:12px;color:var(--muted)}.workout-count{text-align:right;font-size:12px;color:var(--muted);margin-top:3px}.workout-bar{height:5px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:5px}.workout-bar div{height:100%;background:var(--accent);width:0}.workout-now{font-size:12px;color:var(--accent);font-weight:700;margin-top:5px}
+.qrest{border-radius:15px!important;max-width:calc(100vw - 20px);flex-wrap:wrap;justify-content:center}.qrest-copy{display:flex;flex-direction:column;min-width:100px}.qrest-next{font-size:10px;color:var(--muted);max-width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.qrest #qrestStop{min-width:84px}
+.quick-tools{position:relative}.quick-more-btn{border:1px solid var(--line);background:var(--panel-2);color:var(--muted);border-radius:18px;min-width:38px;height:34px;font-weight:800}.quick-tools-menu{display:none;position:absolute;right:0;top:38px;z-index:50;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px;min-width:150px;box-shadow:0 8px 25px #0009}.quick-tools.open .quick-tools-menu{display:flex;flex-direction:column;gap:4px}.quick-tools-menu button{border:0;background:var(--panel-2);color:var(--text);border-radius:8px;padding:9px;text-align:left;font-weight:700}
 </style>
 </head>
 <body>
@@ -1279,21 +1296,11 @@
   </div>
 
   <nav class="bottom-nav">
-    <button class="bottom-nav-btn strength active" id="modeStrengthBtn">
-      <span class="bnav-icon">🏋️</span><span class="bnav-label">Styrka</span>
-    </button>
-    <button class="bottom-nav-btn run" id="modeRunBtn">
-      <span class="bnav-icon">🏃</span><span class="bnav-label">Löpning</span>
-    </button>
-    <button class="bottom-nav-btn stats" id="modeStatsBtn">
-      <span class="bnav-icon">📊</span><span class="bnav-label">Statistik</span>
-    </button>
-    <button class="bottom-nav-btn library" id="modeLibraryBtn">
-      <span class="bnav-icon">📚</span><span class="bnav-label">Bibliotek</span>
-    </button>
-    <button class="bottom-nav-btn settings" id="modeSettingsBtn">
-      <span class="bnav-icon">⚙️</span><span class="bnav-label">Inst.</span>
-    </button>
+    <button class="bottom-nav-btn home active" id="modeHomeBtn"><span class="bnav-icon">⌂</span><span class="bnav-label">Hem</span></button>
+    <button class="bottom-nav-btn strength" id="modeStrengthBtn"><span class="bnav-icon">🏋️</span><span class="bnav-label">Styrka</span></button>
+    <button class="bottom-nav-btn run" id="modeRunBtn"><span class="bnav-icon">🏃</span><span class="bnav-label">Löpning</span></button>
+    <button class="bottom-nav-btn stats" id="modeStatsBtn"><span class="bnav-icon">📊</span><span class="bnav-label">Statistik</span></button>
+    <button class="bottom-nav-btn more" id="modeMoreBtn"><span class="bnav-icon">•••</span><span class="bnav-label">Mer</span></button>
   </nav>
 
   <div class="pending-banner" id="pendingBanner" style="display:none;">
@@ -1307,6 +1314,9 @@
     </div>
   </div>
 
+  <div class="view active" id="homeView">
+  <div class="home-greeting" id="homeGreeting">God eftermiddag</div>
+  <div class="home-draft" id="homeDraft" style="display:none;"></div>
   <div class="card" id="todayCard">
     <div class="today-banner-inner" id="todayBanner">
       <div>
@@ -1351,8 +1361,10 @@
     </div>
   </div>
 
+  </div>
+
   <!-- STRENGTH VIEW -->
-  <div class="view active" id="strengthView">
+  <div class="view" id="strengthView">
     <div class="day-tabs" id="dayTabs"></div>
 
     <div class="mini-toggle">
@@ -1405,6 +1417,7 @@
       <label>Datum</label>
       <input type="date" id="quickLogDate">
       <div class="chart-note" style="margin-top:6px;">Förifyllt med planerade set och målvikt — justera det som avviker och spara hela passet på en gång. Lämna en övning tom om du inte körde den.</div>
+      <div class="workout-head" id="workoutHead"><div><strong id="workoutTitle">Pass pågår</strong><span id="workoutDuration">0 min</span></div><div class="workout-count" id="workoutCount">0/0 set</div><div class="workout-bar"><div id="workoutBarFill"></div></div><div class="workout-now" id="workoutNow"></div></div>
       <div class="draft-notice" id="draftNotice"></div>
       <div class="draft-notice" id="otherDraftNotice"></div>
       <div id="quickLogExercises" style="margin-top:14px;"></div>
@@ -1588,6 +1601,14 @@
     </div>
   </div>
 
+  <!-- MORE VIEW -->
+  <div class="view" id="moreView">
+    <div class="card"><h2>Mer</h2><div class="more-grid">
+      <button class="more-link" id="moreLibraryBtn"><span>📚</span><strong>Övningsbibliotek</strong><small>Sök och lägg till övningar</small></button>
+      <button class="more-link" id="moreSettingsBtn"><span>⚙️</span><strong>Inställningar</strong><small>Program, kategorier, faser och backup</small></button>
+    </div></div>
+  </div>
+
   <!-- LIBRARY VIEW -->
   <div class="view" id="libraryView">
     <div class="card">
@@ -1636,17 +1657,17 @@
       <div class="form-error" id="dataBackupError" style="display:none;"></div>
       <div class="chart-note" id="dataBackupStatus"></div>
       <div class="chart-note" id="lastBackupLabel" style="margin-top:8px;"></div>
-      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 1.4.3</div>
+      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 1.5.0</div>
     </div>
   </div>
 </div>
 
 
-<div class="qrest" id="qrest"><span class="qrest-label" id="qrestLabel">Vila</span><span class="qrest-time" id="qrestTime">0:00</span><button id="qrestMinus">−15</button><button id="qrestPlus">+15</button><button id="qrestStop">✕</button></div>
+<div class="qrest" id="qrest"><div class="qrest-copy"><span class="qrest-label" id="qrestLabel">Vila</span><span class="qrest-next" id="qrestNext"></span></div><span class="qrest-time" id="qrestTime">0:00</span><button id="qrestMinus">−15</button><button id="qrestPlus">+15</button><button id="qrestStop" aria-label="Hoppa över vila">Hoppa över</button></div>
 <div class="exercise-swap-modal" id="sessionSummaryModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 class="summary-head" id="summaryTitle">Pass klart ✓</h2><button class="swap-close" id="summaryClose">×</button></div><div class="summary-stats" id="summaryStats"></div><div id="summaryBody"></div><button class="btn" id="summaryOk" style="margin-top:14px;">Klar</button></div></div>
 <div class="exercise-swap-modal" id="exerciseSwapModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 id="swapTitle">Byt övning</h2><button class="swap-close" id="swapClose">×</button></div><input id="swapSearch" type="search" placeholder="Sök bland alla övningar..." style="margin-top:12px"><div id="swapRecommendedWrap"><div class="swap-section">Rekommenderade alternativ</div><div class="swap-list" id="swapRecommended"></div></div><div class="swap-section">Alla matchningar</div><div class="swap-list" id="swapResults"></div><div id="swapConfirm" style="display:none"><div class="chart-note" id="swapConfirmText" style="margin-top:14px"></div><div class="swap-actions"><button class="btn" id="swapToday">Bara idag</button><button class="btn secondary" id="swapPermanent">Gör permanent</button></div></div></div></div>
 <script>
-const APP_VERSION = '1.4.3';
+const APP_VERSION = '1.5.0';
 // ---------- FRISTÅENDE LOKAL LAGRING ----------
 // IndexedDB används primärt. localStorage används som reserv.
 const STORAGE_PREFIX = 'traningslogg:';
@@ -1866,47 +1887,47 @@ async function downloadPendingQueue(){
 
 const DEFAULT_PLAN = {
   "Push": [
-    {name:"Smith-bänkpress", sets:4, reps:"6-10", kg:"", bodyweight:false, rest:120},
-    {name:"Hantelpress axlar", sets:3, reps:"8-12", kg:17.5, bodyweight:false, rest:90},
+    {name:"Bänkpress", sets:4, reps:"6-8", kg:72.5, bodyweight:false, rest:120},
+    {name:"Hantelpress axlar", sets:3, reps:"8-10", kg:17.5, bodyweight:false, rest:90},
     {name:"Lutande hantelpress", sets:3, reps:"10-12", kg:17.5, bodyweight:false, rest:90},
-    {name:"Sidolyft", sets:3, reps:"12-20", kg:6, bodyweight:false, rest:60, supersetWith:"Triceps pushdown"},
-    {name:"Triceps pushdown", sets:3, reps:"10-15", kg:27.5, bodyweight:false, rest:60, supersetWith:"Sidolyft"},
+    {name:"Sidolyft", sets:3, reps:"12-15", kg:6, bodyweight:false, rest:60, supersetWith:"Triceps pushdown"},
+    {name:"Triceps pushdown", sets:3, reps:"12-15", kg:27.5, bodyweight:false, rest:60, supersetWith:"Sidolyft"},
     {name:"Dips", sets:3, reps:"8-12", kg:"", bodyweight:true, rest:90},
     {name:"Cable crunch", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
     {name:"Russian twist", sets:3, reps:"15-20 per sida", kg:"", bodyweight:true, rest:45}
   ],
   "Pull": [
-    {name:"Marklyft", sets:3, reps:"5-6", kg:"", bodyweight:false, rest:150},
-    {name:"Chins/latsdrag", sets:4, reps:"8-12", kg:"", bodyweight:true, rest:90},
-    {name:"Sälrodd", sets:3, reps:"8-12", kg:"", bodyweight:false, rest:90},
-    {name:"Facepulls", sets:3, reps:"12-20", kg:"", bodyweight:false, rest:60, supersetWith:"Hantelcurl"},
-    {name:"Hantelcurl", sets:3, reps:"10-15", kg:"", bodyweight:false, rest:60, supersetWith:"Facepulls"},
-    {name:"Hammarcurl", sets:3, reps:"10-15", kg:"", bodyweight:false, rest:60}
+    {name:"Marklyft", sets:4, reps:"5-6", kg:"", bodyweight:false, rest:150},
+    {name:"Chins/latsdrag", sets:4, reps:"8-10", kg:"", bodyweight:true, rest:90},
+    {name:"Stående rodd", sets:3, reps:"8-10", kg:"", bodyweight:false, rest:90},
+    {name:"Facepulls", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60, supersetWith:"Hantelcurl"},
+    {name:"Hantelcurl", sets:3, reps:"10-12", kg:"", bodyweight:false, rest:60, supersetWith:"Facepulls"},
+    {name:"Hammarcurl", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60}
   ],
   "Ben": [
-    {name:"Knäböj", sets:4, reps:"6-10", kg:"", bodyweight:false, rest:150},
-    {name:"Rumänsk marklyft", sets:3, reps:"8-12", kg:"", bodyweight:false, rest:120},
-    {name:"Benspark", sets:3, reps:"10-15", kg:"", bodyweight:false, rest:60},
-    {name:"Liggande lårcurl", sets:3, reps:"10-15", kg:"", bodyweight:false, rest:60},
-    {name:"Vadpress", sets:4, reps:"10-20", kg:"", bodyweight:false, rest:60}
+    {name:"Knäböj", sets:4, reps:"6-8", kg:"", bodyweight:false, rest:150},
+    {name:"Rumänsk marklyft", sets:3, reps:"8-10", kg:"", bodyweight:false, rest:120},
+    {name:"Benspark", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
+    {name:"Liggande lårcurl", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
+    {name:"Vadpress", sets:4, reps:"12-15", kg:"", bodyweight:false, rest:60}
   ],
   "Upper": [
-    {name:"Lutande skivstångspress", sets:4, reps:"6-10", kg:"", bodyweight:false, rest:120},
-    {name:"Kabeldrag", sets:3, reps:"8-12", kg:"", bodyweight:false, rest:75},
-    {name:"Militärpress", sets:3, reps:"8-12", kg:"", bodyweight:false, rest:90},
-    {name:"Cross-over/flyes", sets:3, reps:"10-15", kg:"", bodyweight:false, rest:60},
-    {name:"Reverse pec-deck", sets:3, reps:"12-20", kg:"", bodyweight:false, rest:60},
+    {name:"Lutande skivstångspress", sets:4, reps:"6-8", kg:"", bodyweight:false, rest:120},
+    {name:"Kabeldrag", sets:3, reps:"10-12", kg:"", bodyweight:false, rest:60},
+    {name:"Militärpress", sets:3, reps:"8-10", kg:"", bodyweight:false, rest:90},
+    {name:"Cross-over/flyes", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
+    {name:"Reverse pec-deck", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
     {name:"Triceps/biceps superset", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
     {name:"Cable crunch", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
     {name:"Russian twist", sets:3, reps:"15-20 per sida", kg:"", bodyweight:true, rest:45}
   ],
   "Lower": [
-    {name:"Höftlyft", sets:4, reps:"8-12", kg:"", bodyweight:false, rest:120},
-    {name:"Benpress", sets:4, reps:"8-12", kg:"", bodyweight:false, rest:120},
+    {name:"Höftlyft", sets:4, reps:"8-10", kg:"", bodyweight:false, rest:120},
+    {name:"Benpress", sets:4, reps:"10-12", kg:"", bodyweight:false, rest:90},
     {name:"Utfallssteg", sets:3, reps:"10-12 per ben", kg:"", bodyweight:false, rest:90},
     {name:"Bulgarian split squat", sets:3, reps:"10-12 per ben", kg:"", bodyweight:false, rest:90},
-    {name:"Sittande lårcurl", sets:3, reps:"10-15", kg:"", bodyweight:false, rest:60, supersetWith:"Stående vadlyft"},
-    {name:"Stående vadlyft", sets:4, reps:"10-20", kg:"", bodyweight:true, rest:60, supersetWith:"Sittande lårcurl"},
+    {name:"Sittande lårcurl", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60, supersetWith:"Stående vadlyft"},
+    {name:"Stående vadlyft", sets:4, reps:"15-20", kg:"", bodyweight:true, rest:60, supersetWith:"Sittande lårcurl"},
     {name:"Plankan", sets:3, reps:"30-45 sek", kg:"", bodyweight:true, rest:45}
   ]
 };
@@ -2423,84 +2444,17 @@ async function applyRepRangeTuneMigration(){
   try{ await window.storage.set(FLAG_KEY, 'done'); }catch(e){}
 }
 
-async function applyHypertrophyPlanMigration(){
-  const FLAG_KEY = 'migration:v10-hypertrophy-plan';
-  try{
-    const res = await window.storage.get(FLAG_KEY);
-    if(res && res.value === 'done') return;
-  }catch(e){}
-
-  const replaceExercise = (cat, oldNames, replacement) => {
-    if(!PLAN[cat]) return;
-    const names = Array.isArray(oldNames) ? oldNames : [oldNames];
-    const i = PLAN[cat].findIndex(e => names.includes(e.name));
-    if(i === -1) return;
-    const old = PLAN[cat][i];
-    PLAN[cat][i] = { ...old, ...replacement, aliases: [...new Set([...(old.aliases || []), old.name].filter(n => n !== replacement.name))] };
-  };
-  const tune = (cat, name, fields) => {
-    const ex = PLAN[cat] && PLAN[cat].find(e => e.name === name);
-    if(ex) Object.assign(ex, fields);
-  };
-  const moveBefore = (cat, name, before) => {
-    if(!PLAN[cat]) return;
-    const a = PLAN[cat].findIndex(e => e.name === name), b = PLAN[cat].findIndex(e => e.name === before);
-    if(a < 0 || b < 0 || a < b) return;
-    const [item] = PLAN[cat].splice(a, 1);
-    PLAN[cat].splice(PLAN[cat].findIndex(e => e.name === before), 0, item);
-  };
-
-  // Push: prioritera stabil bröstpress och fler hypertrofivänliga repintervall.
-  replaceExercise('Push', ['Bänkpress','Bänkpress (skivstång)'], { name:'Smith-bänkpress', sets:4, reps:'6-10', kg:'', bodyweight:false, rest:120, kgResetDate:todayStr() });
-  tune('Push','Hantelpress axlar',{reps:'8-12'});
-  tune('Push','Lutande hantelpress',{reps:'8-12'});
-  tune('Push','Dips',{sets:3,reps:'8-12'});
-  tune('Push','Sidolyft',{reps:'12-20'});
-  tune('Push','Triceps pushdown',{reps:'10-15'});
-  moveBefore('Push','Dips','Sidolyft');
-
-  // Pull: mindre styrkespecifik marklyftsvolym, mer muskelvänliga drag/curls.
-  tune('Pull','Marklyft',{sets:3,reps:'5-6'});
-  tune('Pull','Chins/latsdrag',{reps:'8-12'});
-  replaceExercise('Pull', ['Stående rodd','Bröststödd hantelrodd'], { name:'Sälrodd', sets:3, reps:'8-12', kg:'', bodyweight:false, rest:90, kgResetDate:todayStr() });
-  tune('Pull','Sälrodd',{reps:'8-12'});
-  tune('Pull','Facepulls',{reps:'12-20'});
-  tune('Pull','Hantelcurl',{reps:'10-15'});
-  tune('Pull','Hammarcurl',{reps:'10-15'});
-
-  // Ben: behåll avlastande Hack squat om den redan finns; annars knäböj.
-  tune('Ben','Knäböj',{reps:'6-10'});
-  tune('Ben','Hack squat',{reps:'8-12'});
-  tune('Ben','Rumänsk marklyft',{reps:'8-12'});
-  tune('Ben','Liggande lårcurl',{reps:'10-15'});
-  tune('Ben','Benspark',{reps:'10-15'});
-  tune('Ben','Vadpress',{reps:'10-20'});
-  moveBefore('Ben','Liggande lårcurl','Benspark');
-
-  // Upper: press/drag alterneras, sedan isolationsarbete.
-  tune('Upper','Lutande skivstångspress',{reps:'6-10'});
-  tune('Upper','Kabeldrag',{reps:'8-12',rest:75});
-  tune('Upper','Militärpress',{reps:'8-12'});
-  tune('Upper','Maskinflyes',{reps:'10-15'});
-  tune('Upper','Cross-over/flyes',{reps:'10-15'});
-  tune('Upper','Reverse pec-deck',{reps:'12-20'});
-  if(PLAN.Upper && PLAN.Upper.some(e=>e.name==='Maskinflyes')) moveBefore('Upper','Reverse pec-deck','Maskinflyes');
-  else moveBefore('Upper','Reverse pec-deck','Cross-over/flyes');
-
-  // Lower: tung knädominant övning först, sedan höftdominant och unilateral träning.
-  tune('Lower','Benpress',{reps:'8-12',rest:120});
-  tune('Lower','Höftlyft',{reps:'8-12'});
-  tune('Lower','Bulgarian split squat',{reps:'10-12 per ben'});
-  tune('Lower','Utfallssteg',{reps:'10-12 per ben'});
-  tune('Lower','Sittande lårcurl',{reps:'10-15'});
-  tune('Lower','Stående vadlyft',{reps:'10-20'});
-  moveBefore('Lower','Benpress','Höftlyft');
-  moveBefore('Lower','Bulgarian split squat','Utfallssteg');
-
-  rebuildProgramFromPlan();
-  await savePlanConfig();
-  resolvedWeekCache.clear();
-  try{ await window.storage.set(FLAG_KEY, 'done'); }catch(e){}
+async function applyHypertrophyUXMigration(){
+ const K='migration:v10-hypertrophy-plan';try{const r=await window.storage.get(K);if(r&&r.value==='done')return;}catch(e){}
+ const tune=(c,n,f)=>{const x=PLAN[c]&&PLAN[c].find(e=>e.name===n);if(x)Object.assign(x,f)};
+ const repl=(c,names,f)=>{const i=PLAN[c]&&PLAN[c].findIndex(e=>names.includes(e.name));if(i>=0){const o=PLAN[c][i];PLAN[c][i]={...o,...f,aliases:[...new Set([...(o.aliases||[]),o.name])]} }};
+ repl('Push',['Bänkpress','Bänkpress (skivstång)'],{name:'Smith-bänkpress',sets:4,reps:'6-10',kg:'',bodyweight:false,rest:120,kgResetDate:todayStr()});
+ tune('Push','Hantelpress axlar',{reps:'8-12'});tune('Push','Lutande hantelpress',{reps:'8-12'});tune('Push','Sidolyft',{reps:'12-20'});tune('Push','Triceps pushdown',{reps:'10-15'});
+ tune('Pull','Marklyft',{sets:3});tune('Pull','Chins/latsdrag',{reps:'8-12'});repl('Pull',['Stående rodd','Bröststödd hantelrodd'],{name:'Sälrodd',sets:3,reps:'8-12',kg:'',bodyweight:false,rest:90,kgResetDate:todayStr()});tune('Pull','Facepulls',{reps:'12-20'});tune('Pull','Hantelcurl',{reps:'10-15'});tune('Pull','Hammarcurl',{reps:'10-15'});
+ tune('Ben','Knäböj',{reps:'6-10'});tune('Ben','Hack squat',{reps:'8-12'});tune('Ben','Rumänsk marklyft',{reps:'8-12'});tune('Ben','Liggande lårcurl',{reps:'10-15'});tune('Ben','Benspark',{reps:'10-15'});tune('Ben','Vadpress',{reps:'10-20'});
+ tune('Upper','Lutande skivstångspress',{reps:'6-10'});tune('Upper','Kabeldrag',{reps:'8-12'});tune('Upper','Militärpress',{reps:'8-12'});tune('Upper','Reverse pec-deck',{reps:'12-20'});
+ tune('Lower','Benpress',{reps:'8-12',rest:120});tune('Lower','Höftlyft',{reps:'8-12'});tune('Lower','Sittande lårcurl',{reps:'10-15'});tune('Lower','Stående vadlyft',{reps:'10-20'});
+ rebuildProgramFromPlan();await savePlanConfig();resolvedWeekCache.clear();try{await window.storage.set(K,'done')}catch(e){}
 }
 
 async function savePlanConfig(){
@@ -2810,7 +2764,7 @@ async function renderSchedule(){
 
   document.getElementById('todayBtn').onclick = () => {
     if(today.mode === 'strength'){
-      modeStrengthBtn.click();
+      goToMode('strength');
       currentDay = today.label;
       renderTabs();
       renderExercises();
@@ -3419,44 +3373,30 @@ logDate.value = todayStr();
 logDate.onchange = () => { updateBwNote(); refreshDayTabCompletion(); };
 
 // ---------- MODE SWITCH ----------
-const modeStrengthBtn = document.getElementById('modeStrengthBtn');
-const modeRunBtn = document.getElementById('modeRunBtn');
-const modeStatsBtn = document.getElementById('modeStatsBtn');
-const modeLibraryBtn = document.getElementById('modeLibraryBtn');
-const modeSettingsBtn = document.getElementById('modeSettingsBtn');
-const strengthView = document.getElementById('strengthView');
-const runView = document.getElementById('runView');
-const statsView = document.getElementById('statsView');
-const libraryView = document.getElementById('libraryView');
-const settingsView = document.getElementById('settingsView');
-
+const modeHomeBtn=document.getElementById('modeHomeBtn'), modeStrengthBtn=document.getElementById('modeStrengthBtn'), modeRunBtn=document.getElementById('modeRunBtn'), modeStatsBtn=document.getElementById('modeStatsBtn'), modeMoreBtn=document.getElementById('modeMoreBtn');
+const homeView=document.getElementById('homeView'), strengthView=document.getElementById('strengthView'), runView=document.getElementById('runView'), statsView=document.getElementById('statsView'), moreView=document.getElementById('moreView'), libraryView=document.getElementById('libraryView'), settingsView=document.getElementById('settingsView');
 function setActiveMode(mode){
-  modeStrengthBtn.classList.toggle('active', mode === 'strength');
-  modeRunBtn.classList.toggle('active', mode === 'run');
-  modeStatsBtn.classList.toggle('active', mode === 'stats');
-  modeLibraryBtn.classList.toggle('active', mode === 'library');
-  modeSettingsBtn.classList.toggle('active', mode === 'settings');
-  strengthView.classList.toggle('active', mode === 'strength');
-  runView.classList.toggle('active', mode === 'run');
-  statsView.classList.toggle('active', mode === 'stats');
-  libraryView.classList.toggle('active', mode === 'library');
-  settingsView.classList.toggle('active', mode === 'settings');
+  modeHomeBtn.classList.toggle('active',mode==='home'); modeStrengthBtn.classList.toggle('active',mode==='strength'); modeRunBtn.classList.toggle('active',mode==='run'); modeStatsBtn.classList.toggle('active',mode==='stats'); modeMoreBtn.classList.toggle('active',['more','library','settings'].includes(mode));
+  homeView.classList.toggle('active',mode==='home'); strengthView.classList.toggle('active',mode==='strength'); runView.classList.toggle('active',mode==='run'); statsView.classList.toggle('active',mode==='stats'); moreView.classList.toggle('active',mode==='more'); libraryView.classList.toggle('active',mode==='library'); settingsView.classList.toggle('active',mode==='settings');
 }
 
 function goToMode(mode){
   setActiveMode(mode);
   safeStorageSet('ui:lastMode', mode);
-  if(mode === 'run') renderRunHistory();
+  if(mode === 'home'){ renderDashboard(); renderHomeDraft(); }
+  else if(mode === 'run') renderRunHistory();
   else if(mode === 'stats') renderAllStats();
   else if(mode === 'library') renderLibrary();
   else if(mode === 'settings'){ renderCategoryManager(); renderPhases(); }
 }
 
+modeHomeBtn.onclick=()=>goToMode('home');
 modeStrengthBtn.onclick = () => goToMode('strength');
 modeRunBtn.onclick = () => goToMode('run');
 modeStatsBtn.onclick = () => goToMode('stats');
-modeLibraryBtn.onclick = () => goToMode('library');
-modeSettingsBtn.onclick = () => goToMode('settings');
+modeMoreBtn.onclick=()=>goToMode('more');
+document.getElementById('moreLibraryBtn').onclick=()=>goToMode('library');
+document.getElementById('moreSettingsBtn').onclick=()=>goToMode('settings');
 
 // ---------- STRENGTH LOGIC ----------
 function renderTabs(){
@@ -3760,8 +3700,8 @@ document.getElementById('addCategoryBtn').onclick = async () => {
 // ---------- EXERCISE LIBRARY ----------
 const LIBRARY = {
   "Bröst": [
-    { name: "Smith-bänkpress", desc: "Stabil bröstpress i Smith-maskin. Den guidade banan minskar balanskravet och gör det lätt att träna nära failure med bröstet som begränsande muskel." },
-    { name: "Lutande Smith-bänkpress", desc: "Smith-press med bänken lätt lutad, cirka 30 grader. Stabil variant för övre bröstet med låg balansbegränsning." },
+    { name: "Smith-bänkpress", desc: "Stabil bröstpress i Smith-maskin för hypertrofi och säker träning nära failure." },
+    { name: "Lutande Smith-bänkpress", desc: "Stabil lutande press för övre bröstet." },
     { name: "Bänkpress (skivstång)", desc: "Klassiskt baslyft för bröst, främre axlar och triceps. Sänk stången kontrollerat till bröstet och pressa upp explosivt." },
     { name: "Hantelpress", desc: "Som bänkpress men med hantlar — större rörelseomfång och mer träning av stabiliserande muskler." },
     { name: "Lutande bänkpress", desc: "Bänken lutas 30–45 grader för att lägga extra fokus på övre bröstet." },
@@ -4245,7 +4185,7 @@ async function fillSwappedBlock(block, ex, last, original){
   block.dataset.exercise=ex.name; block.dataset.originalExercise=original; block.dataset.bw=ex.bodyweight?'1':'0'; block.dataset.rest=String(ex.rest||90);
   const target=`${ex.sets}×${ex.reps}${ex.kg!==''&&ex.kg!=null?(ex.bodyweight?' · +'+ex.kg+'kg':' · '+ex.kg+'kg'):''}`;
   let rows=''; for(let i=1;i<=Number(ex.sets||3);i++){const ps=last?.sets?.[i-1]; const w=ps?.weight??ex.kg??''; const r=ps?.reps??''; rows+=`<div class="quick-set-row"><span class="pill">Set ${i}</span><input type="number" step="0.5" class="quick-weight-input" placeholder="${ex.bodyweight?'tilläggsvikt':'kg'}" value="${w}"><input type="number" class="quick-reps-input" placeholder="${ex.reps}" value="${r}">${i>1?'<button type="button" class="copy-set-btn quick-copy-set-btn" title="Kopiera från set ovan">↑</button>':'<span class="copy-set-spacer"></span>'}<button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button></div>`;}
-  block.innerHTML=`<div class="quick-ex-header"><div class="quick-ex-name">${ex.name} <span class="target">mål: ${target}</span></div><button type="button" class="swap-ex-btn">Byt övning</button></div><div class="swap-note">Ersätter ${original} endast idag</div>${last?`<div class="quick-last">Senast ${fmtDate(last.date)}: ${formatLastSets(last)}</div>`:'<div class="quick-last">Ingen tidigare logg</div>'}<div class="warm-slot"></div><div class="quick-set-rows">${rows}</div><div class="quick-set-actions"><button class="quick-add-set-btn" type="button">+ Set</button><button class="quick-remove-set-btn" type="button">− Set</button></div><input type="text" class="quick-note-input" placeholder="Kommentar (valfritt)">`;
+  block.innerHTML=`<div class="quick-ex-header"><div class="quick-ex-name">${ex.name} <span class="target">mål: ${target}</span></div><div class="quick-tools"><button type="button" class="quick-more-btn">•••</button><div class="quick-tools-menu"><button type="button" data-tool="swap">Byt övning</button><button type="button" data-tool="warm">Uppvärmning</button></div></div></div><div class="swap-note">Ersätter ${original} endast idag</div>${last?`<div class="quick-last">Senast ${fmtDate(last.date)}: ${formatLastSets(last)}</div>`:'<div class="quick-last">Ingen tidigare logg</div>'}<div class="warm-slot"></div><div class="quick-set-rows">${rows}</div><div class="quick-set-actions"><button class="quick-add-set-btn" type="button">+ Set</button><button class="quick-remove-set-btn" type="button">− Set</button></div><input type="text" class="quick-note-input" placeholder="Kommentar (valfritt)">`;
 }
 async function applySwap(permanent){
   if(!exerciseSwapState?.selected)return; const {block,original,selected}=exerciseSwapState; const old=(PLAN[currentDay]||[]).find(x=>x.name===original); const ex=planExerciseFromLibrary(selected,old); ex.name=selected;
@@ -4299,11 +4239,12 @@ updateBackupUI();
 
 // ---- 5. Vilotimer per övning (flytande, syns i Snabblogga) ----
 let qrestEnd = 0, qrestInterval = null;
-function startQuickRest(seconds, label){
+function startQuickRest(seconds, label, nextText){
   qrestEnd = Date.now() + seconds*1000;
   const el = document.getElementById('qrest');
   el.classList.add('show'); el.classList.remove('done');
   document.getElementById('qrestLabel').textContent = label || 'Vila';
+  document.getElementById('qrestNext').textContent = nextText || '';
   clearInterval(qrestInterval); tickQuickRest();
   qrestInterval = setInterval(tickQuickRest, 250);
 }
@@ -4346,11 +4287,11 @@ function handleSetCompleted(row){
       return;
     }
     const restSS = Math.max(rest, Number(partner.dataset.rest) || 0);
-    startQuickRest(restSS, 'Vila superset');
+    startQuickRest(restSS, 'Vila superset', nextSetDescription(row));
     focusRow(rows[idx+1] || null);
     return;
   }
-  startQuickRest(rest, block.dataset.exercise);
+  startQuickRest(rest, block.dataset.exercise, nextSetDescription(row));
   focusRow(rows[idx+1] || null);
 }
 
@@ -4836,6 +4777,36 @@ async function renderWeeklySummary(entries){
   };
 }
 
+
+let workoutTicker=null;
+async function renderHomeDraft(){
+  const el=document.getElementById('homeDraft'); if(!el)return;
+  const h=new Date().getHours(); document.getElementById('homeGreeting').textContent=h<10?'God morgon':h<17?'God eftermiddag':'God kväll';
+  try{
+    const list=await window.storage.list('draft:quick:'); const drafts=[];
+    for(const k of (list.keys||[])){ const r=await window.storage.get(k); if(r&&r.value){const d=JSON.parse(r.value);if(Date.now()-d.savedAt<7*86400000)drafts.push(d);} }
+    drafts.sort((a,b)=>b.savedAt-a.savedAt); const d=drafts[0];
+    if(!d){el.style.display='none';return;}
+    const done=d.blocks.reduce((a,b)=>a+b.rows.filter(r=>r.done).length,0), total=d.blocks.reduce((a,b)=>a+b.rows.length,0);
+    el.innerHTML=`<strong>${d.day} pågår</strong><span>${done}/${total} set klara · sparat ${new Date(d.savedAt).toLocaleTimeString('sv-SE',{hour:'2-digit',minute:'2-digit'})}</span><button id="homeResumeBtn">Fortsätt pass</button>`;el.style.display='block';
+    document.getElementById('homeResumeBtn').onclick=()=>{currentDay=d.day;goToMode('strength');renderTabs();renderExercises();setLogMode('quick');setTimeout(()=>document.getElementById('quickLogCard').scrollIntoView({behavior:'smooth'}),300);};
+  }catch(e){el.style.display='none';}
+}
+function workoutStats(){const rows=[...document.querySelectorAll('#quickLogExercises .quick-set-row')], done=rows.filter(r=>r.classList.contains('done')).length;return{done,total:rows.length};}
+function updateWorkoutUX(){
+ const blocks=[...document.querySelectorAll('#quickLogExercises .quick-ex-block')]; if(!blocks.length)return;
+ const st=workoutStats(), mins=quickSessionStart?Math.max(1,Math.floor((Date.now()-quickSessionStart)/60000)):0;
+ document.getElementById('workoutTitle').textContent=quickSessionStart?`${currentDay} · pass pågår`:currentDay;
+ document.getElementById('workoutDuration').textContent=quickSessionStart?`${mins} min`:'Redo'; document.getElementById('workoutCount').textContent=`${st.done}/${st.total} set`;
+ document.getElementById('workoutBarFill').style.width=(st.total?st.done/st.total*100:0)+'%';
+ let current=null;
+ blocks.forEach(b=>{const rows=[...b.querySelectorAll('.quick-set-row')],all=rows.length&&rows.every(r=>r.classList.contains('done'));b.classList.toggle('complete',all);b.classList.remove('current');if(!current&&!all)current=b;});
+ if(current){current.classList.add('current');const r=[...current.querySelectorAll('.quick-set-row')].find(x=>!x.classList.contains('done'));const n=r?[...current.querySelectorAll('.quick-set-row')].indexOf(r)+1:1;document.getElementById('workoutNow').textContent=`Nu: ${current.dataset.exercise} · set ${n}`;}else document.getElementById('workoutNow').textContent=st.total?'Passet är klart ✓':'';
+}
+setInterval(()=>{if(document.getElementById('strengthView').classList.contains('active'))updateWorkoutUX();},1000);
+function nextSetDescription(row){const b=row.closest('.quick-ex-block'), rows=[...b.querySelectorAll('.quick-set-row')], i=rows.indexOf(row), next=rows[i+1];if(next)return`Nästa: ${b.dataset.exercise} · set ${i+2}`;const all=[...document.querySelectorAll('.quick-ex-block')], bi=all.indexOf(b), nb=all.slice(bi+1).find(x=>!x.classList.contains('complete'));return nb?`Nästa: ${nb.dataset.exercise} · set 1`:'Sista setet i passet';}
+document.getElementById('quickLogExercises').addEventListener('click',e=>{const h=e.target.closest('.quick-ex-header');if(h&&h.closest('.quick-ex-block').classList.contains('complete')&&!e.target.closest('button'))h.closest('.quick-ex-block').classList.toggle('expanded');setTimeout(updateWorkoutUX,0);const mb=e.target.closest('.quick-more-btn');if(mb){mb.closest('.quick-tools').classList.toggle('open');}const act=e.target.closest('[data-tool]');if(act){const b=act.closest('.quick-ex-block');if(act.dataset.tool==='swap')openSwap(b);if(act.dataset.tool==='warm')toggleWarmPanel(b);act.closest('.quick-tools').classList.remove('open');}});
+
 let quickLogRenderToken = 0;
 function formatLastSets(entry){
   if(!entry || !entry.sets || !entry.sets.length) return '';
@@ -4906,7 +4877,7 @@ async function renderQuickLogForm(){
     }
 
     block.innerHTML = `
-      <div class="quick-ex-header"><div class="quick-ex-name">${ex.name} <span class="target">mål: ${targetLabel}</span></div><button type="button" class="swap-ex-btn">Byt övning</button></div>
+      <div class="quick-ex-header"><div class="quick-ex-name">${ex.name} <span class="target">mål: ${targetLabel}</span></div><div class="quick-tools"><button type="button" class="quick-more-btn">•••</button><div class="quick-tools-menu"><button type="button" data-tool="swap">Byt övning</button><button type="button" data-tool="warm">Uppvärmning</button></div></div></div>
       ${lastEntry ? `<div class="quick-last">Senast ${fmtDate(lastEntry.date)}: ${formatLastSets(lastEntry)}</div>` : `<div class="quick-last">Ingen tidigare logg</div>`}
       ${progressionSuggestion(ex,lastEntry) ? `<div class="quick-progression">↗ ${progressionSuggestion(ex,lastEntry)}</div>` : ''}
       ${supersetTag}
@@ -4922,6 +4893,7 @@ async function renderQuickLogForm(){
   document.querySelectorAll('#quickLogExercises .quick-ex-block').forEach(setupWarmSlot);
   try{ await restoreQuickDraft(myToken); }catch(err){ console.error('Utkast kunde inte återställas:', err); }
   document.querySelectorAll('#quickLogExercises .quick-ex-block').forEach(updateRemoveSetButtons);
+  updateWorkoutUX();
 }
 
 document.getElementById('quickLogExercises').addEventListener('click', (e) => {
@@ -4951,6 +4923,7 @@ document.getElementById('quickLogExercises').addEventListener('click', (e) => {
       e.target.textContent='✓';
       if(!quickSessionStart) quickSessionStart = Date.now();
       handleSetCompleted(row);
+      updateWorkoutUX();
     }
     return;
   }
@@ -6656,7 +6629,7 @@ document.getElementById('weekTodayBtn').onclick = () => navigateWeek(0, true);
   await repairScheduleLabels();
   await applyBackReliefMigration();
   await applyRepRangeTuneMigration();
-  await applyHypertrophyPlanMigration();
+  await applyHypertrophyUXMigration();
   const todaysPlan = SCHEDULE[todayIndex()];
   if(todaysPlan.mode === 'strength'){ currentDay = todaysPlan.label; }
   viewedWeekMonday = getMondayOfCurrentWeek();
@@ -6676,15 +6649,7 @@ document.getElementById('weekTodayBtn').onclick = () => navigateWeek(0, true);
   }catch(e){ /* no preference saved yet — quick stays default */ }
   setLogMode(lastLogMode, true);
 
-  // restore remembered tab, defaulting to strength
-  let lastMode = 'strength';
-  try{
-    const res = await window.storage.get('ui:lastMode');
-    if(res && res.value) lastMode = res.value;
-  }catch(e){ /* no preference saved yet — strength stays default */ }
-  if(lastMode !== 'strength'){
-    goToMode(lastMode);
-  }
+  goToMode('home');
 })();
 </script>
 <script>
