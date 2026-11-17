@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#14161A">
-<meta name="application-version" content="1.1.0">
-<meta name="app-version" content="1.1.0">
+<meta name="application-version" content="1.7.0">
+<meta name="app-version" content="1.7.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Träningslogg">
@@ -1269,6 +1269,21 @@
 .workout-head{position:sticky;top:calc(env(safe-area-inset-top,0px) + 4px);z-index:80;background:rgba(24,26,30,.96);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:10px 0;backdrop-filter:blur(10px)}.workout-head>div:first-child{display:flex;justify-content:space-between}.workout-head strong{font-size:14px}.workout-head span{font-size:12px;color:var(--muted)}.workout-count{text-align:right;font-size:12px;color:var(--muted);margin-top:3px}.workout-bar{height:5px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:5px}.workout-bar div{height:100%;background:var(--accent);width:0}.workout-now{font-size:12px;color:var(--accent);font-weight:700;margin-top:5px}
 .qrest{border-radius:15px!important;max-width:calc(100vw - 20px);flex-wrap:wrap;justify-content:center}.qrest-copy{display:flex;flex-direction:column;min-width:100px}.qrest-next{font-size:10px;color:var(--muted);max-width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.qrest #qrestStop{min-width:84px}
 .quick-tools{position:relative}.quick-more-btn{border:1px solid var(--line);background:var(--panel-2);color:var(--muted);border-radius:18px;min-width:38px;height:34px;font-weight:800}.quick-tools-menu{display:none;position:absolute;right:0;top:38px;z-index:50;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px;min-width:150px;box-shadow:0 8px 25px #0009}.quick-tools.open .quick-tools-menu{display:flex;flex-direction:column;gap:4px}.quick-tools-menu button{border:0;background:var(--panel-2);color:var(--text);border-radius:8px;padding:9px;text-align:left;font-weight:700}
+
+
+/* v1.6–1.7: hypertrofiintelligens och återhämtning */
+.rir-select,.quick-rir-select{width:64px;min-height:46px;padding:6px 4px;border:1px solid var(--line);border-radius:9px;background:var(--panel-2);color:var(--text);font-size:13px;text-align:center}
+.rir-head{font-size:10px;color:var(--muted);text-align:center;line-height:1.1}
+.quick-target-card{background:linear-gradient(135deg,#4caf7d16,#3e8fe80d);border:1px solid #4caf7d55;border-radius:10px;padding:9px 11px;margin:0 0 9px;font-size:12px;line-height:1.55}
+.quick-target-card strong{color:var(--good)}
+.intel-box{font-size:13px;line-height:1.55}.intel-box .intel-title{font-weight:800;color:var(--text);margin-bottom:4px}.intel-muted{color:var(--muted);font-size:12px}.intel-warn{color:#f0a44b}.intel-good{color:var(--good)}
+.intel-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.intel-actions button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:999px;padding:7px 11px;font-size:12px;font-weight:700}.intel-actions button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.run-advice{display:none;margin-top:10px;padding:10px 11px;border-radius:10px;border:1px solid var(--line);background:var(--panel-2);font-size:13px;line-height:1.5}.run-advice.show{display:block}.run-advice.warn{border-color:#f0a44b88;color:#f0b35e}.run-advice.good{border-color:#4caf7d66;color:var(--good)}
+.step-grid{display:grid;grid-template-columns:1fr 100px auto;gap:8px;align-items:end}.step-grid .btn{margin:0;width:auto;padding:9px 13px}.step-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.step-chip{background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:5px 9px;font-size:11px;color:var(--muted)}
+.quality-item{border-top:1px solid var(--line);padding:8px 0}.quality-item:first-child{border-top:0;padding-top:0}.quality-item strong{color:var(--text)}
+.quick-set-undo-hint{font-size:11px;color:var(--muted)}
+@media(max-width:700px){.quick-set-row{display:grid;grid-template-columns:48px minmax(64px,1fr) minmax(60px,1fr) 64px 32px 46px}.quick-set-row .pill{width:auto}.quick-weight-input,.quick-reps-input{min-width:0;width:100%}.quick-set-row .copy-set-spacer{width:32px}.set-row{display:grid;grid-template-columns:48px minmax(70px,1fr) minmax(60px,1fr) 64px 32px}.set-row .pill{width:auto}.step-grid{grid-template-columns:1fr 88px}.step-grid .btn{grid-column:1/-1;width:100%}}
+
 </style>
 </head>
 <body>
@@ -1330,6 +1345,8 @@
       <div class="dash-sec" id="dashWeeklySec" style="display:none;"><div class="dash-title">Förra veckan <button class="dash-close" id="dashWeeklyClose" aria-label="Dölj">×</button></div><div id="dashWeekly"></div></div>
       <div class="dash-sec"><div class="dash-title">Veckan</div><div id="dashWeek"><div class="dash-empty">Laddar…</div></div></div>
       <div class="dash-sec"><div class="dash-title">Utveckling</div><div id="dashProgress"><div class="dash-empty">Laddar…</div></div></div>
+      <div class="dash-sec" id="dashRecoverySec"><div class="dash-title">Återhämtning &amp; samordning</div><div id="dashRecovery"><div class="dash-empty">Analyserar…</div></div></div>
+      <div class="dash-sec" id="dashQualitySec"><div class="dash-title">Datakvalitet</div><div id="dashQuality"><div class="dash-empty">Kontrollerar…</div></div></div>
     </div>
 
     <div class="card-collapse-header" id="scheduleCollapseHeader">
@@ -1479,6 +1496,7 @@
         <option>Långpass</option>
         <option>Maratontempo</option>
       </select>
+      <div class="run-advice" id="runCoordinationAdvice"></div>
 
       <div style="height:10px"></div>
       <div class="row-2">
@@ -1646,6 +1664,18 @@
       <div id="phaseHistory" style="margin-top:14px;"></div>
     </div>
 
+    <div class="card" id="weightStepCard">
+      <h2>Personliga viktsteg</h2>
+      <div class="chart-note" style="margin-top:0;">Ställ in minsta möjliga viktökning för utrustningen på ditt gym. Förslagen i Snabblogga använder steget automatiskt.</div>
+      <div class="step-grid" style="margin-top:10px;">
+        <div><label>Övning</label><select id="weightStepExercise"></select></div>
+        <div><label>Steg (kg)</label><input id="weightStepValue" type="number" min="0.25" step="0.25" placeholder="2,5"></div>
+        <button class="btn secondary" id="saveWeightStepBtn">Spara</button>
+      </div>
+      <div class="step-list" id="weightStepList"></div>
+      <div class="form-error" id="weightStepError" style="display:none;"></div>
+    </div>
+
     <div class="card">
       <h2>Data &amp; säkerhetskopiering</h2>
       <div class="chart-note" style="margin-top:0;">All din logg sparas lokalt på den här enheten. Exportera regelbundet för att ha en egen säkerhetskopia och för att flytta data mellan enheter.</div>
@@ -1657,7 +1687,7 @@
       <div class="form-error" id="dataBackupError" style="display:none;"></div>
       <div class="chart-note" id="dataBackupStatus"></div>
       <div class="chart-note" id="lastBackupLabel" style="margin-top:8px;"></div>
-      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 1.5.3</div>
+      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 1.7.0</div>
     </div>
   </div>
 </div>
@@ -1667,7 +1697,9 @@
 <div class="exercise-swap-modal" id="sessionSummaryModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 class="summary-head" id="summaryTitle">Pass klart ✓</h2><button class="swap-close" id="summaryClose">×</button></div><div class="summary-stats" id="summaryStats"></div><div id="summaryBody"></div><button class="btn" id="summaryOk" style="margin-top:14px;">Klar</button></div></div>
 <div class="exercise-swap-modal" id="exerciseSwapModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 id="swapTitle">Byt övning</h2><button class="swap-close" id="swapClose">×</button></div><input id="swapSearch" type="search" placeholder="Sök bland alla övningar..." style="margin-top:12px"><div id="swapRecommendedWrap"><div class="swap-section">Rekommenderade alternativ</div><div class="swap-list" id="swapRecommended"></div></div><div class="swap-section">Alla matchningar</div><div class="swap-list" id="swapResults"></div><div id="swapConfirm" style="display:none"><div class="chart-note" id="swapConfirmText" style="margin-top:14px"></div><div class="swap-actions"><button class="btn" id="swapToday">Bara idag</button><button class="btn secondary" id="swapPermanent">Gör permanent</button></div></div></div></div>
 <script>
-const APP_VERSION = '1.5.3';
+const APP_VERSION = '1.7.0';
+let WEIGHT_STEPS = {};
+let SWAP_FAVORITES = {};
 // ---------- FRISTÅENDE LOKAL LAGRING ----------
 // IndexedDB används primärt. localStorage används som reserv.
 const STORAGE_PREFIX = 'traningslogg:';
@@ -1887,48 +1919,48 @@ async function downloadPendingQueue(){
 
 const DEFAULT_PLAN = {
   "Push": [
-    {name:"Smith-bänkpress", sets:4, reps:"6-10", kg:57.5, bodyweight:false, rest:120, aliases:["Bänkpress"]},
-    {name:"Hantelpress axlar", sets:3, reps:"8-12", kg:17.5, bodyweight:false, rest:90},
-    {name:"Lutande hantelpress", sets:3, reps:"8-12", kg:22.5, bodyweight:false, rest:90},
+    {name:"Bänkpress", sets:4, reps:"6-8", kg:72.5, bodyweight:false, rest:120},
+    {name:"Hantelpress axlar", sets:3, reps:"8-10", kg:17.5, bodyweight:false, rest:90},
+    {name:"Lutande hantelpress", sets:3, reps:"10-12", kg:17.5, bodyweight:false, rest:90},
+    {name:"Sidolyft", sets:3, reps:"12-15", kg:6, bodyweight:false, rest:60, supersetWith:"Triceps pushdown"},
+    {name:"Triceps pushdown", sets:3, reps:"12-15", kg:27.5, bodyweight:false, rest:60, supersetWith:"Sidolyft"},
     {name:"Dips", sets:3, reps:"8-12", kg:"", bodyweight:true, rest:90},
-    {name:"Sidolyft", sets:3, reps:"12-20", kg:10, bodyweight:false, rest:60},
-    {name:"Triceps pushdown", sets:3, reps:"10-15", kg:27.5, bodyweight:false, rest:60},
-    {name:"Cable crunch", sets:3, reps:"12-15", kg:50, bodyweight:false, rest:60},
-    {name:"Planka", sets:3, reps:"30-45 sek", kg:"", bodyweight:true, rest:45}
+    {name:"Cable crunch", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
+    {name:"Russian twist", sets:3, reps:"15-20 per sida", kg:"", bodyweight:true, rest:45}
   ],
   "Pull": [
-    {name:"Marklyft", sets:3, reps:"5-6", kg:110, bodyweight:false, rest:150},
-    {name:"Chins/latsdrag", sets:4, reps:"8-12", kg:"", bodyweight:true, rest:90},
-    {name:"Sälrodd", sets:3, reps:"8-12", kg:47, bodyweight:false, rest:90, aliases:["Stående rodd","Bröststödd hantelrodd"]},
-    {name:"Facepulls", sets:3, reps:"12-20", kg:25, bodyweight:false, rest:60, supersetWith:"Hantelcurl"},
-    {name:"Hantelcurl", sets:3, reps:"10-15", kg:12.5, bodyweight:false, rest:60, supersetWith:"Facepulls"},
-    {name:"Hammarcurl", sets:3, reps:"10-15", kg:12.5, bodyweight:false, rest:60}
+    {name:"Marklyft", sets:4, reps:"5-6", kg:"", bodyweight:false, rest:150},
+    {name:"Chins/latsdrag", sets:4, reps:"8-10", kg:"", bodyweight:true, rest:90},
+    {name:"Stående rodd", sets:3, reps:"8-10", kg:"", bodyweight:false, rest:90},
+    {name:"Facepulls", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60, supersetWith:"Hantelcurl"},
+    {name:"Hantelcurl", sets:3, reps:"10-12", kg:"", bodyweight:false, rest:60, supersetWith:"Facepulls"},
+    {name:"Hammarcurl", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60}
   ],
   "Ben": [
-    {name:"Hack squat", sets:4, reps:"8-12", kg:67, bodyweight:false, rest:120, aliases:["Knäböj","Knäböj (skivstång)"]},
-    {name:"Rumänsk marklyft", sets:3, reps:"8-12", kg:85, bodyweight:false, rest:120},
-    {name:"Liggande lårcurl", sets:3, reps:"10-15", kg:46, bodyweight:false, rest:60},
-    {name:"Benspark", sets:3, reps:"10-15", kg:61, bodyweight:false, rest:60},
-    {name:"Vadpress", sets:4, reps:"10-20", kg:55, bodyweight:false, rest:60}
+    {name:"Hack squat", sets:4, reps:"8-12", kg:"", bodyweight:false, rest:120},
+    {name:"Rumänsk marklyft", sets:3, reps:"8-10", kg:"", bodyweight:false, rest:120},
+    {name:"Benspark", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
+    {name:"Liggande lårcurl", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
+    {name:"Vadpress", sets:4, reps:"12-15", kg:"", bodyweight:false, rest:60}
   ],
   "Upper": [
-    {name:"Lutande Smith-bänkpress", sets:4, reps:"6-10", kg:50, bodyweight:false, rest:120, aliases:["Lutande skivstångspress"]},
-    {name:"Kabeldrag", sets:3, reps:"8-12", kg:"", bodyweight:false, rest:60},
-    {name:"Militärpress", sets:3, reps:"8-12", kg:"", bodyweight:false, rest:90},
-    {name:"Reverse pec-deck", sets:3, reps:"12-20", kg:"", bodyweight:false, rest:60},
-    {name:"Maskinflyes", sets:3, reps:"10-15", kg:52, bodyweight:false, rest:60},
+    {name:"Lutande skivstångspress", sets:4, reps:"6-8", kg:"", bodyweight:false, rest:120},
+    {name:"Kabeldrag", sets:3, reps:"10-12", kg:"", bodyweight:false, rest:60},
+    {name:"Militärpress", sets:3, reps:"8-10", kg:"", bodyweight:false, rest:90},
+    {name:"Cross-over/flyes", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
+    {name:"Reverse pec-deck", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
     {name:"Triceps/biceps superset", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
-    {name:"Cable crunch", sets:3, reps:"12-15", kg:50, bodyweight:false, rest:60},
-    {name:"Planka", sets:3, reps:"30-45 sek", kg:"", bodyweight:true, rest:45}
+    {name:"Cable crunch", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
+    {name:"Russian twist", sets:3, reps:"15-20 per sida", kg:"", bodyweight:true, rest:45}
   ],
   "Lower": [
-    {name:"Benpress", sets:4, reps:"8-12", kg:130, bodyweight:false, rest:120},
-    {name:"Höftlyft", sets:4, reps:"8-12", kg:80, bodyweight:false, rest:120},
-    {name:"Bulgarian split squat", sets:3, reps:"10-12 per ben", kg:25, bodyweight:false, rest:90},
-    {name:"Utfallssteg", sets:3, reps:"10-12 per ben", kg:24, bodyweight:false, rest:90},
-    {name:"Sittande lårcurl", sets:3, reps:"10-15", kg:59, bodyweight:false, rest:60, supersetWith:"Stående vadlyft"},
-    {name:"Stående vadlyft", sets:4, reps:"10-20", kg:115, bodyweight:true, rest:60, supersetWith:"Sittande lårcurl"},
-    {name:"Cable crunch", sets:3, reps:"12-15", kg:50, bodyweight:false, rest:60}
+    {name:"Benpress", sets:4, reps:"8-12", kg:"", bodyweight:false, rest:120},
+    {name:"Höftlyft", sets:4, reps:"8-12", kg:"", bodyweight:false, rest:120},
+    {name:"Utfallssteg", sets:3, reps:"10-12 per ben", kg:"", bodyweight:false, rest:90},
+    {name:"Bulgarian split squat", sets:3, reps:"10-12 per ben", kg:"", bodyweight:false, rest:90},
+    {name:"Sittande lårcurl", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60, supersetWith:"Stående vadlyft"},
+    {name:"Stående vadlyft", sets:4, reps:"15-20", kg:"", bodyweight:true, rest:60, supersetWith:"Sittande lårcurl"},
+    {name:"Plankan", sets:3, reps:"30-45 sek", kg:"", bodyweight:true, rest:45}
   ]
 };
 
@@ -2508,85 +2540,50 @@ async function applyHackSquatAndLegPressMigration(){
   try{ await window.storage.set(FLAG_KEY, 'done'); }catch(e){}
 }
 
-async function applyLogReviewRecommendationsMigration(){
-  const FLAG_KEY = 'migration:v12-log-review-2026-11-17';
+
+// ---------- v1.5.3: dokumenterade datarättningar och hypertrofimål ----------
+async function applyV153Migration(force){
+  const FLAG_KEY = 'migration:v12-v153-recommendations';
+  if(!force){ try{ const r = await window.storage.get(FLAG_KEY); if(r && r.value === 'done') return; }catch(e){} }
+  const tune = (cat, name, fields) => { const ex=(PLAN[cat]||[]).find(x=>x.name===name); if(ex) Object.assign(ex, fields); };
+  // Prioriterade huvudövningar behåller fyra set; kompletterande övningar har tre.
+  Object.entries(PLAN).forEach(([cat,list]) => list.forEach((ex,idx) => {
+    const priority = ['Smith-bänkpress','Chins/latsdrag','Hack squat','Benpress','Höftlyft'].includes(ex.name);
+    if(priority) ex.sets = 4;
+    else if(Number(ex.sets) > 3 && !/vadpress|stående vadlyft/i.test(ex.name)) ex.sets = 3;
+  }));
+  tune('Push','Smith-bänkpress',{kg:57.5, weightStep:2.5});
+  tune('Ben','Hack squat',{kg:67, weightStep:1});
+  tune('Lower','Benpress',{kg:130, weightStep:5});
+  tune('Ben','Rumänsk marklyft',{kg:85, weightStep:2.5});
+  tune('Lower','Höftlyft',{kg:80, weightStep:2.5});
+  tune('Lower','Sittande lårcurl',{kg:59, weightStep:1});
+  tune('Pull','Marklyft',{kg:110, sets:3, reps:'5-6', weightStep:2.5});
+  tune('Pull','Sälrodd',{kg:47, sets:3, reps:'8-12', weightStep:1});
+  rebuildProgramFromPlan();
+  await savePlanConfig();
+
+  // Rätta Facepulls 2 375 kg och rensa exakta dubbletter från 4 oktober.
   try{
-    const res = await window.storage.get(FLAG_KEY);
-    if(res && res.value === 'done') return;
-  }catch(e){}
-
-  const today = todayStr();
-  let planChanged = false;
-  const tune = (cat, name, fields) => {
-    const ex = (PLAN[cat] || []).find(item => item.name === name);
-    if(ex){ Object.assign(ex, fields); planChanged = true; }
-  };
-
-  // Keep four sets only on the prioritised main lifts and calves; complementary
-  // movements stay at three quality sets.
-  tune('Push', 'Smith-bänkpress', { sets:4, reps:'6-10', kg:57.5, kgResetDate:today });
-  ['Hantelpress axlar','Lutande hantelpress','Dips','Sidolyft','Triceps pushdown','Cable crunch','Planka'].forEach(n => tune('Push', n, { sets:3 }));
-  tune('Pull', 'Marklyft', { sets:3, reps:'5-6', kg:110, kgResetDate:today });
-  tune('Pull', 'Chins/latsdrag', { sets:4, reps:'8-12' });
-  tune('Pull', 'Sälrodd', { sets:3, reps:'8-12', kg:47, kgResetDate:today });
-  ['Facepulls','Hantelcurl','Hammarcurl'].forEach(n => tune('Pull', n, { sets:3 }));
-  tune('Ben', 'Hack squat', { sets:4, reps:'8-12', kg:67, kgResetDate:today });
-  tune('Ben', 'Rumänsk marklyft', { sets:3, reps:'8-12', kg:85, kgResetDate:today });
-  ['Liggande lårcurl','Benspark'].forEach(n => tune('Ben', n, { sets:3 }));
-  tune('Lower', 'Benpress', { sets:4, reps:'8-12', kg:130, kgResetDate:today });
-  tune('Lower', 'Höftlyft', { sets:4, reps:'8-12', kg:80, kgResetDate:today });
-  tune('Lower', 'Sittande lårcurl', { sets:3, reps:'10-15', kg:59, kgResetDate:today });
-  ['Bulgarian split squat','Utfallssteg','Cable crunch'].forEach(n => tune('Lower', n, { sets:3 }));
-
-  if(planChanged){
-    rebuildProgramFromPlan();
-    await savePlanConfig();
-    resolvedWeekCache.clear();
-  }
-
-  let correctionFailed = false;
-  try{
-    const entries = (await loadAllEntries()).slice().sort((a,b) => String(a._key || '').localeCompare(String(b._key || '')));
-
-    // Correct 2375 kg -> 23.75 kg in the 10 Nov Facepulls entry.
-    for(const entry of entries){
-      if(entry.date !== '2026-11-10' || entry.exercise !== 'Facepulls') continue;
-      const correctedSets = (entry.sets || []).map(set => Number(set.weight) > 500 ? { ...set, weight: Number(set.weight) / 100 } : set);
-      if(JSON.stringify(correctedSets) !== JSON.stringify(entry.sets || [])){
-        const key = entry._key;
-        if(key){
-          const clean = { ...entry, sets: correctedSets };
-          delete clean._key;
-          await window.storage.set(key, JSON.stringify(clean));
-        }
-      }
-    }
-
-    // Remove only byte-for-byte equivalent exercise logs from 4 Oct; keep one.
-    const seen = new Set();
-    for(const entry of entries){
-      if(entry.date !== '2026-10-04') continue;
-      const fingerprint = JSON.stringify({
-        date: entry.date, day: entry.day, exercise: entry.exercise,
-        sets: entry.sets || [], isBodyweight: !!entry.isBodyweight,
-        bodyweightUsed: entry.bodyweightUsed ?? null, note: entry.note || '',
-        originalExercise: entry.originalExercise ?? null
-      });
-      if(seen.has(fingerprint)){
-        if(entry._key) await window.storage.delete(entry._key);
-      }else{
-        seen.add(fingerprint);
+    const entries = await loadAllEntries();
+    const signatures = new Map();
+    for(const en of entries){
+      let changed = false;
+      const clean = {...en, sets:(en.sets||[]).map(st=>{
+        const cp={...st};
+        if(en.exercise === 'Facepulls' && Number(cp.weight) === 2375){ cp.weight=23.75; changed=true; }
+        return cp;
+      })};
+      if(changed){ const key=clean._key; delete clean._key; await window.storage.set(key, JSON.stringify(clean)); }
+      if(en.date === '2026-10-04'){
+        const sig = JSON.stringify([en.date,en.day,en.exercise,en.sets,en.note||'',en.bodyweightUsed??null]);
+        if(signatures.has(sig)) await window.storage.delete(en._key);
+        else signatures.set(sig,en._key);
       }
     }
     invalidateEntriesCache();
-  }catch(err){
-    correctionFailed = true;
-    console.error('Kunde inte korrigera historiken automatiskt:', err);
-  }
-
-  if(!correctionFailed){
-    try{ await window.storage.set(FLAG_KEY, 'done'); }catch(e){}
-  }
+  }catch(err){ console.error('v1.5.3-datarättning misslyckades:',err); }
+  try{ await window.storage.set(FLAG_KEY,'done'); }catch(e){}
 }
 
 async function savePlanConfig(){
@@ -3516,10 +3513,10 @@ function goToMode(mode){
   setActiveMode(mode);
   safeStorageSet('ui:lastMode', mode);
   if(mode === 'home'){ renderDashboard(); renderHomeDraft(); }
-  else if(mode === 'run') renderRunHistory();
+  else if(mode === 'run'){ renderRunHistory(); updateRunCoordinationAdvice(); }
   else if(mode === 'stats') renderAllStats();
   else if(mode === 'library') renderLibrary();
-  else if(mode === 'settings'){ renderCategoryManager(); renderPhases(); }
+  else if(mode === 'settings'){ renderCategoryManager(); renderPhases(); renderWeightStepSettings(); }
 }
 
 modeHomeBtn.onclick=()=>goToMode('home');
@@ -4088,6 +4085,10 @@ exerciseSelect.onchange = () => {
   updateBwNote();
 };
 
+function rirOptions(value){
+  const v = value == null ? '' : String(Math.min(3, Number(value)));
+  return [['','RIR'],['0','0'],['1','1'],['2','2'],['3','3+']].map(([x,l]) => `<option value="${x}"${v===x?' selected':''}>${l}</option>`).join('');
+}
 function setRowHtml(i, isBW, prevSet){
   const placeholder = isBW ? 'tilläggsvikt' : 'kg';
   const weightVal = prevSet && prevSet.weight != null ? prevSet.weight : '';
@@ -4097,6 +4098,7 @@ function setRowHtml(i, isBW, prevSet){
     <span class="pill">Set ${i}</span>
     <input type="number" step="0.5" placeholder="${placeholder}" class="weight-input" value="${weightVal}" style="flex:1;">
     <input type="number" placeholder="reps" class="reps-input" value="${repsVal}" style="flex:1;">
+    <select class="rir-select" aria-label="RIR, reps kvar i tanken" title="RIR – reps kvar i tanken">${rirOptions(prevSet && prevSet.rir)}</select>
     ${copyBtn}
   `;
 }
@@ -4152,7 +4154,9 @@ document.getElementById('addSetBtn').onclick = () => {
   const isBW = isBodyweightExercise(currentDay, exerciseSelect.value);
   const row = document.createElement('div');
   row.className = 'set-row';
-  row.innerHTML = setRowHtml(numSets, isBW);
+  const prev = setsContainer.lastElementChild;
+  const prevSet = prev ? { weight: prev.querySelector('.weight-input')?.value || '', reps: prev.querySelector('.reps-input')?.value || '' } : null;
+  row.innerHTML = setRowHtml(numSets, isBW, prevSet);
   setsContainer.appendChild(row);
 };
 document.getElementById('removeSetBtn').onclick = () => {
@@ -4292,7 +4296,8 @@ function renderSwapOptions(){
   const q=(document.getElementById('swapSearch').value||'').trim().toLowerCase();
   const all=swapLibraryItems().filter(x=>x.name!==exerciseSwapState.original && (!q||x.name.toLowerCase().includes(q)||(x.desc||'').toLowerCase().includes(q)));
   const group=swapGroupFor(exerciseSwapState.original);
-  const rec=all.filter(x=>x.group===group).slice(0,6);
+  const fav = (SWAP_FAVORITES[exerciseSwapState.original] || {});
+  const rec=all.filter(x=>x.group===group || fav[x.name]).sort((a,b)=>(fav[b.name]||0)-(fav[a.name]||0) || Number(b.group===group)-Number(a.group===group) || a.name.localeCompare(b.name,'sv')).slice(0,6);
   const html=x=>`<button class="swap-option" data-name="${x.name.replace(/"/g,'&quot;')}">${x.name}<small>${x.group} · ${x.desc||''}</small></button>`;
   document.getElementById('swapRecommendedWrap').style.display=(!q&&rec.length)?'':'none';
   document.getElementById('swapRecommended').innerHTML=rec.map(html).join('');
@@ -4317,11 +4322,17 @@ function planExerciseFromLibrary(name,old){
 async function fillSwappedBlock(block, ex, last, original){
   block.dataset.exercise=ex.name; block.dataset.originalExercise=original; block.dataset.bw=ex.bodyweight?'1':'0'; block.dataset.rest=String(ex.rest||90);
   const target=`${ex.sets}×${ex.reps}${ex.kg!==''&&ex.kg!=null?(ex.bodyweight?' · +'+ex.kg+'kg':' · '+ex.kg+'kg'):''}`;
-  let rows=''; for(let i=1;i<=Number(ex.sets||3);i++){const ps=last?.sets?.[i-1]; const w=ps?.weight??ex.kg??''; const r=ps?.reps??''; rows+=`<div class="quick-set-row"><span class="pill">Set ${i}</span><input type="number" step="0.5" class="quick-weight-input" placeholder="${ex.bodyweight?'tilläggsvikt':'kg'}" value="${w}"><input type="number" class="quick-reps-input" placeholder="${ex.reps}" value="${r}">${i>1?'<button type="button" class="copy-set-btn quick-copy-set-btn" title="Kopiera från set ovan">↑</button>':'<span class="copy-set-spacer"></span>'}<button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button></div>`;}
+  let rows=''; for(let i=1;i<=Number(ex.sets||3);i++){const ps=last?.sets?.[i-1]; const w=ps?.weight??ex.kg??''; const r=ps?.reps??''; rows+=`<div class="quick-set-row"><span class="pill">Set ${i}</span><input type="number" step="0.5" class="quick-weight-input" placeholder="${ex.bodyweight?'tilläggsvikt':'kg'}" value="${w}"><input type="number" class="quick-reps-input" placeholder="${ex.reps}" value="${r}"><select class="quick-rir-select" aria-label="RIR">${rirOptions(ps?.rir)}</select>${i>1?'<button type="button" class="copy-set-btn quick-copy-set-btn" title="Kopiera från set ovan">↑</button>':'<span class="copy-set-spacer"></span>'}<button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button></div>`;}
   block.innerHTML=`<div class="quick-ex-header"><div class="quick-ex-name">${ex.name} <span class="target">mål: ${target}</span></div><div class="quick-tools"><button type="button" class="quick-more-btn">•••</button><div class="quick-tools-menu"><button type="button" data-tool="swap">Byt övning</button><button type="button" data-tool="warm">Uppvärmning</button></div></div></div><div class="swap-note">Ersätter ${original} endast idag</div>${last?`<div class="quick-last">Senast ${fmtDate(last.date)}: ${formatLastSets(last)}</div>`:'<div class="quick-last">Ingen tidigare logg</div>'}<div class="warm-slot"></div><div class="quick-set-rows">${rows}</div><div class="quick-set-actions"><button class="quick-add-set-btn" type="button">+ Set</button><button class="quick-remove-set-btn" type="button">− Set</button></div><input type="text" class="quick-note-input" placeholder="Kommentar (valfritt)">`;
 }
+async function recordSwapFavorite(original, selected){
+  SWAP_FAVORITES[original] = SWAP_FAVORITES[original] || {};
+  SWAP_FAVORITES[original][selected] = (SWAP_FAVORITES[original][selected] || 0) + 1;
+  try{ await window.storage.set('settings:swapFavorites', JSON.stringify(SWAP_FAVORITES)); }catch(e){}
+}
 async function applySwap(permanent){
-  if(!exerciseSwapState?.selected)return; const {block,original,selected}=exerciseSwapState; const old=(PLAN[currentDay]||[]).find(x=>x.name===original); const ex=planExerciseFromLibrary(selected,old); ex.name=selected;
+  if(!exerciseSwapState?.selected)return; const {block,original,selected}=exerciseSwapState;
+  await recordSwapFavorite(original, selected); const old=(PLAN[currentDay]||[]).find(x=>x.name===original); const ex=planExerciseFromLibrary(selected,old); ex.name=selected;
   if(permanent){const i=(PLAN[currentDay]||[]).findIndex(x=>x.name===original); if(i>=0){PLAN[currentDay][i]=ex; rebuildProgramFromPlan(); await savePlanConfig();} closeSwap();renderTabs();renderExercises();await renderQuickLogForm();await renderSchedule();}
   else {const last=await latestEntryAnyDay(selected); await fillSwappedBlock(block,ex,last,original); setupWarmSlot(block); updateRemoveSetButtons(block); closeSwap(); markQuickDirty();}
 }
@@ -4405,6 +4416,7 @@ function focusRow(row){
 function findBlock(name){
   return [...document.querySelectorAll('#quickLogExercises .quick-ex-block')].find(b => b.dataset.exercise === name) || null;
 }
+function blockExerciseName(row){ return row?.closest('.quick-ex-block')?.dataset.exercise || 'Set'; }
 function handleSetCompleted(row){
   const block = row.closest('.quick-ex-block');
   const rows = [...block.querySelectorAll('.quick-set-row')];
@@ -4571,16 +4583,13 @@ let quickDraftDirty = false, quickDraftTimer = null;
 function addQuickRow(block){
   const rowsWrap = block.querySelector('.quick-set-rows');
   const isBW = block.getAttribute('data-bw') === '1';
-  const existingRows = rowsWrap.querySelectorAll('.quick-set-row');
-  const previousRow = existingRows.length ? existingRows[existingRows.length - 1] : null;
-  const previousWeight = previousRow ? previousRow.querySelector('.quick-weight-input').value : '';
-  const previousReps = previousRow ? previousRow.querySelector('.quick-reps-input').value : '';
-  const safeWeight = String(previousWeight).replace(/"/g, '&quot;');
-  const safeReps = String(previousReps).replace(/"/g, '&quot;');
-  const n = existingRows.length + 1;
+  const n = rowsWrap.querySelectorAll('.quick-set-row').length + 1;
   const row = document.createElement('div');
   row.className = 'quick-set-row';
-  row.innerHTML = `<span class="pill">Set ${n}</span><input type="number" step="0.5" class="quick-weight-input" placeholder="${isBW ? 'tilläggsvikt' : 'kg'}" value="${safeWeight}"><input type="number" class="quick-reps-input" placeholder="reps" value="${safeReps}">${n > 1 ? '<button type="button" class="copy-set-btn quick-copy-set-btn" title="Kopiera från set ovan">↑</button>' : '<span class="copy-set-spacer"></span>'}<button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button>`;
+  const prev = rowsWrap.lastElementChild;
+  const pw = prev?.querySelector('.quick-weight-input')?.value || '';
+  const pr = prev?.querySelector('.quick-reps-input')?.value || '';
+  row.innerHTML = `<span class="pill">Set ${n}</span><input type="number" step="0.5" class="quick-weight-input" placeholder="${isBW ? 'tilläggsvikt' : 'kg'}" value="${pw}"><input type="number" class="quick-reps-input" placeholder="reps" value="${pr}"><select class="quick-rir-select" aria-label="RIR">${rirOptions('')}</select>${n > 1 ? '<button type="button" class="copy-set-btn quick-copy-set-btn" title="Kopiera från set ovan">↑</button>' : '<span class="copy-set-spacer"></span>'}<button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button>`;
   rowsWrap.appendChild(row);
   updateRemoveSetButtons(block);
   return row;
@@ -4596,6 +4605,7 @@ function serializeQuickDraft(){
     rows: [...b.querySelectorAll('.quick-set-row')].map(r => ({
       w: r.querySelector('.quick-weight-input').value,
       r: r.querySelector('.quick-reps-input').value,
+      rir: (r.querySelector('.quick-rir-select') || {}).value || '',
       done: r.classList.contains('done')
     }))
   }));
@@ -4663,6 +4673,7 @@ async function applyDraftToForm(d){
       const row = rows[i];
       row.querySelector('.quick-weight-input').value = dr.w;
       row.querySelector('.quick-reps-input').value = dr.r;
+      const rir = row.querySelector('.quick-rir-select'); if(rir) rir.value = dr.rir == null ? '' : String(dr.rir);
       row.classList.toggle('done', !!dr.done);
       row.querySelector('.quick-set-done-btn').classList.toggle('done', !!dr.done);
     });
@@ -4810,6 +4821,8 @@ async function renderDashboard(){
     : '<div class="dash-empty" style="margin-top:6px;">Trend visas när det finns minst 8 veckors historik.</div>';
   try{ await renderWeeklySummary(entries); }catch(err){ console.error('Veckosammanfattning:', err); }
   progEl.innerHTML = (prHtml ? `<div class="dash-pr">${prHtml}</div>` : '<div class="dash-empty">Inga personbästan ännu. De dyker upp här när du slår ett tidigare resultat.</div>') + trendHtml;
+  try{ await renderRecoveryIntelligence(); }catch(err){ console.error('Återhämtningsanalys:',err); }
+  try{ await renderDataQuality(); }catch(err){ console.error('Datakvalitet:',err); }
 }
 
 
@@ -4949,24 +4962,55 @@ document.getElementById('quickLogExercises').addEventListener('click',e=>{const 
 let quickLogRenderToken = 0;
 function formatLastSets(entry){
   if(!entry || !entry.sets || !entry.sets.length) return '';
-  return entry.sets.map(x => `${x.weight || 0}×${x.reps}`).join(' / ');
+  return entry.sets.map(x => `${x.weight || 0}×${x.reps}${x.rir == null || x.rir === '' ? '' : '@RIR '+(Number(x.rir)>=3?'3+':x.rir)}`).join(' / ');
 }
 function parseRepRange(v){
   const nums=String(v||'').match(/\d+/g) || [];
   if(!nums.length) return null;
   return {min:Number(nums[0]), max:Number(nums[1] || nums[0])};
 }
-function progressionSuggestion(ex,lastEntry){
+function defaultWeightStep(name, w){
+  const n=String(name||'').toLowerCase();
+  if(/hantel/.test(n)) return 2; // total rapporterad ökning för hantelparet
+  if(/hack|benpress/.test(n)) return 5;
+  if(/kabel|pushdown|facepull|curl|pec-deck|maskin/.test(n)) return 2.5;
+  return w >= 40 ? 2.5 : 1;
+}
+function getWeightStep(ex, w){ return Number(WEIGHT_STEPS[ex.name] || ex.weightStep || defaultWeightStep(ex.name,w)) || 1; }
+function progressionSuggestion(ex,lastEntry,allHistory){
   if(!lastEntry || !lastEntry.sets || !lastEntry.sets.length || ex.bodyweight) return '';
   const range=parseRepRange(ex.reps); if(!range) return '';
   const sets=lastEntry.sets;
-  const allTop=sets.length >= Number(ex.sets||sets.length) && sets.every(x => Number(x.reps)>=range.max);
+  const required=Number(ex.sets||sets.length);
+  const totalReps=sets.slice(0,required).reduce((a,x)=>a+(Number(x.reps)||0),0);
+  const allInRange=sets.length >= required && sets.slice(0,required).every(x => Number(x.reps)>=range.min);
+  const allTop=sets.length >= required && sets.slice(0,required).every(x => Number(x.reps)>=range.max);
+  const threshold=required*Math.max(range.min,range.max-1);
   const anyLow=sets.some(x => Number(x.reps)<range.min);
   const w=Math.max(...sets.map(x=>Number(x.weight)||0)); if(!w) return '';
-  const step=w>=50 ? 2.5 : 1;
-  if(allTop) return `Förslag idag: ${Math.round((w+step)*10)/10} kg · ${range.min}–${range.max} reps`;
-  if(anyLow) return `Förslag idag: behåll ${w} kg tills alla set når minst ${range.min} reps`;
-  return `Förslag idag: behåll ${w} kg och bygg mot ${range.max} reps i alla set`;
+  const step=getWeightStep(ex,w);
+  const rirs=sets.map(x=>x.rir).filter(x=>x!==''&&x!=null).map(Number);
+  const fullRir=rirs.length===sets.length;
+  const minRir=fullRir?Math.min(...rirs):null;
+  const next=Math.round((w+step)*100)/100;
+  if(((fullRir && allInRange && totalReps>=threshold && minRir>=1) || (!fullRir && allTop))) return `Förslag idag: ${next} kg · ${range.min}–${range.max} reps${fullRir?' · sikta på RIR 1–2':''}`;
+  if(allInRange && totalReps>=threshold && fullRir && minRir===0) return `Behåll ${w} kg: du nådde ${totalReps} reps, men minst ett set var RIR 0. Bygg samma reps med RIR 1–2 först.`;
+  if(anyLow){
+    const recent=(allHistory||[]).filter(e=>e.exercise===ex.name).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,2);
+    const twice=recent.length===2 && recent.every(e=>(e.sets||[]).some(st=>Number(st.reps)<range.min && Number(st.rir)===0));
+    return twice ? `Två pass under repintervallet vid RIR 0: överväg ${Math.max(step,Math.round((w-step)*100)/100)} kg.` : `Behåll ${w} kg tills alla set når minst ${range.min} reps.`;
+  }
+  return `Behåll ${w} kg och bygg mot ${range.max} reps i alla set${fullRir?' vid RIR 1–2':''}.`;
+}
+function dailyTargetHtml(ex,lastEntry,allHistory){
+  const range=parseRepRange(ex.reps); if(!range) return '';
+  const required=Number(ex.sets||3);
+  let w=Number(ex.kg)||0;
+  if(lastEntry?.sets?.length) w=Math.max(...lastEntry.sets.map(st=>Number(st.weight)||0),w);
+  const suggestion=progressionSuggestion(ex,lastEntry,allHistory);
+  const m=suggestion.match(/Förslag idag: ([\d.]+) kg/); if(m) w=Number(m[1]);
+  const totalMin=required*Math.max(range.min,range.max-2), totalMax=required*Math.max(range.min,range.max-1);
+  return `<div class="quick-target-card"><strong>Mål idag</strong><br>${w?`${String(w).replace('.',',')} kg × `:''}${range.min}–${range.max} · sikta på totalt ${totalMin}–${totalMax}+ reps över ${required} set · RIR 1–2<br><span class="intel-muted">Höj med ${getWeightStep(ex,w)} kg när du når ${totalMax}+ reps, alla set är inom intervallet och inget set är RIR 0.</span></div>`;
 }
 async function renderQuickLogForm(){
   await flushQuickDraft();
@@ -4974,6 +5018,7 @@ async function renderQuickLogForm(){
   document.getElementById('quickLogDayLabel').textContent = currentDay;
   const exercises = PLAN[currentDay] || [];
 
+  const allHistory = await loadAllEntries();
   const lastEntries = await Promise.all(
     exercises.map(ex => getLastLoggedEntry(currentDay, ex.name))
   );
@@ -5009,6 +5054,7 @@ async function renderQuickLogForm(){
           <span class="pill">Set ${s}</span>
           <input type="number" step="0.5" class="quick-weight-input" placeholder="${weightPlaceholder}" value="${weightValue}">
           <input type="number" class="quick-reps-input" placeholder="${ex.reps}" value="${repsValue}">
+          <select class="quick-rir-select" aria-label="RIR, reps kvar i tanken" title="RIR – reps kvar i tanken">${rirOptions(prevSet && prevSet.rir)}</select>
           ${copyBtn}
           <button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button>
         </div>
@@ -5018,7 +5064,8 @@ async function renderQuickLogForm(){
     block.innerHTML = `
       <div class="quick-ex-header"><div class="quick-ex-name">${ex.name} <span class="target">mål: ${targetLabel}</span></div><div class="quick-tools"><button type="button" class="quick-more-btn">•••</button><div class="quick-tools-menu"><button type="button" data-tool="swap">Byt övning</button><button type="button" data-tool="warm">Uppvärmning</button></div></div></div>
       ${lastEntry ? `<div class="quick-last">Senast ${fmtDate(lastEntry.date)}: ${formatLastSets(lastEntry)}</div>` : `<div class="quick-last">Ingen tidigare logg</div>`}
-      ${progressionSuggestion(ex,lastEntry) ? `<div class="quick-progression">↗ ${progressionSuggestion(ex,lastEntry)}</div>` : ''}
+      ${progressionSuggestion(ex,lastEntry,allHistory) ? `<div class="quick-progression">↗ ${progressionSuggestion(ex,lastEntry,allHistory)}</div>` : ''}
+      ${dailyTargetHtml(ex,lastEntry,allHistory)}
       ${supersetTag}
       <div class="ss-slot"></div>
       <div class="warm-slot"></div>
@@ -5061,7 +5108,10 @@ document.getElementById('quickLogExercises').addEventListener('click', (e) => {
     if(nowDone){
       e.target.textContent='✓';
       if(!quickSessionStart) quickSessionStart = Date.now();
+      if(navigator.vibrate) navigator.vibrate(35);
       handleSetCompleted(row);
+      const label = `${blockExerciseName(row)} · set ${[...row.parentElement.children].indexOf(row)+1} klart ✓`;
+      showUndoToast(label, () => { row.classList.remove('done'); e.target.classList.remove('done'); stopQuickRest(); updateWorkoutUX(); markQuickDirty(); });
       updateWorkoutUX();
     }
     return;
@@ -5087,10 +5137,14 @@ document.getElementById('quickLogExercises').addEventListener('click', (e) => {
   const weightPlaceholder = isBW ? 'tilläggsvikt' : 'kg';
   const row = document.createElement('div');
   row.className = 'quick-set-row';
+  const prevRow = rowsWrap.lastElementChild;
+  const prevWeight = prevRow?.querySelector('.quick-weight-input')?.value || '';
+  const prevReps = prevRow?.querySelector('.quick-reps-input')?.value || '';
   row.innerHTML = `
     <span class="pill">Set ${nextNum}</span>
-    <input type="number" step="0.5" class="quick-weight-input" placeholder="${weightPlaceholder}">
-    <input type="number" class="quick-reps-input" placeholder="reps">
+    <input type="number" step="0.5" class="quick-weight-input" placeholder="${weightPlaceholder}" value="${prevWeight}">
+    <input type="number" class="quick-reps-input" placeholder="reps" value="${prevReps}">
+    <select class="quick-rir-select" aria-label="RIR">${rirOptions('')}</select>
     <button type="button" class="copy-set-btn quick-copy-set-btn" title="Kopiera från set ovan">↑</button>
     <button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button>
   `;
@@ -5107,14 +5161,15 @@ document.getElementById('quickSaveBtn').onclick = async () => {
     const exerciseName = block.getAttribute('data-exercise');
     const originalExercise = block.getAttribute('data-original-exercise') || exerciseName;
     const isBW = block.getAttribute('data-bw') === '1';
-    const weightInputs = block.querySelectorAll('.quick-weight-input');
-    const repsInputs = block.querySelectorAll('.quick-reps-input');
     const sets = [];
-    weightInputs.forEach((w, i) => {
-      const reps = parseInt(repsInputs[i].value);
+    block.querySelectorAll('.quick-set-row').forEach(row => {
+      const reps = parseInt(row.querySelector('.quick-reps-input').value);
       if(!isNaN(reps) && reps > 0){
-        const weight = parseFloat(w.value);
-        sets.push({ weight: isNaN(weight) ? 0 : weight, reps });
+        const weight = parseFloat(row.querySelector('.quick-weight-input').value);
+        const rirRaw = (row.querySelector('.quick-rir-select') || {}).value;
+        const set = { weight: isNaN(weight) ? 0 : weight, reps };
+        if(rirRaw !== '' && rirRaw != null) set.rir = Number(rirRaw);
+        sets.push(set);
       }
     });
     if(sets.length > 0){
@@ -5246,12 +5301,15 @@ async function upsertEntry(entry){
 document.getElementById('saveBtn').onclick = async () => {
   const weightInputs = document.querySelectorAll('.weight-input');
   const repsInputs = document.querySelectorAll('.reps-input');
+  const rirInputs = document.querySelectorAll('.rir-select');
   const sets = [];
   weightInputs.forEach((w,i) => {
     const weight = parseFloat(w.value);
     const reps = parseInt(repsInputs[i].value);
     if(!isNaN(weight) && !isNaN(reps)){
-      sets.push({weight, reps});
+      const set={weight, reps};
+      if(rirInputs[i] && rirInputs[i].value !== '') set.rir=Number(rirInputs[i].value);
+      sets.push(set);
     }
   });
   if(sets.length === 0){
@@ -5344,7 +5402,10 @@ function showUndoToast(message, onUndo){
   const btn = document.getElementById('undoToastBtn');
   document.getElementById('undoToastText').textContent = message;
   toast.classList.add('show');
+  clearTimeout(toast._hideTimeout);
+  toast._hideTimeout = setTimeout(() => toast.classList.remove('show'), 5000);
   btn.onclick = () => {
+    clearTimeout(toast._hideTimeout);
     toast.classList.remove('show');
     onUndo();
   };
@@ -5383,10 +5444,10 @@ function fmtSets(entry){
       const bwTag = entry.bodyweightUsed
         ? ` (≈${Math.round((s.weight + entry.bodyweightUsed)*10)/10}kg)`
         : '';
-      return `+${s.weight}kg×${s.reps}${bwTag}`;
+      return `+${s.weight}kg×${s.reps}${s.rir==null||s.rir===''?'':` @RIR ${Number(s.rir)>=3?'3+':s.rir}`}${bwTag}`;
     }).join(', ');
   }
-  return entry.sets.map(s => `${s.weight}kg×${s.reps}`).join(', ');
+  return entry.sets.map(s => `${s.weight}kg×${s.reps}${s.rir==null||s.rir===''?'':` @RIR ${Number(s.rir)>=3?'3+':s.rir}`}`).join(', ');
 }
 function maxWeight(entry){
   return Math.max(...entry.sets.map(s => effectiveWeight(entry, s)));
@@ -6331,7 +6392,7 @@ async function renderBodyweightChart(){
       labels,
       datasets: [
         { type: 'bar', label: 'Träningsvolym (kg)', data: volume, backgroundColor: '#3E8FE855', yAxisID: 'yVol' },
-        { type: 'line', label: 'Kroppsvikt (kg)', data: avgWeight, borderColor: '#E8531D',
+        { type: 'line', label: 'Kroppsvikt, 7-dagarssnitt (kg)', data: avgWeight, borderColor: '#E8531D',
           backgroundColor: '#E8531D', spanGaps: true, tension: 0.25, pointRadius: 4, yAxisID: 'yKg' }
       ]
     },
@@ -6347,14 +6408,11 @@ async function renderBodyweightChart(){
     }
   });
 
-  const loggedWeights = weights.slice().sort((a,b) => new Date(a.date) - new Date(b.date));
-  if(loggedWeights.length >= 2){
-    const first = loggedWeights[0];
-    const last = loggedWeights[loggedWeights.length - 1];
-    const diff = Math.round((last.kg - first.kg) * 10) / 10;
-    noteEl.textContent = `${first.kg} kg (${fmtDate(first.date)}) → ${last.kg} kg (${fmtDate(last.date)}), ${diff >= 0 ? '+' : ''}${diff} kg. Jämför med volymstapeln — mål är stabil/lätt sjunkande vikt medan volymen ökar.`;
-  } else if(loggedWeights.length === 1){
-    noteEl.textContent = `Första vikten loggad: ${loggedWeights[0].kg} kg. Logga igen om en vecka för att se trenden.`;
+  const trend = weightTrendStats(weights);
+  if(trend && weights.length >= 2){
+    noteEl.textContent = `7-dagarssnitt ${trend.avg.toFixed(1).replace('.',',')} kg · trend ${trend.slope >= 0 ? '+' : ''}${trend.slope.toFixed(2).replace('.',',')} kg/vecka de senaste tre veckorna. Jämför med volymstapeln och styrkeutvecklingen.`;
+  } else if(trend){
+    noteEl.textContent = `Första vikten loggad: ${trend.avg.toFixed(1).replace('.',',')} kg. Logga flera morgonvikter för ett stabilt 7-dagarssnitt.`;
   }
 }
 
@@ -6629,6 +6687,124 @@ async function renderAllStats(){
   await renderMonthlyReport();
 }
 
+
+// ================= v1.6–1.7 INTELLIGENCE =================
+async function loadIntelligenceSettings(){
+  try{ const r=await window.storage.get('settings:weightSteps'); WEIGHT_STEPS=JSON.parse(r.value||'{}'); }catch(e){ WEIGHT_STEPS={}; }
+  try{ const r=await window.storage.get('settings:swapFavorites'); SWAP_FAVORITES=JSON.parse(r.value||'{}'); }catch(e){ SWAP_FAVORITES={}; }
+}
+function renderWeightStepSettings(){
+  const sel=document.getElementById('weightStepExercise'); if(!sel)return;
+  const names=getAllPlanExerciseNames().sort((a,b)=>a.localeCompare(b,'sv'));
+  const prev=sel.value; sel.innerHTML=names.map(n=>`<option${n===prev?' selected':''}>${n}</option>`).join('');
+  const ex=findPlanExerciseAny(sel.value||names[0]); const w=Number(ex?.kg)||50;
+  document.getElementById('weightStepValue').value=WEIGHT_STEPS[sel.value]||ex?.weightStep||defaultWeightStep(sel.value,w);
+  const list=document.getElementById('weightStepList');
+  const custom=Object.entries(WEIGHT_STEPS).sort((a,b)=>a[0].localeCompare(b[0],'sv'));
+  list.innerHTML=custom.length?custom.map(([n,v])=>`<span class="step-chip">${n}: +${v} kg</span>`).join(''):'<span class="intel-muted">Inga egna steg ännu – rimliga standardvärden används.</span>';
+}
+function findPlanExerciseAny(name){ for(const list of Object.values(PLAN)){const ex=list.find(x=>x.name===name);if(ex)return ex;}return null; }
+document.getElementById('weightStepExercise').addEventListener('change',renderWeightStepSettings);
+document.getElementById('saveWeightStepBtn').onclick=async()=>{
+  const name=document.getElementById('weightStepExercise').value, value=Number(document.getElementById('weightStepValue').value);
+  if(!name||!value||value<=0){showInlineError('weightStepError','Ange ett giltigt viktsteg.');return;}
+  WEIGHT_STEPS[name]=value; await window.storage.set('settings:weightSteps',JSON.stringify(WEIGHT_STEPS)); renderWeightStepSettings(); refreshQuickLogIfVisible();
+};
+
+function entryBestE1RM(e){ return Math.max(0,...(e.sets||[]).map(st=>estimated1RMForSet(e,st))); }
+function weightTrendStats(weights){
+  const sorted=weights.slice().filter(w=>Number(w.kg)>0).sort((a,b)=>a.date.localeCompare(b.date));
+  if(!sorted.length)return null;
+  const points=sorted.map((w,i)=>{
+    const end=new Date(w.date+'T12:00:00'), start=new Date(end);start.setDate(end.getDate()-6);
+    const arr=sorted.filter(x=>{const d=new Date(x.date+'T12:00:00');return d>=start&&d<=end;}).map(x=>Number(x.kg));
+    return {date:w.date,avg:arr.reduce((a,b)=>a+b,0)/arr.length};
+  });
+  const last=points[points.length-1], cutoff=new Date(last.date+'T12:00:00');cutoff.setDate(cutoff.getDate()-21);
+  const recent=points.filter(p=>new Date(p.date+'T12:00:00')>=cutoff);
+  let slope=0;
+  if(recent.length>=2){const x0=new Date(recent[0].date+'T12:00:00').getTime();const xs=recent.map(p=>(new Date(p.date+'T12:00:00').getTime()-x0)/86400000),ys=recent.map(p=>p.avg);const xm=xs.reduce((a,b)=>a+b,0)/xs.length,ym=ys.reduce((a,b)=>a+b,0)/ys.length;const den=xs.reduce((a,x)=>a+(x-xm)**2,0);slope=den?xs.reduce((a,x,i)=>a+(x-xm)*(ys[i]-ym),0)/den*7:0;}
+  return {avg:last.avg,slope,points};
+}
+function nextStrengthAfter(dateStr){
+  const d=new Date(dateStr+'T12:00:00');
+  for(let add=1;add<=3;add++){const x=new Date(d);x.setDate(d.getDate()+add);const idx=(x.getDay()+6)%7;const item=SCHEDULE[idx];if(item?.mode==='strength')return {days:add,item};}
+  return null;
+}
+function runCoordinationMessage(dateStr,type){
+  const d=new Date((dateStr||todayStr())+'T12:00:00'), idx=(d.getDay()+6)%7, today=SCHEDULE[idx], next=nextStrengthAfter(dateStr||todayStr());
+  const hard=/tempo|intervall|maraton/i.test(type||''); const legToday=today?.mode==='strength'&&/ben|lower/i.test(today.label||''); const legTomorrow=next&&next.days===1&&/ben|lower/i.test(next.item.label||'');
+  if(hard&&(legToday||legTomorrow))return {warn:true,text:`⚠️ ${legToday?'Benpass samma dag':'Imorgon: '+next.item.label}. Byt helst till lugn distans eller flytta kvalitetspasset för att skydda benpassets prestation.`};
+  if(legToday||legTomorrow)return {warn:false,text:`✓ Lugn löpning passar. Håll intensiteten lätt eftersom ${legToday?'du kör ben idag':'du har '+next.item.label+' imorgon'}.`};
+  return {warn:false,text:'✓ Ingen tydlig krock med nästa benpass. Kvalitetspass är möjligt om återhämtningen känns normal.'};
+}
+function updateRunCoordinationAdvice(){
+  const el=document.getElementById('runCoordinationAdvice');if(!el)return;const m=runCoordinationMessage(document.getElementById('runDate').value||todayStr(),document.getElementById('runType').value);el.textContent=m.text;el.className='run-advice show '+(m.warn?'warn':'good');
+}
+document.getElementById('runDate').addEventListener('change',updateRunCoordinationAdvice);
+document.getElementById('runType').addEventListener('change',updateRunCoordinationAdvice);
+
+async function recoveryAnalysis(){
+  const entries=await loadAllEntries();
+  const mains=[];Object.values(PLAN).forEach(list=>{const x=list.find(e=>exerciseClass(e.name)==='heavy');if(x&&!mains.includes(x.name))mains.push(x.name);});
+  const details=[];
+  for(const name of mains.slice(0,6)){
+    const list=entries.filter(e=>e.exercise===name&&(e.sets||[]).length).sort((a,b)=>a.date.localeCompare(b.date)).slice(-3);
+    if(list.length<3)continue;
+    const rirSets=list.slice(-2).flatMap(e=>e.sets||[]).filter(st=>st.rir!==''&&st.rir!=null);
+    const rirCoverage=rirSets.length===list.slice(-2).flatMap(e=>e.sets||[]).length;
+    if(!rirCoverage)continue;
+    const change=(entryBestE1RM(list[2])-entryBestE1RM(list[0]))/Math.max(1,entryBestE1RM(list[0]))*100;
+    const avgRir=rirSets.reduce((a,s)=>a+Number(s.rir),0)/rirSets.length;
+    if(change<=1&&avgRir<=1.5)details.push({name,change,avgRir});
+  }
+  return {mains:mains.slice(0,6),details,suggest:details.length>=4};
+}
+async function planDeload(){
+  const monday=getMondayOfCurrentWeek(), next=new Date(monday);next.setDate(monday.getDate()+7);
+  const plan=JSON.parse(JSON.stringify(PLAN));
+  const entries=await loadAllEntries();
+  Object.values(plan).forEach(list=>list.forEach(ex=>{ex.sets=Math.max(1,Math.round(Number(ex.sets||3)*0.7));let base=Number(ex.kg)||0;if(!base){const last=entries.filter(e=>e.exercise===ex.name).sort((a,b)=>b.date.localeCompare(a.date))[0];base=last?Math.max(...last.sets.map(s=>Number(s.weight)||0)):0;}if(base&&!ex.bodyweight){const step=getWeightStep(ex,base);ex.kg=Math.max(step,Math.round(base*0.9/step)*step);ex.kgResetDate=toLocalDateStr(next);}}));
+  const labels={};SCHEDULE.filter(d=>d.mode==='strength').forEach(d=>labels[d.name]=d.label);
+  await saveWeekConfig(next,plan,JSON.parse(JSON.stringify(RUN_TARGETS)),labels,{deload:true});
+  await window.storage.set('recovery:deloadPlanned',toLocalDateStr(next));
+  alert(`Deload planerad veckan ${fmtDate(toLocalDateStr(next))}: cirka 30 % färre set och 10 % lägre vikt. Övningarna är oförändrade.`);
+  await renderRecoveryIntelligence();
+}
+async function renderRecoveryIntelligence(){
+  const el=document.getElementById('dashRecovery');if(!el)return;
+  const [analysis,weights]=await Promise.all([recoveryAnalysis(),loadAllWeights()]);const wt=weightTrendStats(weights);const run=runCoordinationMessage(todayStr(),(RUN_TARGETS[SCHEDULE[todayIndex()]?.name]||{}).type||'Lugn distans');
+  let deload='';
+  const ignoreUntil=Number(await readMeta('recovery:ignoreUntil'))||0;
+  if(analysis.suggest && ignoreUntil>Date.now()) deload='<div class="intel-muted">Deload-förslaget är dolt till '+new Date(ignoreUntil).toLocaleDateString('sv-SE')+'.</div>';
+  else if(analysis.suggest)deload=`<div class="intel-warn"><strong>Återhämtningen verkar försämras.</strong><br>${analysis.details.length} av ${analysis.mains.length} huvudövningar har stagnerat/minskat över tre pass samtidigt som seten ligger nära failure.</div><div class="intel-actions"><button class="primary" id="planDeloadBtn">Planera deload</button><button id="ignoreDeloadBtn">Ignorera 14 dagar</button></div>`;
+  else if(analysis.details.length)deload=`<div class="intel-muted">${analysis.details.length} av ${analysis.mains.length} huvudövningar visar möjlig trötthet. Deload föreslås först vid minst fyra.</div>`;
+  else deload='<div class="intel-muted">Deload-analys visas när minst tre pass per huvudövning har komplett RIR.</div>';
+  const whtml=wt?`<div style="margin-top:8px;"><strong>${wt.avg.toFixed(1).replace('.',',')} kg</strong> · 7-dagarssnitt · <span class="${Math.abs(wt.slope)<=0.25?'intel-good':'intel-warn'}">${wt.slope>=0?'+':''}${wt.slope.toFixed(2).replace('.',',')} kg/vecka</span></div>`:'<div class="intel-muted" style="margin-top:8px;">Logga kroppsvikt för 7-dagarstrend.</div>';
+  el.innerHTML=`<div class="intel-box">${deload}${whtml}<div class="${run.warn?'intel-warn':'intel-good'}" style="margin-top:8px;">${run.text}</div></div>`;
+  document.getElementById('planDeloadBtn')?.addEventListener('click',planDeload);
+  document.getElementById('ignoreDeloadBtn')?.addEventListener('click',async()=>{await window.storage.set('recovery:ignoreUntil',String(Date.now()+14*86400000));el.innerHTML='<div class="intel-muted">Deload-förslaget är dolt i 14 dagar.</div>';});
+}
+
+async function acceptedQuality(){try{const r=await window.storage.get('quality:accepted');return JSON.parse(r.value||'{}');}catch(e){return {};}}
+function qualitySig(en,st){return `${en._key}|${st.weight}|${st.reps}`;}
+async function scanDataQuality(){
+  const entries=await loadAllEntries(),accepted=await acceptedQuality(),issues=[];
+  const byEx={};entries.forEach(e=>(byEx[e.exercise]=byEx[e.exercise]||[]).push(e));
+  Object.entries(byEx).forEach(([name,list])=>{
+    const vals=list.flatMap(e=>(e.sets||[]).map(st=>Number(st.weight)).filter(v=>v>0&&v<1000)).sort((a,b)=>a-b);if(vals.length<4)return;const med=vals[Math.floor(vals.length/2)];
+    list.forEach(en=>(en.sets||[]).forEach((st,idx)=>{const w=Number(st.weight);const sig=qualitySig(en,st);if(w>Math.max(med*3,med+100)&&!accepted[sig])issues.push({type:'weight',en,st,idx,med,sig});}));
+  });
+  const dup=[];const seen=new Map();entries.forEach(en=>{const sig=JSON.stringify([en.date,en.day,en.exercise,en.sets,en.note||'',en.bodyweightUsed??null]);if(seen.has(sig))dup.push({type:'duplicate',en,original:seen.get(sig)});else seen.set(sig,en);});
+  return [...issues,...dup];
+}
+async function renderDataQuality(){
+  const el=document.getElementById('dashQuality');if(!el)return;const issues=await scanDataQuality();
+  if(!issues.length){el.innerHTML='<div class="intel-good">✓ Inga misstänkta värden eller exakta dubbletter hittades.</div>';return;}
+  el.innerHTML=issues.slice(0,4).map((x,i)=>x.type==='weight'?`<div class="quality-item"><strong>⚠️ Misstänkt värde</strong><br>${x.en.exercise}: ${x.st.weight} kg · normalt omkring ${Math.round(x.med*100)/100} kg<div class="intel-actions"><button data-quality-edit="${i}">Ändra</button><button data-quality-accept="${i}">Det stämmer</button></div></div>`:`<div class="quality-item"><strong>⚠️ Möjlig dubblett</strong><br>${x.en.day} · ${fmtDate(x.en.date)} · ${x.en.exercise}<div class="intel-actions"><button data-quality-delete="${i}">Rensa dubbletten</button></div></div>`).join('')+(issues.length>4?`<div class="intel-muted">+${issues.length-4} fler problem</div>`:'');
+  el.onclick=async ev=>{const attr=['qualityEdit','qualityAccept','qualityDelete'].find(k=>ev.target.dataset[k]!=null);if(!attr)return;const x=issues[Number(ev.target.dataset[attr])];if(attr==='qualityEdit'){const v=prompt(`Ny vikt för ${x.en.exercise}:`,String(x.med));if(v==null)return;const n=Number(String(v).replace(',','.'));if(!n||n<0)return;const clean={...x.en,sets:x.en.sets.map((st,j)=>j===x.idx?{...st,weight:n}:{...st})};const key=clean._key;delete clean._key;await window.storage.set(key,JSON.stringify(clean));invalidateEntriesCache();}else if(attr==='qualityAccept'){const a=await acceptedQuality();a[x.sig]=true;await window.storage.set('quality:accepted',JSON.stringify(a));}else{await window.storage.delete(x.en._key);invalidateEntriesCache();}await renderDataQuality();};
+}
+
 // ---------- DATA BACKUP (export / import) ----------
 document.getElementById('exportDataBtn').onclick = async () => {
   const statusEl = document.getElementById('dataBackupStatus');
@@ -6653,7 +6829,8 @@ document.getElementById('exportDataBtn').onclick = async () => {
 
     const backup = {
       exportedAt: new Date().toISOString(),
-      entries, runs, weights, wellness, planConfig, weekPlans
+      entries, runs, weights, wellness, planConfig, weekPlans,
+      settings: { weightSteps: WEIGHT_STEPS, swapFavorites: SWAP_FAVORITES }
     };
     const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
     await _saveFileForViewer(`traningslogg-backup-${todayStr()}.json`, blob, 'application/json');
@@ -6704,6 +6881,11 @@ document.getElementById('importDataFile').onchange = async (e) => {
     if(data.planConfig){
       await window.storage.set('plan:config', JSON.stringify(data.planConfig));
     }
+    if(data.settings){
+      if(data.settings.weightSteps) await window.storage.set('settings:weightSteps',JSON.stringify(data.settings.weightSteps));
+      if(data.settings.swapFavorites) await window.storage.set('settings:swapFavorites',JSON.stringify(data.settings.swapFavorites));
+      await loadIntelligenceSettings();
+    }
 
     let weekPlanCount = 0;
     if(data.weekPlans){
@@ -6721,6 +6903,7 @@ document.getElementById('importDataFile').onchange = async (e) => {
     invalidateWellnessCache();
     resolvedWeekCache.clear();
     await loadPlanConfig();
+    await applyV153Migration(true);
     viewedWeekMonday = getMondayOfCurrentWeek();
     await loadViewedWeek();
     renderWeekNavHeader();
@@ -6758,6 +6941,7 @@ document.getElementById('weekTodayBtn').onclick = () => navigateWeek(0, true);
 // init
 (async () => {
   await checkStorageHealth();
+  await loadIntelligenceSettings();
   await loadPlanConfig();
   await applyLegsAndCoreMigration();
   await applyBicepsVolumeMigration();
@@ -6770,7 +6954,7 @@ document.getElementById('weekTodayBtn').onclick = () => navigateWeek(0, true);
   await applyRepRangeTuneMigration();
   await applyHypertrophyUXMigration();
   await applyHackSquatAndLegPressMigration();
-  await applyLogReviewRecommendationsMigration();
+  await applyV153Migration();
   const todaysPlan = SCHEDULE[todayIndex()];
   if(todaysPlan.mode === 'strength'){ currentDay = todaysPlan.label; }
   viewedWeekMonday = getMondayOfCurrentWeek();
