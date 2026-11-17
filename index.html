@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#14161A">
-<meta name="application-version" content="1.8.0">
-<meta name="app-version" content="1.8.0">
+<meta name="application-version" content="1.1.0">
+<meta name="app-version" content="1.1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Träningslogg">
@@ -35,10 +35,6 @@
     --library: #4FA6A6;
     --good: #4CAF7D;
     --good-dim: #4CAF7D22;
-    --current: #E8531D;
-    --current-dim: #E8531D22;
-    --danger: #E65A5A;
-    --danger-dim: #E65A5A22;
   }
   *{ box-sizing: border-box; }
   body{
@@ -1274,34 +1270,23 @@
 .qrest{border-radius:15px!important;max-width:calc(100vw - 20px);flex-wrap:wrap;justify-content:center}.qrest-copy{display:flex;flex-direction:column;min-width:100px}.qrest-next{font-size:10px;color:var(--muted);max-width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.qrest #qrestStop{min-width:84px}
 .quick-tools{position:relative}.quick-more-btn{border:1px solid var(--line);background:var(--panel-2);color:var(--muted);border-radius:18px;min-width:38px;height:34px;font-weight:800}.quick-tools-menu{display:none;position:absolute;right:0;top:38px;z-index:50;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px;min-width:150px;box-shadow:0 8px 25px #0009}.quick-tools.open .quick-tools-menu{display:flex;flex-direction:column;gap:4px}.quick-tools-menu button{border:0;background:var(--panel-2);color:var(--text);border-radius:8px;padding:9px;text-align:left;font-weight:700}
 
+/* v1.8.1: tydlig, minimerbar navigation under pågående pass */
+body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom))}
+.workout-dock{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(82px + env(safe-area-inset-bottom));z-index:900;width:min(620px,calc(100vw - 20px));background:rgba(28,31,37,.98);border:1px solid var(--accent);border-radius:17px;box-shadow:0 14px 38px #000b;display:none;overflow:hidden;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.workout-dock.show{display:block}.workout-dock.compact{border-color:var(--line)}
+.workout-dock-expanded{padding:12px}.workout-dock.compact .workout-dock-expanded{display:none}.workout-dock-compact{display:none;width:100%;border:0;background:transparent;color:var(--text);padding:11px 13px;text-align:left;align-items:center;gap:10px}.workout-dock.compact .workout-dock-compact{display:flex}
+.workout-dock-compact-copy{min-width:0;flex:1}.workout-dock-compact-title{display:block;font-weight:800;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.workout-dock-compact-meta{display:block;color:var(--muted);font-size:11px;margin-top:2px}.workout-dock-resume{color:var(--accent);font-size:12px;font-weight:800;white-space:nowrap}
+.workout-dock-top{display:flex;align-items:flex-start;gap:10px}.workout-dock-current{min-width:0;flex:1}.workout-dock-title{display:block;font-weight:800;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.workout-dock-values{display:block;color:var(--muted);font-size:12px;margin-top:2px}.workout-minimize{width:40px;height:40px;flex:0 0 40px;border:1px solid var(--line);border-radius:50%;background:var(--panel-2);color:var(--text);font-size:26px;line-height:1;padding:0}.workout-complete{width:58px;height:58px;flex:0 0 58px;border:0;border-radius:15px;background:var(--good);color:#fff;font-size:27px;font-weight:900}.workout-complete:disabled{opacity:.45}
+.workout-dock-rest{display:none;align-items:center;gap:8px;border-top:1px solid var(--line);margin-top:10px;padding-top:10px;flex-wrap:wrap}.workout-dock-rest.show{display:flex}.workout-rest-label{min-width:0;flex:1;color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.workout-rest-time{font:700 23px 'Barlow Condensed',sans-serif;color:var(--accent);min-width:48px;text-align:center}.workout-rest-adjust{border:1px solid var(--line);background:var(--panel-2);color:var(--text);border-radius:10px;min-width:44px;height:38px;font-weight:800}.workout-skip-rest{border:1px solid var(--line);background:var(--panel-2);color:var(--text);border-radius:10px;height:38px;padding:0 12px;font-weight:800;font-size:12px}
+.workout-dock-actions{display:flex;justify-content:flex-end;border-top:1px solid var(--line);margin-top:10px;padding-top:8px}.workout-end{border:0;background:transparent;color:var(--danger,#e85b5b);font-size:12px;font-weight:800;padding:7px 4px}
+/* Den gamla separata vilopillan ersätts av vilan i passfältet. */
+.qrest{display:none!important}
+.bottom-nav{z-index:1000!important}
+@media(max-width:700px){body.workout-dock-visible{padding-bottom:calc(190px + env(safe-area-inset-bottom))}.workout-dock{bottom:calc(86px + env(safe-area-inset-bottom))}}
 
-/* v1.6–1.7: hypertrofiintelligens och återhämtning */
-.rir-select,.quick-rir-select{width:64px;min-height:46px;padding:6px 4px;border:1px solid var(--line);border-radius:9px;background:var(--panel-2);color:var(--text);font-size:13px;text-align:center}
-.rir-head{font-size:10px;color:var(--muted);text-align:center;line-height:1.1}
-.quick-target-card{background:linear-gradient(135deg,#4caf7d16,#3e8fe80d);border:1px solid #4caf7d55;border-radius:10px;padding:9px 11px;margin:0 0 9px;font-size:12px;line-height:1.55}
-.quick-target-card strong{color:var(--good)}
-.intel-box{font-size:13px;line-height:1.55}.intel-box .intel-title{font-weight:800;color:var(--text);margin-bottom:4px}.intel-muted{color:var(--muted);font-size:12px}.intel-warn{color:#f0a44b}.intel-good{color:var(--good)}
-.intel-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.intel-actions button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:999px;padding:7px 11px;font-size:12px;font-weight:700}.intel-actions button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-.run-advice{display:none;margin-top:10px;padding:10px 11px;border-radius:10px;border:1px solid var(--line);background:var(--panel-2);font-size:13px;line-height:1.5}.run-advice.show{display:block}.run-advice.warn{border-color:#f0a44b88;color:#f0b35e}.run-advice.good{border-color:#4caf7d66;color:var(--good)}
-.step-grid{display:grid;grid-template-columns:1fr 100px auto;gap:8px;align-items:end}.step-grid .btn{margin:0;width:auto;padding:9px 13px}.step-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.step-chip{background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:5px 9px;font-size:11px;color:var(--muted)}
-.quality-item{border-top:1px solid var(--line);padding:8px 0}.quality-item:first-child{border-top:0;padding-top:0}.quality-item strong{color:var(--text)}
-.quick-set-undo-hint{font-size:11px;color:var(--muted)}
-@media(max-width:700px){.quick-set-row{display:grid;grid-template-columns:48px minmax(64px,1fr) minmax(60px,1fr) 64px 32px 46px}.quick-set-row .pill{width:auto}.quick-weight-input,.quick-reps-input{min-width:0;width:100%}.quick-set-row .copy-set-spacer{width:32px}.set-row{display:grid;grid-template-columns:48px minmax(70px,1fr) minmax(60px,1fr) 64px 32px}.set-row .pill{width:auto}.step-grid{grid-template-columns:1fr 88px}.step-grid .btn{grid-column:1/-1;width:100%}}
-
-
-/* v1.8: lugnare loggning, samlade meddelanden och semantiska färger */
-#backupBanner{display:none!important}
-.quick-rir-select{display:none!important}
-.rir-prompt{grid-column:1/-1;display:flex;align-items:center;gap:7px;flex-wrap:wrap;background:var(--panel-2);border:1px solid var(--current);border-radius:10px;padding:8px 9px;margin-top:4px;animation:rirIn .18s ease-out}
-.rir-prompt-label{font-size:12px;color:var(--text);font-weight:700;margin-right:auto}.rir-choice{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:999px;min-width:38px;height:34px;font-weight:800}.rir-choice.selected{background:var(--good);border-color:var(--good);color:#fff}.rir-skip{border:0;background:transparent;color:var(--muted);font-size:11px;text-decoration:underline;padding:5px}.rir-saved{grid-column:1/-1;color:var(--good);font-size:11px;text-align:right;margin:-2px 4px 3px}
-@keyframes rirIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
-.quick-input-touch{cursor:pointer;caret-color:transparent}
-.set-stepper-backdrop{display:none;position:fixed;inset:0;background:#0008;z-index:5000;align-items:flex-end;justify-content:center}.set-stepper-backdrop.open{display:flex}.set-stepper{width:100%;max-width:640px;background:var(--panel);border:1px solid var(--line);border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom));box-shadow:0 -16px 40px #0008}.set-stepper-title{font-size:12px;color:var(--muted)}.set-stepper-value{font:700 34px 'Barlow Condensed',sans-serif;text-align:center;margin:7px 0 12px}.set-stepper-controls{display:grid;grid-template-columns:1fr 1fr;gap:9px}.set-stepper-controls button{min-height:52px;border-radius:12px;border:1px solid var(--line);background:var(--panel-2);color:var(--text);font-size:18px;font-weight:800}.set-stepper-controls button.step-plus{border-color:var(--current);color:var(--current)}.set-stepper-actions{display:flex;gap:8px;margin-top:10px}.set-stepper-actions button{flex:1;border:0;background:transparent;color:var(--muted);padding:10px;font-weight:700}.set-stepper-actions .keyboard{color:var(--text);background:var(--panel-2);border-radius:10px}
-.workout-dock{display:none;position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:1450;max-width:620px;margin:auto;background:rgba(28,31,37,.97);border:1px solid var(--current);border-radius:16px;padding:10px 11px;box-shadow:0 12px 34px #000c;backdrop-filter:blur(12px)}.workout-dock.show{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}.dock-title{font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dock-value{font-size:12px;color:var(--muted);margin-top:2px}.dock-done{width:50px;height:50px;border-radius:14px;border:1px solid var(--current);background:var(--current);color:#fff;font-size:22px;font-weight:900}.dock-done:disabled{background:var(--good);border-color:var(--good);opacity:.75}.dock-rest{grid-column:1/-1;display:none;grid-template-columns:minmax(0,1fr) auto auto auto;gap:6px;align-items:center;border-top:1px solid var(--line);padding-top:8px}.dock-rest.show{display:grid}.dock-rest-copy{font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dock-rest-time{font:700 21px 'Barlow Condensed',sans-serif;color:var(--current);min-width:48px;text-align:center}.dock-rest button{border:1px solid var(--line);background:var(--panel-2);color:var(--text);border-radius:9px;height:32px;min-width:38px;font-size:11px;font-weight:700}.qrest{display:none!important}
-.home-message{display:none;border:1px solid var(--line);border-left:4px solid var(--current);background:var(--panel);border-radius:13px;padding:12px;margin:0 0 12px}.home-message.show{display:block}.home-message.good{border-left-color:var(--good)}.home-message.danger{border-left-color:var(--danger)}.home-message-title{font-weight:800;font-size:14px}.home-message-copy{font-size:12px;color:var(--muted);line-height:1.5;margin-top:3px}.home-message-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.home-message-actions button{border:1px solid var(--line);background:var(--panel-2);color:var(--text);border-radius:999px;padding:7px 11px;font-size:12px;font-weight:800}.home-message-actions button.primary{background:var(--current);border-color:var(--current);color:#fff}.home-message-more{font-size:11px;color:var(--muted);margin-top:7px}.home-draft{display:none!important}#dashRecoverySec,#dashQualitySec{display:none}.dash-down{color:var(--current)!important}.form-error,.pending-icon{color:var(--danger)!important}.pending-banner{border-color:var(--danger)!important}.quality-item strong{color:var(--danger)}.intel-warn{color:var(--current)}
-.stats-segments{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:5px;margin-bottom:12px;position:sticky;top:4px;z-index:70}.stats-segments button{border:0;background:transparent;color:var(--muted);border-radius:8px;padding:9px 4px;font-weight:800}.stats-segments button.active{background:var(--panel-2);color:var(--stats)}.stats-group{display:none}.stats-group.active{display:block}
-.cloud-grid{display:grid;gap:9px}.cloud-connected{display:none}.cloud-connected.show{display:block}.cloud-form.hidden{display:none}.cloud-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.cloud-actions .btn{margin:0}.cloud-actions .disconnect{grid-column:1/-1;background:transparent;color:var(--muted);border:1px solid var(--line)}.cloud-status{font-size:12px;line-height:1.55;margin-top:9px;color:var(--muted)}.cloud-status.good{color:var(--good)}.cloud-status.error{color:var(--danger)}.cloud-status.current{color:var(--current)}
-@media(max-width:700px){.quick-set-row{grid-template-columns:48px minmax(68px,1fr) minmax(62px,1fr) 32px 46px!important}.workout-head{position:static}.cloud-actions{grid-template-columns:1fr}.cloud-actions .disconnect{grid-column:auto}}
+/* GitHub-molnbackup */
+.cloud-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.cloud-grid .full{grid-column:1/-1}.cloud-actions{display:flex;gap:8px;flex-wrap:wrap}.cloud-actions .btn{width:auto;flex:1;min-width:140px;margin-top:0}.cloud-status{margin-top:10px;font-size:12px;line-height:1.5;color:var(--muted)}.cloud-status.ok{color:var(--good)}.cloud-status.error{color:var(--danger,#e85b5b)}
+@media(max-width:480px){.cloud-grid{grid-template-columns:1fr}.cloud-grid .full{grid-column:auto}}
 
 </style>
 </head>
@@ -1350,7 +1335,6 @@
 
   <div class="view active" id="homeView">
   <div class="home-greeting" id="homeGreeting">God eftermiddag</div>
-  <div class="home-message" id="homeMessageCenter" role="status" aria-live="polite"></div>
   <div class="home-draft" id="homeDraft" style="display:none;"></div>
   <div class="card" id="todayCard">
     <div class="today-banner-inner" id="todayBanner">
@@ -1365,8 +1349,6 @@
       <div class="dash-sec" id="dashWeeklySec" style="display:none;"><div class="dash-title">Förra veckan <button class="dash-close" id="dashWeeklyClose" aria-label="Dölj">×</button></div><div id="dashWeekly"></div></div>
       <div class="dash-sec"><div class="dash-title">Veckan</div><div id="dashWeek"><div class="dash-empty">Laddar…</div></div></div>
       <div class="dash-sec"><div class="dash-title">Utveckling</div><div id="dashProgress"><div class="dash-empty">Laddar…</div></div></div>
-      <div class="dash-sec" id="dashRecoverySec"><div class="dash-title">Återhämtning &amp; samordning</div><div id="dashRecovery"><div class="dash-empty">Analyserar…</div></div></div>
-      <div class="dash-sec" id="dashQualitySec"><div class="dash-title">Datakvalitet</div><div id="dashQuality"><div class="dash-empty">Kontrollerar…</div></div></div>
     </div>
 
     <div class="card-collapse-header" id="scheduleCollapseHeader">
@@ -1516,7 +1498,6 @@
         <option>Långpass</option>
         <option>Maratontempo</option>
       </select>
-      <div class="run-advice" id="runCoordinationAdvice"></div>
 
       <div style="height:10px"></div>
       <div class="row-2">
@@ -1546,27 +1527,96 @@
 
   <!-- STATS VIEW -->
   <div class="view" id="statsView">
-    <div class="stats-segments" role="tablist" aria-label="Statistikvy">
-      <button class="active" data-stats-tab="exercise" role="tab" aria-selected="true">Övning</button>
-      <button data-stats-tab="week" role="tab" aria-selected="false">Vecka</button>
-      <button data-stats-tab="body" role="tab" aria-selected="false">Kropp</button>
+    <div class="card">
+      <div class="card-collapse-header" style="cursor:default;">
+        <h2 style="margin:0;">Månadsrapport</h2>
+        <span class="report-month-label" id="reportMonthLabel"></span>
+      </div>
+      <div class="report-grid" id="monthlyReportGrid"></div>
     </div>
 
-    <div class="stats-group active" data-stats-group="exercise">
-      <div class="card"><h2>Styrkeutveckling</h2><label>Övning</label><select id="statsExerciseSelect"></select><div class="chart-wrap"><canvas id="strengthChart"></canvas></div><div class="chart-note" id="strengthChartNote"></div></div>
-      <div class="card" id="prCard"><h2>Personbästa</h2><div class="chart-note" style="margin-top:0;">Gäller övningen som är vald ovan.</div><div id="prCardBody"></div></div>
+    <div class="card">
+      <h2>Styrkeutveckling</h2>
+      <label>Övning</label>
+      <select id="statsExerciseSelect"></select>
+      <div class="chart-wrap">
+        <canvas id="strengthChart"></canvas>
+      </div>
+      <div class="chart-note" id="strengthChartNote"></div>
     </div>
 
-    <div class="stats-group" data-stats-group="week">
-      <div class="card"><div class="card-collapse-header" style="cursor:default;"><h2 style="margin:0;">Månadsrapport</h2><span class="report-month-label" id="reportMonthLabel"></span></div><div class="report-grid" id="monthlyReportGrid"></div></div>
-      <div class="card"><h2>Volym per muskelgrupp</h2><div class="chart-wrap"><canvas id="muscleVolumeChart"></canvas></div><div class="chart-note">Total volym (vikt × reps, alla set) per vecka.</div></div>
-      <div class="card"><h2>Löpning — vecka för vecka</h2><div class="chart-wrap"><canvas id="runChart"></canvas></div><div class="chart-note">Stapel = km loggat. Streckad linje = veckomål.</div></div>
-      <div class="card"><h2>Pass-efterlevnad</h2><div class="chart-wrap"><canvas id="adherenceChart"></canvas></div><div class="chart-note">Andel av veckans schemalagda pass som loggats.</div></div>
+    <div class="card" id="prCard">
+      <h2>Personbästa</h2>
+      <div class="chart-note" style="margin-top:0;">Gäller övningen som är vald i Styrkeutveckling ovan.</div>
+      <div id="prCardBody"></div>
     </div>
 
-    <div class="stats-group" data-stats-group="body">
-      <div class="card"><h2>Kroppsvikt &amp; volym</h2><div class="weight-mini-form"><input type="date" id="statsWeightDate"><input type="number" step="0.1" id="statsWeightInput" placeholder="kg"><button class="btn" id="statsSaveWeightBtn" style="margin-top:0; width:auto; padding:9px 14px;">Spara vikt</button></div><div class="form-error" id="weightFormError" style="display:none;"></div><div class="chart-wrap"><canvas id="bodyweightChart"></canvas></div><div class="chart-note" id="bodyweightChartNote">7-dagarssnitt och vikttrend över tid.</div></div>
-      <div class="card"><h2>Kost &amp; välmående</h2><div class="chart-note" style="margin-top:0;">Alla fält är frivilliga. Samma datum skriver över tidigare inlägg den dagen.</div><label style="margin-top:10px;">Datum</label><input type="date" id="wellnessDate"><div class="row-2" style="margin-top:8px;"><div><label>Kalorier</label><input type="number" id="wellnessCalories" placeholder="t.ex. 2400"></div><div><label>Protein (g)</label><input type="number" id="wellnessProtein" placeholder="t.ex. 150"></div></div><div class="row-2" style="margin-top:8px;"><div><label>Sömn (timmar)</label><input type="number" step="0.5" id="wellnessSleep" placeholder="t.ex. 7.5"></div><div><label>Alkohol (enheter)</label><input type="number" step="0.5" id="wellnessAlcohol" placeholder="t.ex. 2"></div></div><button class="btn" id="saveWellnessBtn">Spara</button><div class="form-error" id="wellnessFormError" style="display:none;"></div><div id="wellnessHistory" style="margin-top:14px;"></div></div>
+    <div class="card">
+      <h2>Volym per muskelgrupp</h2>
+      <div class="chart-wrap">
+        <canvas id="muscleVolumeChart"></canvas>
+      </div>
+      <div class="chart-note">Total volym (vikt × reps, alla set) per vecka, uppdelat på dina fyra styrkedagar. Stigande staplar = ökande total belastning, inte bara toppvikt.</div>
+    </div>
+
+    <div class="card">
+      <h2>Löpning — vecka för vecka</h2>
+      <div class="chart-wrap">
+        <canvas id="runChart"></canvas>
+      </div>
+      <div class="chart-note">Stapel = km loggat den veckan. Streckad linje = ditt schemalagda veckomål utifrån löpdagarna i planen.</div>
+    </div>
+
+    <div class="card">
+      <h2>Pass-efterlevnad</h2>
+      <div class="chart-wrap">
+        <canvas id="adherenceChart"></canvas>
+      </div>
+      <div class="chart-note">Andel av veckans schemalagda pass (styrka + löpning) som du faktiskt loggat.</div>
+    </div>
+
+    <div class="card">
+      <h2>Kroppsvikt &amp; volym</h2>
+      <div class="weight-mini-form">
+        <input type="date" id="statsWeightDate">
+        <input type="number" step="0.1" id="statsWeightInput" placeholder="kg">
+        <button class="btn" id="statsSaveWeightBtn" style="margin-top:0; width:auto; padding:9px 14px;">Spara vikt</button>
+      </div>
+      <div class="form-error" id="weightFormError" style="display:none;"></div>
+      <div class="chart-wrap">
+        <canvas id="bodyweightChart"></canvas>
+      </div>
+      <div class="chart-note" id="bodyweightChartNote">Stapel = total träningsvolym den veckan (vänster axel). Linje = din snittvikt den veckan (höger axel) — bra sätt att se recomp: volymen upp, vikten stabil eller ner.</div>
+    </div>
+
+    <div class="card">
+      <h2>Kost &amp; välmående</h2>
+      <div class="chart-note" style="margin-top:0;">Alla fält är frivilliga — fyll i det du vill följa. Samma datum skriver över tidigare inlägg den dagen.</div>
+      <label style="margin-top:10px;">Datum</label>
+      <input type="date" id="wellnessDate">
+      <div class="row-2" style="margin-top:8px;">
+        <div>
+          <label>Kalorier</label>
+          <input type="number" id="wellnessCalories" placeholder="t.ex. 2400">
+        </div>
+        <div>
+          <label>Protein (g)</label>
+          <input type="number" id="wellnessProtein" placeholder="t.ex. 150">
+        </div>
+      </div>
+      <div class="row-2" style="margin-top:8px;">
+        <div>
+          <label>Sömn (timmar)</label>
+          <input type="number" step="0.5" id="wellnessSleep" placeholder="t.ex. 7.5">
+        </div>
+        <div>
+          <label>Alkohol (enheter)</label>
+          <input type="number" step="0.5" id="wellnessAlcohol" placeholder="t.ex. 2">
+        </div>
+      </div>
+      <button class="btn" id="saveWellnessBtn">Spara</button>
+      <div class="form-error" id="wellnessFormError" style="display:none;"></div>
+      <div id="wellnessHistory" style="margin-top:14px;"></div>
     </div>
   </div>
 
@@ -1615,32 +1665,21 @@
       <div id="phaseHistory" style="margin-top:14px;"></div>
     </div>
 
-    <div class="card" id="weightStepCard">
-      <h2>Personliga viktsteg</h2>
-      <div class="chart-note" style="margin-top:0;">Ställ in minsta möjliga viktökning för utrustningen på ditt gym. Förslagen i Snabblogga använder steget automatiskt.</div>
-      <div class="step-grid" style="margin-top:10px;">
-        <div><label>Övning</label><select id="weightStepExercise"></select></div>
-        <div><label>Steg (kg)</label><input id="weightStepValue" type="number" min="0.25" step="0.25" placeholder="2,5"></div>
-        <button class="btn secondary" id="saveWeightStepBtn">Spara</button>
-      </div>
-      <div class="step-list" id="weightStepList"></div>
-      <div class="form-error" id="weightStepError" style="display:none;"></div>
-    </div>
 
-
-    <div class="card" id="cloudBackupCard">
+    <div class="card" id="githubCloudCard">
       <h2>Molnbackup (GitHub)</h2>
-      <div class="chart-note" style="margin-top:0;">Krypterad anslutning till ditt privata repo. Åtkomstnyckeln sparas bara lokalt på den här enheten.</div>
-      <div class="cloud-form cloud-grid" id="cloudBackupForm" style="margin-top:11px;">
-        <div><label>GitHub-användarnamn</label><input id="cloudOwner" autocomplete="username" value="Nybbe84"></div>
-        <div><label>Privat repo</label><input id="cloudRepo" value="traningslogg-data"></div>
-        <div><label>Åtkomstnyckel (fine-grained token)</label><input id="cloudToken" type="password" autocomplete="new-password" placeholder="github_pat_…"></div>
-        <button class="btn" id="cloudConnectBtn">Spara och testa</button>
+      <div class="chart-note" style="margin-top:0;">Sparar automatiskt en krypterad-transportskyddad JSON-backup i ditt privata repo. Din fine-grained token lagras bara lokalt på den här enheten.</div>
+      <div class="cloud-grid" style="margin-top:12px;">
+        <div><label>GitHub-användare</label><input id="githubUserInput" autocomplete="username" value="Nybbe84"></div>
+        <div><label>Privat repo</label><input id="githubRepoInput" value="traningslogg-data"></div>
+        <div class="full"><label>Fine-grained token</label><input id="githubTokenInput" type="password" autocomplete="off" placeholder="github_pat_…"></div>
       </div>
-      <div class="cloud-connected" id="cloudConnected">
-        <div class="cloud-actions"><button class="btn" id="cloudBackupNowBtn">Säkerhetskopiera nu</button><button class="btn secondary" id="cloudRestoreBtn">Hämta från molnet</button><button class="btn disconnect" id="cloudDisconnectBtn">Koppla bort</button></div>
+      <div class="cloud-actions" style="margin-top:10px;">
+        <button class="btn" id="githubSaveTestBtn">Spara och testa</button>
+        <button class="btn secondary" id="githubBackupNowBtn">Säkerhetskopiera nu</button>
+        <button class="btn secondary" id="githubRestoreBtn">Hämta från molnet</button>
       </div>
-      <div class="cloud-status" id="cloudStatus">Inte ansluten.</div>
+      <div class="cloud-status" id="githubCloudStatus" role="status" aria-live="polite">Inte ansluten.</div>
     </div>
 
     <div class="card">
@@ -1654,21 +1693,38 @@
       <div class="form-error" id="dataBackupError" style="display:none;"></div>
       <div class="chart-note" id="dataBackupStatus"></div>
       <div class="chart-note" id="lastBackupLabel" style="margin-top:8px;"></div>
-      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 1.8.0</div>
+      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 1.8.1</div>
     </div>
   </div>
 </div>
 
 
-<div class="workout-dock" id="workoutDock" aria-live="polite"><div><div class="dock-title" id="dockTitle">Pass pågår</div><div class="dock-value" id="dockValue"></div></div><button class="dock-done" id="dockDone" aria-label="Markera aktuellt set klart">✓</button><div class="dock-rest" id="dockRest"><span class="dock-rest-copy" id="dockRestCopy"></span><span class="dock-rest-time" id="dockRestTime"></span><button id="dockRestMinus">−15</button><button id="dockRestPlus">+15</button><button id="dockRestStop">Hoppa</button></div></div>
-<div class="set-stepper-backdrop" id="setStepperBackdrop"><div class="set-stepper" role="dialog" aria-modal="true" aria-labelledby="setStepperTitle"><div class="set-stepper-title" id="setStepperTitle">Justera värde</div><div class="set-stepper-value" id="setStepperValue">0</div><div class="set-stepper-controls"><button id="setStepperMinus">−</button><button class="step-plus" id="setStepperPlus">+</button></div><div class="set-stepper-actions"><button class="keyboard" id="setStepperKeyboard">Skriv värde</button><button id="setStepperClose">Klar</button></div></div></div>
-<div class="qrest" id="qrest"><div class="qrest-copy"><span class="qrest-label" id="qrestLabel">Vila</span><span class="qrest-next" id="qrestNext"></span></div><span class="qrest-time" id="qrestTime">0:00</span><button id="qrestMinus">−15</button><button id="qrestPlus">+15</button><button id="qrestStop" aria-label="Hoppa över vila">Hoppa över</button></div>
+
+<div class="workout-dock" id="workoutDock" aria-live="polite">
+  <button class="workout-dock-compact" id="workoutDockCompact" type="button" aria-label="Fortsätt pågående pass">
+    <span class="workout-dock-compact-copy"><span class="workout-dock-compact-title" id="workoutDockCompactTitle">Pass pågår</span><span class="workout-dock-compact-meta" id="workoutDockCompactMeta">0/0 set klara</span></span>
+    <span class="workout-dock-resume">Fortsätt pass ↑</span>
+  </button>
+  <div class="workout-dock-expanded">
+    <div class="workout-dock-top">
+      <div class="workout-dock-current"><span class="workout-dock-title" id="workoutDockTitle">Aktuellt set</span><span class="workout-dock-values" id="workoutDockValues"></span></div>
+      <button class="workout-minimize" id="workoutMinimizeBtn" type="button" aria-label="Minimera pass" title="Minimera pass">×</button>
+      <button class="workout-complete" id="workoutCompleteBtn" type="button" aria-label="Set klart" title="Set klart">✓</button>
+    </div>
+    <div class="workout-dock-rest" id="workoutDockRest">
+      <span class="workout-rest-label" id="workoutRestLabel">Vila</span><span class="workout-rest-time" id="workoutRestTime">0:00</span>
+      <button class="workout-rest-adjust" id="workoutRestMinus" type="button">−15</button><button class="workout-rest-adjust" id="workoutRestPlus" type="button">+15</button>
+      <button class="workout-skip-rest" id="workoutSkipRest" type="button">Hoppa över vila</button>
+    </div>
+    <div class="workout-dock-actions"><button class="workout-end" id="workoutEndBtn" type="button">Avsluta pass</button></div>
+  </div>
+</div>
+
+<div class="qrest" id="qrest"><div class="qrest-copy"><span class="qrest-label" id="qrestLabel">Vila</span><span class="qrest-next" id="qrestNext"></span></div><span class="qrest-time" id="qrestTime">0:00</span><button id="qrestMinus">−15</button><button id="qrestPlus">+15</button><button id="qrestStop" aria-label="Hoppa över vila">Hoppa över vila</button></div>
 <div class="exercise-swap-modal" id="sessionSummaryModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 class="summary-head" id="summaryTitle">Pass klart ✓</h2><button class="swap-close" id="summaryClose">×</button></div><div class="summary-stats" id="summaryStats"></div><div id="summaryBody"></div><button class="btn" id="summaryOk" style="margin-top:14px;">Klar</button></div></div>
 <div class="exercise-swap-modal" id="exerciseSwapModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 id="swapTitle">Byt övning</h2><button class="swap-close" id="swapClose">×</button></div><input id="swapSearch" type="search" placeholder="Sök bland alla övningar..." style="margin-top:12px"><div id="swapRecommendedWrap"><div class="swap-section">Rekommenderade alternativ</div><div class="swap-list" id="swapRecommended"></div></div><div class="swap-section">Alla matchningar</div><div class="swap-list" id="swapResults"></div><div id="swapConfirm" style="display:none"><div class="chart-note" id="swapConfirmText" style="margin-top:14px"></div><div class="swap-actions"><button class="btn" id="swapToday">Bara idag</button><button class="btn secondary" id="swapPermanent">Gör permanent</button></div></div></div></div>
 <script>
-const APP_VERSION = '1.8.0';
-let WEIGHT_STEPS = {};
-let SWAP_FAVORITES = {};
+const APP_VERSION = '1.8.1';
 // ---------- FRISTÅENDE LOKAL LAGRING ----------
 // IndexedDB används primärt. localStorage används som reserv.
 const STORAGE_PREFIX = 'traningslogg:';
@@ -1725,13 +1781,11 @@ window.storage = {
     }catch(e){
       localStorage.setItem(STORAGE_PREFIX + key, String(value));
     }
-    if(typeof window.cloudMutationHook === 'function') window.cloudMutationHook(key);
     return { key, value, shared: false };
   },
   async delete(key){
     try{ await localDbOperation('delete', key); }
     catch(e){ localStorage.removeItem(STORAGE_PREFIX + key); }
-    if(typeof window.cloudMutationHook === 'function') window.cloudMutationHook(key);
     return { key, deleted: true, shared: false };
   },
   async list(prefix){
@@ -2509,52 +2563,6 @@ async function applyHackSquatAndLegPressMigration(){
     resolvedWeekCache.clear();
   }
   try{ await window.storage.set(FLAG_KEY, 'done'); }catch(e){}
-}
-
-
-// ---------- v1.5.3: dokumenterade datarättningar och hypertrofimål ----------
-async function applyV153Migration(force){
-  const FLAG_KEY = 'migration:v12-v153-recommendations';
-  if(!force){ try{ const r = await window.storage.get(FLAG_KEY); if(r && r.value === 'done') return; }catch(e){} }
-  const tune = (cat, name, fields) => { const ex=(PLAN[cat]||[]).find(x=>x.name===name); if(ex) Object.assign(ex, fields); };
-  // Prioriterade huvudövningar behåller fyra set; kompletterande övningar har tre.
-  Object.entries(PLAN).forEach(([cat,list]) => list.forEach((ex,idx) => {
-    const priority = ['Smith-bänkpress','Chins/latsdrag','Hack squat','Benpress','Höftlyft'].includes(ex.name);
-    if(priority) ex.sets = 4;
-    else if(Number(ex.sets) > 3 && !/vadpress|stående vadlyft/i.test(ex.name)) ex.sets = 3;
-  }));
-  tune('Push','Smith-bänkpress',{kg:57.5, weightStep:2.5});
-  tune('Ben','Hack squat',{kg:67, weightStep:1});
-  tune('Lower','Benpress',{kg:130, weightStep:5});
-  tune('Ben','Rumänsk marklyft',{kg:85, weightStep:2.5});
-  tune('Lower','Höftlyft',{kg:80, weightStep:2.5});
-  tune('Lower','Sittande lårcurl',{kg:59, weightStep:1});
-  tune('Pull','Marklyft',{kg:110, sets:3, reps:'5-6', weightStep:2.5});
-  tune('Pull','Sälrodd',{kg:47, sets:3, reps:'8-12', weightStep:1});
-  rebuildProgramFromPlan();
-  await savePlanConfig();
-
-  // Rätta Facepulls 2 375 kg och rensa exakta dubbletter från 4 oktober.
-  try{
-    const entries = await loadAllEntries();
-    const signatures = new Map();
-    for(const en of entries){
-      let changed = false;
-      const clean = {...en, sets:(en.sets||[]).map(st=>{
-        const cp={...st};
-        if(en.exercise === 'Facepulls' && Number(cp.weight) === 2375){ cp.weight=23.75; changed=true; }
-        return cp;
-      })};
-      if(changed){ const key=clean._key; delete clean._key; await window.storage.set(key, JSON.stringify(clean)); }
-      if(en.date === '2026-10-04'){
-        const sig = JSON.stringify([en.date,en.day,en.exercise,en.sets,en.note||'',en.bodyweightUsed??null]);
-        if(signatures.has(sig)) await window.storage.delete(en._key);
-        else signatures.set(sig,en._key);
-      }
-    }
-    invalidateEntriesCache();
-  }catch(err){ console.error('v1.5.3-datarättning misslyckades:',err); }
-  try{ await window.storage.set(FLAG_KEY,'done'); }catch(e){}
 }
 
 async function savePlanConfig(){
@@ -3484,10 +3492,10 @@ function goToMode(mode){
   setActiveMode(mode);
   safeStorageSet('ui:lastMode', mode);
   if(mode === 'home'){ renderDashboard(); renderHomeDraft(); }
-  else if(mode === 'run'){ renderRunHistory(); updateRunCoordinationAdvice(); }
+  else if(mode === 'run') renderRunHistory();
   else if(mode === 'stats') renderAllStats();
   else if(mode === 'library') renderLibrary();
-  else if(mode === 'settings'){ renderCategoryManager(); renderPhases(); renderWeightStepSettings(); }
+  else if(mode === 'settings'){ renderCategoryManager(); renderPhases(); }
 }
 
 modeHomeBtn.onclick=()=>goToMode('home');
@@ -4056,10 +4064,6 @@ exerciseSelect.onchange = () => {
   updateBwNote();
 };
 
-function rirOptions(value){
-  const v = value == null ? '' : String(Math.min(3, Number(value)));
-  return [['','RIR'],['0','0'],['1','1'],['2','2'],['3','3+']].map(([x,l]) => `<option value="${x}"${v===x?' selected':''}>${l}</option>`).join('');
-}
 function setRowHtml(i, isBW, prevSet){
   const placeholder = isBW ? 'tilläggsvikt' : 'kg';
   const weightVal = prevSet && prevSet.weight != null ? prevSet.weight : '';
@@ -4069,7 +4073,6 @@ function setRowHtml(i, isBW, prevSet){
     <span class="pill">Set ${i}</span>
     <input type="number" step="0.5" placeholder="${placeholder}" class="weight-input" value="${weightVal}" style="flex:1;">
     <input type="number" placeholder="reps" class="reps-input" value="${repsVal}" style="flex:1;">
-    <select class="rir-select" aria-label="RIR, reps kvar i tanken" title="RIR – reps kvar i tanken">${rirOptions(prevSet && prevSet.rir)}</select>
     ${copyBtn}
   `;
 }
@@ -4125,9 +4128,7 @@ document.getElementById('addSetBtn').onclick = () => {
   const isBW = isBodyweightExercise(currentDay, exerciseSelect.value);
   const row = document.createElement('div');
   row.className = 'set-row';
-  const prev = setsContainer.lastElementChild;
-  const prevSet = prev ? { weight: prev.querySelector('.weight-input')?.value || '', reps: prev.querySelector('.reps-input')?.value || '' } : null;
-  row.innerHTML = setRowHtml(numSets, isBW, prevSet);
+  row.innerHTML = setRowHtml(numSets, isBW);
   setsContainer.appendChild(row);
 };
 document.getElementById('removeSetBtn').onclick = () => {
@@ -4267,8 +4268,7 @@ function renderSwapOptions(){
   const q=(document.getElementById('swapSearch').value||'').trim().toLowerCase();
   const all=swapLibraryItems().filter(x=>x.name!==exerciseSwapState.original && (!q||x.name.toLowerCase().includes(q)||(x.desc||'').toLowerCase().includes(q)));
   const group=swapGroupFor(exerciseSwapState.original);
-  const fav = (SWAP_FAVORITES[exerciseSwapState.original] || {});
-  const rec=all.filter(x=>x.group===group || fav[x.name]).sort((a,b)=>(fav[b.name]||0)-(fav[a.name]||0) || Number(b.group===group)-Number(a.group===group) || a.name.localeCompare(b.name,'sv')).slice(0,6);
+  const rec=all.filter(x=>x.group===group).slice(0,6);
   const html=x=>`<button class="swap-option" data-name="${x.name.replace(/"/g,'&quot;')}">${x.name}<small>${x.group} · ${x.desc||''}</small></button>`;
   document.getElementById('swapRecommendedWrap').style.display=(!q&&rec.length)?'':'none';
   document.getElementById('swapRecommended').innerHTML=rec.map(html).join('');
@@ -4293,17 +4293,11 @@ function planExerciseFromLibrary(name,old){
 async function fillSwappedBlock(block, ex, last, original){
   block.dataset.exercise=ex.name; block.dataset.originalExercise=original; block.dataset.bw=ex.bodyweight?'1':'0'; block.dataset.rest=String(ex.rest||90);
   const target=`${ex.sets}×${ex.reps}${ex.kg!==''&&ex.kg!=null?(ex.bodyweight?' · +'+ex.kg+'kg':' · '+ex.kg+'kg'):''}`;
-  let rows=''; for(let i=1;i<=Number(ex.sets||3);i++){const ps=last?.sets?.[i-1]; const w=ps?.weight??ex.kg??''; const r=ps?.reps??''; rows+=`<div class="quick-set-row"><span class="pill">Set ${i}</span><input type="number" step="0.5" class="quick-weight-input quick-input-touch" readonly placeholder="${ex.bodyweight?'tilläggsvikt':'kg'}" value="${w}"><input type="number" class="quick-reps-input quick-input-touch" readonly placeholder="${ex.reps}" value="${r}"><select class="quick-rir-select" tabindex="-1" aria-label="RIR">${rirOptions(ps?.rir)}</select>${i>1?'<button type="button" class="copy-set-btn quick-copy-set-btn" title="Kopiera från set ovan">↑</button>':'<span class="copy-set-spacer"></span>'}<button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button></div>`;}
+  let rows=''; for(let i=1;i<=Number(ex.sets||3);i++){const ps=last?.sets?.[i-1]; const w=ps?.weight??ex.kg??''; const r=ps?.reps??''; rows+=`<div class="quick-set-row"><span class="pill">Set ${i}</span><input type="number" step="0.5" class="quick-weight-input" placeholder="${ex.bodyweight?'tilläggsvikt':'kg'}" value="${w}"><input type="number" class="quick-reps-input" placeholder="${ex.reps}" value="${r}">${i>1?'<button type="button" class="copy-set-btn quick-copy-set-btn" title="Kopiera från set ovan">↑</button>':'<span class="copy-set-spacer"></span>'}<button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button></div>`;}
   block.innerHTML=`<div class="quick-ex-header"><div class="quick-ex-name">${ex.name} <span class="target">mål: ${target}</span></div><div class="quick-tools"><button type="button" class="quick-more-btn">•••</button><div class="quick-tools-menu"><button type="button" data-tool="swap">Byt övning</button><button type="button" data-tool="warm">Uppvärmning</button></div></div></div><div class="swap-note">Ersätter ${original} endast idag</div>${last?`<div class="quick-last">Senast ${fmtDate(last.date)}: ${formatLastSets(last)}</div>`:'<div class="quick-last">Ingen tidigare logg</div>'}<div class="warm-slot"></div><div class="quick-set-rows">${rows}</div><div class="quick-set-actions"><button class="quick-add-set-btn" type="button">+ Set</button><button class="quick-remove-set-btn" type="button">− Set</button></div><input type="text" class="quick-note-input" placeholder="Kommentar (valfritt)">`;
 }
-async function recordSwapFavorite(original, selected){
-  SWAP_FAVORITES[original] = SWAP_FAVORITES[original] || {};
-  SWAP_FAVORITES[original][selected] = (SWAP_FAVORITES[original][selected] || 0) + 1;
-  try{ await window.storage.set('settings:swapFavorites', JSON.stringify(SWAP_FAVORITES)); }catch(e){}
-}
 async function applySwap(permanent){
-  if(!exerciseSwapState?.selected)return; const {block,original,selected}=exerciseSwapState;
-  await recordSwapFavorite(original, selected); const old=(PLAN[currentDay]||[]).find(x=>x.name===original); const ex=planExerciseFromLibrary(selected,old); ex.name=selected;
+  if(!exerciseSwapState?.selected)return; const {block,original,selected}=exerciseSwapState; const old=(PLAN[currentDay]||[]).find(x=>x.name===original); const ex=planExerciseFromLibrary(selected,old); ex.name=selected;
   if(permanent){const i=(PLAN[currentDay]||[]).findIndex(x=>x.name===original); if(i>=0){PLAN[currentDay][i]=ex; rebuildProgramFromPlan(); await savePlanConfig();} closeSwap();renderTabs();renderExercises();await renderQuickLogForm();await renderSchedule();}
   else {const last=await latestEntryAnyDay(selected); await fillSwappedBlock(block,ex,last,original); setupWarmSlot(block); updateRemoveSetButtons(block); closeSwap(); markQuickDirty();}
 }
@@ -4340,12 +4334,10 @@ async function updateBackupUI(){
   const banner = document.getElementById('backupBanner');
   const snoozed = snooze && Date.now() < Number(snooze);
   const overdue = !last || daysSince(last) > BACKUP_DAYS;
-  banner.classList.remove('show');
-  window._backupReminderDue = overdue && !snoozed;
+  banner.classList.toggle('show', overdue && !snoozed);
   document.getElementById('backupBannerText').textContent = last
     ? `⚠️ ${daysSince(last)} dagar sedan senaste backup`
     : '⚠️ Ingen backup registrerad. Din data finns bara på den här enheten.';
-  if(document.getElementById('homeView')?.classList.contains('active')) renderHomeMessages().catch(()=>{});
 }
 document.getElementById('backupNowBtn').onclick = () => document.getElementById('exportDataBtn').onclick();
 document.getElementById('backupSnoozeBtn').onclick = async () => {
@@ -4362,29 +4354,23 @@ function startQuickRest(seconds, label, nextText){
   el.classList.add('show'); el.classList.remove('done');
   document.getElementById('qrestLabel').textContent = label || 'Vila';
   document.getElementById('qrestNext').textContent = nextText || '';
-  const dockRest=document.getElementById('dockRest'); if(dockRest){dockRest.classList.add('show');document.getElementById('dockRestCopy').textContent=(label||'Vila')+(nextText?' · '+nextText:'');}
   clearInterval(qrestInterval); tickQuickRest();
   qrestInterval = setInterval(tickQuickRest, 250);
 }
 function tickQuickRest(){
   const left = Math.max(0, Math.ceil((qrestEnd - Date.now())/1000));
-  const restText = left > 0 ? formatTimerDisplay(left) : 'Kör! 💪';
-  document.getElementById('qrestTime').textContent = restText;
-  const dockTime=document.getElementById('dockRestTime'); if(dockTime) dockTime.textContent=restText;
+  document.getElementById('qrestTime').textContent = left > 0 ? formatTimerDisplay(left) : 'Kör! 💪';
   if(left <= 0){
     clearInterval(qrestInterval);
     const el = document.getElementById('qrest'); el.classList.add('done');
     playTimerBeep();
-    setTimeout(() => { if(Date.now() >= qrestEnd){ el.classList.remove('show'); document.getElementById('dockRest')?.classList.remove('show'); } }, 4000);
+    setTimeout(() => { if(Date.now() >= qrestEnd) el.classList.remove('show'); }, 4000);
   }
 }
-function stopQuickRest(){ clearInterval(qrestInterval); document.getElementById('qrest').classList.remove('show'); document.getElementById('dockRest')?.classList.remove('show'); }
+function stopQuickRest(){ clearInterval(qrestInterval); document.getElementById('qrest').classList.remove('show'); }
 document.getElementById('qrestMinus').onclick = () => { qrestEnd = Math.max(Date.now()+1000, qrestEnd - 15000); tickQuickRest(); };
 document.getElementById('qrestPlus').onclick = () => { qrestEnd += 15000; tickQuickRest(); };
 document.getElementById('qrestStop').onclick = stopQuickRest;
-document.getElementById('dockRestMinus').onclick = () => document.getElementById('qrestMinus').click();
-document.getElementById('dockRestPlus').onclick = () => document.getElementById('qrestPlus').click();
-document.getElementById('dockRestStop').onclick = stopQuickRest;
 
 function focusRow(row){
   if(!row) return;
@@ -4395,7 +4381,6 @@ function focusRow(row){
 function findBlock(name){
   return [...document.querySelectorAll('#quickLogExercises .quick-ex-block')].find(b => b.dataset.exercise === name) || null;
 }
-function blockExerciseName(row){ return row?.closest('.quick-ex-block')?.dataset.exercise || 'Set'; }
 function handleSetCompleted(row){
   const block = row.closest('.quick-ex-block');
   const rows = [...block.querySelectorAll('.quick-set-row')];
@@ -4565,10 +4550,7 @@ function addQuickRow(block){
   const n = rowsWrap.querySelectorAll('.quick-set-row').length + 1;
   const row = document.createElement('div');
   row.className = 'quick-set-row';
-  const prev = rowsWrap.lastElementChild;
-  const pw = prev?.querySelector('.quick-weight-input')?.value || '';
-  const pr = prev?.querySelector('.quick-reps-input')?.value || '';
-  row.innerHTML = `<span class="pill">Set ${n}</span><input type="number" step="0.5" class="quick-weight-input quick-input-touch" readonly placeholder="${isBW ? 'tilläggsvikt' : 'kg'}" value="${pw}"><input type="number" class="quick-reps-input quick-input-touch" readonly placeholder="reps" value="${pr}"><select class="quick-rir-select" tabindex="-1" aria-label="RIR">${rirOptions('')}</select>${n > 1 ? '<button type="button" class="copy-set-btn quick-copy-set-btn" title="Kopiera från set ovan">↑</button>' : '<span class="copy-set-spacer"></span>'}<button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button>`;
+  row.innerHTML = `<span class="pill">Set ${n}</span><input type="number" step="0.5" class="quick-weight-input" placeholder="${isBW ? 'tilläggsvikt' : 'kg'}"><input type="number" class="quick-reps-input" placeholder="reps">${n > 1 ? '<button type="button" class="copy-set-btn quick-copy-set-btn" title="Kopiera från set ovan">↑</button>' : '<span class="copy-set-spacer"></span>'}<button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button>`;
   rowsWrap.appendChild(row);
   updateRemoveSetButtons(block);
   return row;
@@ -4584,14 +4566,13 @@ function serializeQuickDraft(){
     rows: [...b.querySelectorAll('.quick-set-row')].map(r => ({
       w: r.querySelector('.quick-weight-input').value,
       r: r.querySelector('.quick-reps-input').value,
-      rir: (r.querySelector('.quick-rir-select') || {}).value || '',
       done: r.classList.contains('done')
     }))
   }));
   return { v:1, day: currentDay, date: quickLogDate.value || todayStr(), savedAt: Date.now(), start: quickSessionStart, blocks };
 }
 function draftHasProgress(d){
-  return d && d.blocks && d.blocks.some(b => b.exercise !== b.original || b.note || (b.ssPartner && !b.planSuperset) || b.rows.some(r => r.done));
+  return d && d.blocks && (!!d.start || d.blocks.some(b => b.exercise !== b.original || b.note || (b.ssPartner && !b.planSuperset) || b.rows.some(r => r.done)));
 }
 function markQuickDirty(){
   quickDraftDirty = true;
@@ -4652,7 +4633,6 @@ async function applyDraftToForm(d){
       const row = rows[i];
       row.querySelector('.quick-weight-input').value = dr.w;
       row.querySelector('.quick-reps-input').value = dr.r;
-      const rir = row.querySelector('.quick-rir-select'); if(rir) rir.value = dr.rir == null ? '' : String(dr.rir);
       row.classList.toggle('done', !!dr.done);
       row.querySelector('.quick-set-done-btn').classList.toggle('done', !!dr.done);
     });
@@ -4800,9 +4780,6 @@ async function renderDashboard(){
     : '<div class="dash-empty" style="margin-top:6px;">Trend visas när det finns minst 8 veckors historik.</div>';
   try{ await renderWeeklySummary(entries); }catch(err){ console.error('Veckosammanfattning:', err); }
   progEl.innerHTML = (prHtml ? `<div class="dash-pr">${prHtml}</div>` : '<div class="dash-empty">Inga personbästan ännu. De dyker upp här när du slår ett tidigare resultat.</div>') + trendHtml;
-  try{ await renderRecoveryIntelligence(); }catch(err){ console.error('Återhämtningsanalys:',err); }
-  try{ await renderDataQuality(); }catch(err){ console.error('Datakvalitet:',err); }
-  try{ await renderHomeMessages(); }catch(err){ console.error('Meddelanden:',err); }
 }
 
 
@@ -4934,81 +4911,32 @@ function updateWorkoutUX(){
  let current=null;
  blocks.forEach(b=>{const rows=[...b.querySelectorAll('.quick-set-row')],all=rows.length&&rows.every(r=>r.classList.contains('done'));b.classList.toggle('complete',all);b.classList.remove('current');if(!current&&!all)current=b;});
  if(current){current.classList.add('current');const r=[...current.querySelectorAll('.quick-set-row')].find(x=>!x.classList.contains('done'));const n=r?[...current.querySelectorAll('.quick-set-row')].indexOf(r)+1:1;document.getElementById('workoutNow').textContent=`Nu: ${current.dataset.exercise} · set ${n}`;}else document.getElementById('workoutNow').textContent=st.total?'Passet är klart ✓':'';
- updateWorkoutDock(current,st);
 }
 setInterval(()=>{if(document.getElementById('strengthView').classList.contains('active'))updateWorkoutUX();},1000);
-
-function updateWorkoutDock(currentBlock,st){
-  const dock=document.getElementById('workoutDock'); if(!dock)return;
-  const visible=document.getElementById('strengthView')?.classList.contains('active') && document.getElementById('quickLogCard')?.style.display!=='none';
-  if(!visible||!st?.total){dock.classList.remove('show');return;}
-  dock.classList.add('show');
-  const btn=document.getElementById('dockDone');
-  if(!currentBlock){document.getElementById('dockTitle').textContent='Passet är klart ✓';document.getElementById('dockValue').textContent=`${st.done}/${st.total} set`;btn.disabled=true;btn._row=null;return;}
-  const rows=[...currentBlock.querySelectorAll('.quick-set-row')],row=rows.find(x=>!x.classList.contains('done')),idx=Math.max(0,rows.indexOf(row));
-  const w=row?.querySelector('.quick-weight-input')?.value||'–',r=row?.querySelector('.quick-reps-input')?.value||'–';
-  document.getElementById('dockTitle').textContent=`${currentBlock.dataset.exercise} · Set ${idx+1}`;
-  document.getElementById('dockValue').textContent=`${w} kg × ${r} reps`;
-  btn.disabled=!row;btn._row=row||null;
-}
-document.getElementById('dockDone').onclick=()=>{const row=document.getElementById('dockDone')._row;row?.querySelector('.quick-set-done-btn')?.click();};
-document.getElementById('quickLogExercises').addEventListener('input',()=>{updateWorkoutUX();markQuickDirty();});
-
 function nextSetDescription(row){const b=row.closest('.quick-ex-block'), rows=[...b.querySelectorAll('.quick-set-row')], i=rows.indexOf(row), next=rows[i+1];if(next)return`Nästa: ${b.dataset.exercise} · set ${i+2}`;const all=[...document.querySelectorAll('.quick-ex-block')], bi=all.indexOf(b), nb=all.slice(bi+1).find(x=>!x.classList.contains('complete'));return nb?`Nästa: ${nb.dataset.exercise} · set 1`:'Sista setet i passet';}
 document.getElementById('quickLogExercises').addEventListener('click',e=>{const h=e.target.closest('.quick-ex-header');if(h&&h.closest('.quick-ex-block').classList.contains('complete')&&!e.target.closest('button'))h.closest('.quick-ex-block').classList.toggle('expanded');setTimeout(updateWorkoutUX,0);const mb=e.target.closest('.quick-more-btn');if(mb){mb.closest('.quick-tools').classList.toggle('open');}const act=e.target.closest('[data-tool]');if(act){const b=act.closest('.quick-ex-block');if(act.dataset.tool==='swap')openSwap(b);if(act.dataset.tool==='warm')toggleWarmPanel(b);act.closest('.quick-tools').classList.remove('open');}});
 
 let quickLogRenderToken = 0;
 function formatLastSets(entry){
   if(!entry || !entry.sets || !entry.sets.length) return '';
-  return entry.sets.map(x => `${x.weight || 0}×${x.reps}${x.rir == null || x.rir === '' ? '' : '@RIR '+(Number(x.rir)>=3?'3+':x.rir)}`).join(' / ');
+  return entry.sets.map(x => `${x.weight || 0}×${x.reps}`).join(' / ');
 }
 function parseRepRange(v){
   const nums=String(v||'').match(/\d+/g) || [];
   if(!nums.length) return null;
   return {min:Number(nums[0]), max:Number(nums[1] || nums[0])};
 }
-function defaultWeightStep(name, w){
-  const n=String(name||'').toLowerCase();
-  if(/hantel/.test(n)) return 2; // total rapporterad ökning för hantelparet
-  if(/hack|benpress/.test(n)) return 5;
-  if(/kabel|pushdown|facepull|curl|pec-deck|maskin/.test(n)) return 2.5;
-  return w >= 40 ? 2.5 : 1;
-}
-function getWeightStep(ex, w){ return Number(WEIGHT_STEPS[ex.name] || ex.weightStep || defaultWeightStep(ex.name,w)) || 1; }
-function progressionSuggestion(ex,lastEntry,allHistory){
+function progressionSuggestion(ex,lastEntry){
   if(!lastEntry || !lastEntry.sets || !lastEntry.sets.length || ex.bodyweight) return '';
   const range=parseRepRange(ex.reps); if(!range) return '';
   const sets=lastEntry.sets;
-  const required=Number(ex.sets||sets.length);
-  const totalReps=sets.slice(0,required).reduce((a,x)=>a+(Number(x.reps)||0),0);
-  const allInRange=sets.length >= required && sets.slice(0,required).every(x => Number(x.reps)>=range.min);
-  const allTop=sets.length >= required && sets.slice(0,required).every(x => Number(x.reps)>=range.max);
-  const threshold=required*Math.max(range.min,range.max-1);
+  const allTop=sets.length >= Number(ex.sets||sets.length) && sets.every(x => Number(x.reps)>=range.max);
   const anyLow=sets.some(x => Number(x.reps)<range.min);
   const w=Math.max(...sets.map(x=>Number(x.weight)||0)); if(!w) return '';
-  const step=getWeightStep(ex,w);
-  const rirs=sets.map(x=>x.rir).filter(x=>x!==''&&x!=null).map(Number);
-  const fullRir=rirs.length===sets.length;
-  const minRir=fullRir?Math.min(...rirs):null;
-  const next=Math.round((w+step)*100)/100;
-  if(((fullRir && allInRange && totalReps>=threshold && minRir>=1) || (!fullRir && allTop))) return `Förslag idag: ${next} kg · ${range.min}–${range.max} reps${fullRir?' · sikta på RIR 1–2':''}`;
-  if(allInRange && totalReps>=threshold && fullRir && minRir===0) return `Behåll ${w} kg: du nådde ${totalReps} reps, men minst ett set var RIR 0. Bygg samma reps med RIR 1–2 först.`;
-  if(anyLow){
-    const recent=(allHistory||[]).filter(e=>e.exercise===ex.name).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,2);
-    const twice=recent.length===2 && recent.every(e=>(e.sets||[]).some(st=>Number(st.reps)<range.min && Number(st.rir)===0));
-    return twice ? `Två pass under repintervallet vid RIR 0: överväg ${Math.max(step,Math.round((w-step)*100)/100)} kg.` : `Behåll ${w} kg tills alla set når minst ${range.min} reps.`;
-  }
-  return `Behåll ${w} kg och bygg mot ${range.max} reps i alla set${fullRir?' vid RIR 1–2':''}.`;
-}
-function dailyTargetHtml(ex,lastEntry,allHistory){
-  const range=parseRepRange(ex.reps); if(!range) return '';
-  const required=Number(ex.sets||3);
-  let w=Number(ex.kg)||0;
-  if(lastEntry?.sets?.length) w=Math.max(...lastEntry.sets.map(st=>Number(st.weight)||0),w);
-  const suggestion=progressionSuggestion(ex,lastEntry,allHistory);
-  const m=suggestion.match(/Förslag idag: ([\d.]+) kg/); if(m) w=Number(m[1]);
-  const totalMin=required*Math.max(range.min,range.max-2), totalMax=required*Math.max(range.min,range.max-1);
-  return `<div class="quick-target-card"><strong>Mål idag</strong><br>${w?`${String(w).replace('.',',')} kg × `:''}${range.min}–${range.max} · sikta på totalt ${totalMin}–${totalMax}+ reps över ${required} set · RIR 1–2<br><span class="intel-muted">Höj med ${getWeightStep(ex,w)} kg när du når ${totalMax}+ reps, alla set är inom intervallet och inget set är RIR 0.</span></div>`;
+  const step=w>=50 ? 2.5 : 1;
+  if(allTop) return `Förslag idag: ${Math.round((w+step)*10)/10} kg · ${range.min}–${range.max} reps`;
+  if(anyLow) return `Förslag idag: behåll ${w} kg tills alla set når minst ${range.min} reps`;
+  return `Förslag idag: behåll ${w} kg och bygg mot ${range.max} reps i alla set`;
 }
 async function renderQuickLogForm(){
   await flushQuickDraft();
@@ -5016,7 +4944,6 @@ async function renderQuickLogForm(){
   document.getElementById('quickLogDayLabel').textContent = currentDay;
   const exercises = PLAN[currentDay] || [];
 
-  const allHistory = await loadAllEntries();
   const lastEntries = await Promise.all(
     exercises.map(ex => getLastLoggedEntry(currentDay, ex.name))
   );
@@ -5050,9 +4977,8 @@ async function renderQuickLogForm(){
       rowsHtml += `
         <div class="quick-set-row">
           <span class="pill">Set ${s}</span>
-          <input type="number" step="0.5" class="quick-weight-input quick-input-touch" readonly placeholder="${weightPlaceholder}" value="${weightValue}">
-          <input type="number" class="quick-reps-input quick-input-touch" readonly placeholder="${ex.reps}" value="${repsValue}">
-          <select class="quick-rir-select" tabindex="-1" aria-label="RIR, reps kvar i tanken" title="RIR – reps kvar i tanken">${rirOptions(prevSet && prevSet.rir)}</select>
+          <input type="number" step="0.5" class="quick-weight-input" placeholder="${weightPlaceholder}" value="${weightValue}">
+          <input type="number" class="quick-reps-input" placeholder="${ex.reps}" value="${repsValue}">
           ${copyBtn}
           <button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button>
         </div>
@@ -5062,8 +4988,7 @@ async function renderQuickLogForm(){
     block.innerHTML = `
       <div class="quick-ex-header"><div class="quick-ex-name">${ex.name} <span class="target">mål: ${targetLabel}</span></div><div class="quick-tools"><button type="button" class="quick-more-btn">•••</button><div class="quick-tools-menu"><button type="button" data-tool="swap">Byt övning</button><button type="button" data-tool="warm">Uppvärmning</button></div></div></div>
       ${lastEntry ? `<div class="quick-last">Senast ${fmtDate(lastEntry.date)}: ${formatLastSets(lastEntry)}</div>` : `<div class="quick-last">Ingen tidigare logg</div>`}
-      ${progressionSuggestion(ex,lastEntry,allHistory) ? `<div class="quick-progression">↗ ${progressionSuggestion(ex,lastEntry,allHistory)}</div>` : ''}
-      ${dailyTargetHtml(ex,lastEntry,allHistory)}
+      ${progressionSuggestion(ex,lastEntry) ? `<div class="quick-progression">↗ ${progressionSuggestion(ex,lastEntry)}</div>` : ''}
       ${supersetTag}
       <div class="ss-slot"></div>
       <div class="warm-slot"></div>
@@ -5079,23 +5004,6 @@ async function renderQuickLogForm(){
   document.querySelectorAll('#quickLogExercises .quick-ex-block').forEach(updateRemoveSetButtons);
   updateWorkoutUX();
 }
-
-
-function clearRirPrompt(row){const p=row?.querySelector('.rir-prompt');if(p){clearTimeout(p._timer);p.remove();}}
-function showRirPrompt(row){
-  if(!row)return; clearRirPrompt(row);
-  const select=row.querySelector('.quick-rir-select'),saved=select?.value||'';
-  const prompt=document.createElement('div');prompt.className='rir-prompt';
-  prompt.innerHTML=`<span class="rir-prompt-label">Hur många reps hade du kvar?</span>${[['0','0'],['1','1'],['2','2'],['3','3+']].map(([v,l])=>`<button type="button" class="rir-choice${saved===v?' selected':''}" data-rir="${v}">${l}</button>`).join('')}<button type="button" class="rir-skip">Hoppa över</button>`;
-  row.appendChild(prompt);
-  prompt._timer=setTimeout(()=>clearRirPrompt(row),9000);
-}
-document.getElementById('quickLogExercises').addEventListener('click',e=>{
-  const choice=e.target.closest('.rir-choice'),skip=e.target.closest('.rir-skip'); if(!choice&&!skip)return;
-  const row=e.target.closest('.quick-set-row'),sel=row?.querySelector('.quick-rir-select');
-  if(choice&&sel){sel.value=choice.dataset.rir;let saved=row.querySelector('.rir-saved');if(!saved){saved=document.createElement('div');saved.className='rir-saved';row.appendChild(saved);}saved.textContent=`RIR ${choice.dataset.rir==='3'?'3+':choice.dataset.rir} sparat`;markQuickDirty();}
-  clearRirPrompt(row);
-});
 
 document.getElementById('quickLogExercises').addEventListener('click', (e) => {
   if(e.target.closest('.quick-set-done-btn, .quick-copy-set-btn, .quick-add-set-btn, .quick-remove-set-btn, .ss-activate-btn')) setTimeout(markQuickDirty, 0);
@@ -5123,13 +5031,9 @@ document.getElementById('quickLogExercises').addEventListener('click', (e) => {
     if(nowDone){
       e.target.textContent='✓';
       if(!quickSessionStart) quickSessionStart = Date.now();
-      if(navigator.vibrate) navigator.vibrate(35);
-      showRirPrompt(row);
       handleSetCompleted(row);
-      const label = `${blockExerciseName(row)} · set ${[...row.parentElement.children].indexOf(row)+1} klart ✓`;
-      showUndoToast(label, () => { row.classList.remove('done'); e.target.classList.remove('done'); clearRirPrompt(row); stopQuickRest(); updateWorkoutUX(); markQuickDirty(); });
       updateWorkoutUX();
-    }else{ clearRirPrompt(row); }
+    }
     return;
   }
   const ssBtn = e.target.closest('.ss-activate-btn');
@@ -5153,37 +5057,16 @@ document.getElementById('quickLogExercises').addEventListener('click', (e) => {
   const weightPlaceholder = isBW ? 'tilläggsvikt' : 'kg';
   const row = document.createElement('div');
   row.className = 'quick-set-row';
-  const prevRow = rowsWrap.lastElementChild;
-  const prevWeight = prevRow?.querySelector('.quick-weight-input')?.value || '';
-  const prevReps = prevRow?.querySelector('.quick-reps-input')?.value || '';
   row.innerHTML = `
     <span class="pill">Set ${nextNum}</span>
-    <input type="number" step="0.5" class="quick-weight-input quick-input-touch" readonly placeholder="${weightPlaceholder}" value="${prevWeight}">
-    <input type="number" class="quick-reps-input quick-input-touch" readonly placeholder="reps" value="${prevReps}">
-    <select class="quick-rir-select" tabindex="-1" aria-label="RIR">${rirOptions('')}</select>
+    <input type="number" step="0.5" class="quick-weight-input" placeholder="${weightPlaceholder}">
+    <input type="number" class="quick-reps-input" placeholder="reps">
     <button type="button" class="copy-set-btn quick-copy-set-btn" title="Kopiera från set ovan">↑</button>
     <button type="button" class="quick-set-done-btn" title="Markera set klart">✓</button>
   `;
   rowsWrap.appendChild(row);
   updateRemoveSetButtons(block);
 });
-
-
-let stepperInput=null,stepperStep=1;
-function stepperNumber(v){const n=Number(v);return Number.isFinite(n)?n:0;}
-function openSetStepper(input){
-  stepperInput=input;const isWeight=input.classList.contains('quick-weight-input'),block=input.closest('.quick-ex-block');
-  const ex=findPlanExerciseAny(block?.dataset.exercise);stepperStep=isWeight?getWeightStep(ex||{name:block?.dataset.exercise||''},stepperNumber(input.value)):1;
-  document.getElementById('setStepperTitle').textContent=isWeight?`${block?.dataset.exercise||'Övning'} · vikt (steg ${String(stepperStep).replace('.',',')} kg)`:`${block?.dataset.exercise||'Övning'} · reps`;
-  updateStepperValue();document.getElementById('setStepperBackdrop').classList.add('open');
-}
-function updateStepperValue(){if(!stepperInput)return;document.getElementById('setStepperValue').textContent=`${stepperInput.value||0}${stepperInput.classList.contains('quick-weight-input')?' kg':' reps'}`;}
-function changeStepper(dir){if(!stepperInput)return;const next=Math.max(0,Math.round((stepperNumber(stepperInput.value)+dir*stepperStep)*100)/100);stepperInput.value=next;stepperInput.dispatchEvent(new Event('input',{bubbles:true}));updateStepperValue();}
-document.getElementById('quickLogExercises').addEventListener('click',e=>{const input=e.target.closest('.quick-input-touch');if(input){e.preventDefault();input.blur();openSetStepper(input);}});
-document.getElementById('setStepperMinus').onclick=()=>changeStepper(-1);document.getElementById('setStepperPlus').onclick=()=>changeStepper(1);
-document.getElementById('setStepperClose').onclick=()=>document.getElementById('setStepperBackdrop').classList.remove('open');
-document.getElementById('setStepperBackdrop').onclick=e=>{if(e.target.id==='setStepperBackdrop')e.currentTarget.classList.remove('open');};
-document.getElementById('setStepperKeyboard').onclick=()=>{const i=stepperInput;document.getElementById('setStepperBackdrop').classList.remove('open');if(!i)return;i.readOnly=false;i.classList.remove('quick-input-touch');i.focus();i.select();i.addEventListener('blur',()=>{i.readOnly=true;i.classList.add('quick-input-touch');},{once:true});};
 
 document.getElementById('quickSaveBtn').onclick = async () => {
   const date = quickLogDate.value || todayStr();
@@ -5194,15 +5077,14 @@ document.getElementById('quickSaveBtn').onclick = async () => {
     const exerciseName = block.getAttribute('data-exercise');
     const originalExercise = block.getAttribute('data-original-exercise') || exerciseName;
     const isBW = block.getAttribute('data-bw') === '1';
+    const weightInputs = block.querySelectorAll('.quick-weight-input');
+    const repsInputs = block.querySelectorAll('.quick-reps-input');
     const sets = [];
-    block.querySelectorAll('.quick-set-row').forEach(row => {
-      const reps = parseInt(row.querySelector('.quick-reps-input').value);
+    weightInputs.forEach((w, i) => {
+      const reps = parseInt(repsInputs[i].value);
       if(!isNaN(reps) && reps > 0){
-        const weight = parseFloat(row.querySelector('.quick-weight-input').value);
-        const rirRaw = (row.querySelector('.quick-rir-select') || {}).value;
-        const set = { weight: isNaN(weight) ? 0 : weight, reps };
-        if(rirRaw !== '' && rirRaw != null) set.rir = Number(rirRaw);
-        sets.push(set);
+        const weight = parseFloat(w.value);
+        sets.push({ weight: isNaN(weight) ? 0 : weight, reps });
       }
     });
     if(sets.length > 0){
@@ -5334,15 +5216,12 @@ async function upsertEntry(entry){
 document.getElementById('saveBtn').onclick = async () => {
   const weightInputs = document.querySelectorAll('.weight-input');
   const repsInputs = document.querySelectorAll('.reps-input');
-  const rirInputs = document.querySelectorAll('.rir-select');
   const sets = [];
   weightInputs.forEach((w,i) => {
     const weight = parseFloat(w.value);
     const reps = parseInt(repsInputs[i].value);
     if(!isNaN(weight) && !isNaN(reps)){
-      const set={weight, reps};
-      if(rirInputs[i] && rirInputs[i].value !== '') set.rir=Number(rirInputs[i].value);
-      sets.push(set);
+      sets.push({weight, reps});
     }
   });
   if(sets.length === 0){
@@ -5435,10 +5314,7 @@ function showUndoToast(message, onUndo){
   const btn = document.getElementById('undoToastBtn');
   document.getElementById('undoToastText').textContent = message;
   toast.classList.add('show');
-  clearTimeout(toast._hideTimeout);
-  toast._hideTimeout = setTimeout(() => toast.classList.remove('show'), 5000);
   btn.onclick = () => {
-    clearTimeout(toast._hideTimeout);
     toast.classList.remove('show');
     onUndo();
   };
@@ -5477,10 +5353,10 @@ function fmtSets(entry){
       const bwTag = entry.bodyweightUsed
         ? ` (≈${Math.round((s.weight + entry.bodyweightUsed)*10)/10}kg)`
         : '';
-      return `+${s.weight}kg×${s.reps}${s.rir==null||s.rir===''?'':` @RIR ${Number(s.rir)>=3?'3+':s.rir}`}${bwTag}`;
+      return `+${s.weight}kg×${s.reps}${bwTag}`;
     }).join(', ');
   }
-  return entry.sets.map(s => `${s.weight}kg×${s.reps}${s.rir==null||s.rir===''?'':` @RIR ${Number(s.rir)>=3?'3+':s.rir}`}`).join(', ');
+  return entry.sets.map(s => `${s.weight}kg×${s.reps}`).join(', ');
 }
 function maxWeight(entry){
   return Math.max(...entry.sets.map(s => effectiveWeight(entry, s)));
@@ -6425,7 +6301,7 @@ async function renderBodyweightChart(){
       labels,
       datasets: [
         { type: 'bar', label: 'Träningsvolym (kg)', data: volume, backgroundColor: '#3E8FE855', yAxisID: 'yVol' },
-        { type: 'line', label: 'Kroppsvikt, 7-dagarssnitt (kg)', data: avgWeight, borderColor: '#E8531D',
+        { type: 'line', label: 'Kroppsvikt (kg)', data: avgWeight, borderColor: '#E8531D',
           backgroundColor: '#E8531D', spanGaps: true, tension: 0.25, pointRadius: 4, yAxisID: 'yKg' }
       ]
     },
@@ -6441,11 +6317,14 @@ async function renderBodyweightChart(){
     }
   });
 
-  const trend = weightTrendStats(weights);
-  if(trend && weights.length >= 2){
-    noteEl.textContent = `7-dagarssnitt ${trend.avg.toFixed(1).replace('.',',')} kg · trend ${trend.slope >= 0 ? '+' : ''}${trend.slope.toFixed(2).replace('.',',')} kg/vecka de senaste tre veckorna. Jämför med volymstapeln och styrkeutvecklingen.`;
-  } else if(trend){
-    noteEl.textContent = `Första vikten loggad: ${trend.avg.toFixed(1).replace('.',',')} kg. Logga flera morgonvikter för ett stabilt 7-dagarssnitt.`;
+  const loggedWeights = weights.slice().sort((a,b) => new Date(a.date) - new Date(b.date));
+  if(loggedWeights.length >= 2){
+    const first = loggedWeights[0];
+    const last = loggedWeights[loggedWeights.length - 1];
+    const diff = Math.round((last.kg - first.kg) * 10) / 10;
+    noteEl.textContent = `${first.kg} kg (${fmtDate(first.date)}) → ${last.kg} kg (${fmtDate(last.date)}), ${diff >= 0 ? '+' : ''}${diff} kg. Jämför med volymstapeln — mål är stabil/lätt sjunkande vikt medan volymen ökar.`;
+  } else if(loggedWeights.length === 1){
+    noteEl.textContent = `Första vikten loggad: ${loggedWeights[0].kg} kg. Logga igen om en vecka för att se trenden.`;
   }
 }
 
@@ -6707,14 +6586,6 @@ async function renderMonthlyReport(){
   `;
 }
 
-
-function setStatsMode(mode){
-  document.querySelectorAll('[data-stats-tab]').forEach(b=>{const on=b.dataset.statsTab===mode;b.classList.toggle('active',on);b.setAttribute('aria-selected',String(on));});
-  document.querySelectorAll('[data-stats-group]').forEach(g=>g.classList.toggle('active',g.dataset.statsGroup===mode));
-  safeStorageSet('ui:statsMode',mode);setTimeout(()=>window.dispatchEvent(new Event('resize')),40);
-}
-document.querySelectorAll('[data-stats-tab]').forEach(b=>b.addEventListener('click',()=>setStatsMode(b.dataset.statsTab)));
-
 async function renderAllStats(){
   await populateStatsExerciseSelect();
   const select = document.getElementById('statsExerciseSelect');
@@ -6728,198 +6599,32 @@ async function renderAllStats(){
   await renderMonthlyReport();
 }
 
-
-// ================= v1.6–1.7 INTELLIGENCE =================
-async function loadIntelligenceSettings(){
-  try{ const r=await window.storage.get('settings:weightSteps'); WEIGHT_STEPS=JSON.parse(r.value||'{}'); }catch(e){ WEIGHT_STEPS={}; }
-  try{ const r=await window.storage.get('settings:swapFavorites'); SWAP_FAVORITES=JSON.parse(r.value||'{}'); }catch(e){ SWAP_FAVORITES={}; }
-}
-function renderWeightStepSettings(){
-  const sel=document.getElementById('weightStepExercise'); if(!sel)return;
-  const names=getAllPlanExerciseNames().sort((a,b)=>a.localeCompare(b,'sv'));
-  const prev=sel.value; sel.innerHTML=names.map(n=>`<option${n===prev?' selected':''}>${n}</option>`).join('');
-  const ex=findPlanExerciseAny(sel.value||names[0]); const w=Number(ex?.kg)||50;
-  document.getElementById('weightStepValue').value=WEIGHT_STEPS[sel.value]||ex?.weightStep||defaultWeightStep(sel.value,w);
-  const list=document.getElementById('weightStepList');
-  const custom=Object.entries(WEIGHT_STEPS).sort((a,b)=>a[0].localeCompare(b[0],'sv'));
-  list.innerHTML=custom.length?custom.map(([n,v])=>`<span class="step-chip">${n}: +${v} kg</span>`).join(''):'<span class="intel-muted">Inga egna steg ännu – rimliga standardvärden används.</span>';
-}
-function findPlanExerciseAny(name){ for(const list of Object.values(PLAN)){const ex=list.find(x=>x.name===name);if(ex)return ex;}return null; }
-document.getElementById('weightStepExercise').addEventListener('change',renderWeightStepSettings);
-document.getElementById('saveWeightStepBtn').onclick=async()=>{
-  const name=document.getElementById('weightStepExercise').value, value=Number(document.getElementById('weightStepValue').value);
-  if(!name||!value||value<=0){showInlineError('weightStepError','Ange ett giltigt viktsteg.');return;}
-  WEIGHT_STEPS[name]=value; await window.storage.set('settings:weightSteps',JSON.stringify(WEIGHT_STEPS)); renderWeightStepSettings(); refreshQuickLogIfVisible();
-};
-
-function entryBestE1RM(e){ return Math.max(0,...(e.sets||[]).map(st=>estimated1RMForSet(e,st))); }
-function weightTrendStats(weights){
-  const sorted=weights.slice().filter(w=>Number(w.kg)>0).sort((a,b)=>a.date.localeCompare(b.date));
-  if(!sorted.length)return null;
-  const points=sorted.map((w,i)=>{
-    const end=new Date(w.date+'T12:00:00'), start=new Date(end);start.setDate(end.getDate()-6);
-    const arr=sorted.filter(x=>{const d=new Date(x.date+'T12:00:00');return d>=start&&d<=end;}).map(x=>Number(x.kg));
-    return {date:w.date,avg:arr.reduce((a,b)=>a+b,0)/arr.length};
-  });
-  const last=points[points.length-1], cutoff=new Date(last.date+'T12:00:00');cutoff.setDate(cutoff.getDate()-21);
-  const recent=points.filter(p=>new Date(p.date+'T12:00:00')>=cutoff);
-  let slope=0;
-  if(recent.length>=2){const x0=new Date(recent[0].date+'T12:00:00').getTime();const xs=recent.map(p=>(new Date(p.date+'T12:00:00').getTime()-x0)/86400000),ys=recent.map(p=>p.avg);const xm=xs.reduce((a,b)=>a+b,0)/xs.length,ym=ys.reduce((a,b)=>a+b,0)/ys.length;const den=xs.reduce((a,x)=>a+(x-xm)**2,0);slope=den?xs.reduce((a,x,i)=>a+(x-xm)*(ys[i]-ym),0)/den*7:0;}
-  return {avg:last.avg,slope,points};
-}
-function nextStrengthAfter(dateStr){
-  const d=new Date(dateStr+'T12:00:00');
-  for(let add=1;add<=3;add++){const x=new Date(d);x.setDate(d.getDate()+add);const idx=(x.getDay()+6)%7;const item=SCHEDULE[idx];if(item?.mode==='strength')return {days:add,item};}
-  return null;
-}
-function runCoordinationMessage(dateStr,type){
-  const d=new Date((dateStr||todayStr())+'T12:00:00'), idx=(d.getDay()+6)%7, today=SCHEDULE[idx], next=nextStrengthAfter(dateStr||todayStr());
-  const hard=/tempo|intervall|maraton/i.test(type||''); const legToday=today?.mode==='strength'&&/ben|lower/i.test(today.label||''); const legTomorrow=next&&next.days===1&&/ben|lower/i.test(next.item.label||'');
-  if(hard&&(legToday||legTomorrow))return {warn:true,text:`⚠️ ${legToday?'Benpass samma dag':'Imorgon: '+next.item.label}. Byt helst till lugn distans eller flytta kvalitetspasset för att skydda benpassets prestation.`};
-  if(legToday||legTomorrow)return {warn:false,text:`✓ Lugn löpning passar. Håll intensiteten lätt eftersom ${legToday?'du kör ben idag':'du har '+next.item.label+' imorgon'}.`};
-  return {warn:false,text:'✓ Ingen tydlig krock med nästa benpass. Kvalitetspass är möjligt om återhämtningen känns normal.'};
-}
-function updateRunCoordinationAdvice(){
-  const el=document.getElementById('runCoordinationAdvice');if(!el)return;const m=runCoordinationMessage(document.getElementById('runDate').value||todayStr(),document.getElementById('runType').value);el.textContent=m.text;el.className='run-advice show '+(m.warn?'warn':'good');
-}
-document.getElementById('runDate').addEventListener('change',updateRunCoordinationAdvice);
-document.getElementById('runType').addEventListener('change',updateRunCoordinationAdvice);
-
-async function recoveryAnalysis(){
-  const entries=await loadAllEntries();
-  const mains=[];Object.values(PLAN).forEach(list=>{const x=list.find(e=>exerciseClass(e.name)==='heavy');if(x&&!mains.includes(x.name))mains.push(x.name);});
-  const details=[];
-  for(const name of mains.slice(0,6)){
-    const list=entries.filter(e=>e.exercise===name&&(e.sets||[]).length).sort((a,b)=>a.date.localeCompare(b.date)).slice(-3);
-    if(list.length<3)continue;
-    const rirSets=list.slice(-2).flatMap(e=>e.sets||[]).filter(st=>st.rir!==''&&st.rir!=null);
-    const rirCoverage=rirSets.length===list.slice(-2).flatMap(e=>e.sets||[]).length;
-    if(!rirCoverage)continue;
-    const change=(entryBestE1RM(list[2])-entryBestE1RM(list[0]))/Math.max(1,entryBestE1RM(list[0]))*100;
-    const avgRir=rirSets.reduce((a,s)=>a+Number(s.rir),0)/rirSets.length;
-    if(change<=1&&avgRir<=1.5)details.push({name,change,avgRir});
-  }
-  return {mains:mains.slice(0,6),details,suggest:details.length>=4};
-}
-async function planDeload(){
-  const monday=getMondayOfCurrentWeek(), next=new Date(monday);next.setDate(monday.getDate()+7);
-  const plan=JSON.parse(JSON.stringify(PLAN));
-  const entries=await loadAllEntries();
-  Object.values(plan).forEach(list=>list.forEach(ex=>{ex.sets=Math.max(1,Math.round(Number(ex.sets||3)*0.7));let base=Number(ex.kg)||0;if(!base){const last=entries.filter(e=>e.exercise===ex.name).sort((a,b)=>b.date.localeCompare(a.date))[0];base=last?Math.max(...last.sets.map(s=>Number(s.weight)||0)):0;}if(base&&!ex.bodyweight){const step=getWeightStep(ex,base);ex.kg=Math.max(step,Math.round(base*0.9/step)*step);ex.kgResetDate=toLocalDateStr(next);}}));
-  const labels={};SCHEDULE.filter(d=>d.mode==='strength').forEach(d=>labels[d.name]=d.label);
-  await saveWeekConfig(next,plan,JSON.parse(JSON.stringify(RUN_TARGETS)),labels,{deload:true});
-  await window.storage.set('recovery:deloadPlanned',toLocalDateStr(next));
-  alert(`Deload planerad veckan ${fmtDate(toLocalDateStr(next))}: cirka 30 % färre set och 10 % lägre vikt. Övningarna är oförändrade.`);
-  await renderRecoveryIntelligence();
-}
-async function renderRecoveryIntelligence(){
-  const el=document.getElementById('dashRecovery');if(!el)return;
-  const [analysis,weights]=await Promise.all([recoveryAnalysis(),loadAllWeights()]);const wt=weightTrendStats(weights);const run=runCoordinationMessage(todayStr(),(RUN_TARGETS[SCHEDULE[todayIndex()]?.name]||{}).type||'Lugn distans');
-  let deload='';
-  const ignoreUntil=Number(await readMeta('recovery:ignoreUntil'))||0;
-  if(analysis.suggest && ignoreUntil>Date.now()) deload='<div class="intel-muted">Deload-förslaget är dolt till '+new Date(ignoreUntil).toLocaleDateString('sv-SE')+'.</div>';
-  else if(analysis.suggest)deload=`<div class="intel-warn"><strong>Återhämtningen verkar försämras.</strong><br>${analysis.details.length} av ${analysis.mains.length} huvudövningar har stagnerat/minskat över tre pass samtidigt som seten ligger nära failure.</div><div class="intel-actions"><button class="primary" id="planDeloadBtn">Planera deload</button><button id="ignoreDeloadBtn">Ignorera 14 dagar</button></div>`;
-  else if(analysis.details.length)deload=`<div class="intel-muted">${analysis.details.length} av ${analysis.mains.length} huvudövningar visar möjlig trötthet. Deload föreslås först vid minst fyra.</div>`;
-  else deload='<div class="intel-muted">Deload-analys visas när minst tre pass per huvudövning har komplett RIR.</div>';
-  const whtml=wt?`<div style="margin-top:8px;"><strong>${wt.avg.toFixed(1).replace('.',',')} kg</strong> · 7-dagarssnitt · <span class="${Math.abs(wt.slope)<=0.25?'intel-good':'intel-warn'}">${wt.slope>=0?'+':''}${wt.slope.toFixed(2).replace('.',',')} kg/vecka</span></div>`:'<div class="intel-muted" style="margin-top:8px;">Logga kroppsvikt för 7-dagarstrend.</div>';
-  el.innerHTML=`<div class="intel-box">${deload}${whtml}<div class="${run.warn?'intel-warn':'intel-good'}" style="margin-top:8px;">${run.text}</div></div>`;
-  document.getElementById('planDeloadBtn')?.addEventListener('click',planDeload);
-  document.getElementById('ignoreDeloadBtn')?.addEventListener('click',async()=>{await window.storage.set('recovery:ignoreUntil',String(Date.now()+14*86400000));el.innerHTML='<div class="intel-muted">Deload-förslaget är dolt i 14 dagar.</div>';});
-}
-
-async function acceptedQuality(){try{const r=await window.storage.get('quality:accepted');return JSON.parse(r.value||'{}');}catch(e){return {};}}
-function qualitySig(en,st){return `${en._key}|${st.weight}|${st.reps}`;}
-async function scanDataQuality(){
-  const entries=await loadAllEntries(),accepted=await acceptedQuality(),issues=[];
-  const byEx={};entries.forEach(e=>(byEx[e.exercise]=byEx[e.exercise]||[]).push(e));
-  Object.entries(byEx).forEach(([name,list])=>{
-    const vals=list.flatMap(e=>(e.sets||[]).map(st=>Number(st.weight)).filter(v=>v>0&&v<1000)).sort((a,b)=>a-b);if(vals.length<4)return;const med=vals[Math.floor(vals.length/2)];
-    list.forEach(en=>(en.sets||[]).forEach((st,idx)=>{const w=Number(st.weight);const sig=qualitySig(en,st);if(w>Math.max(med*3,med+100)&&!accepted[sig])issues.push({type:'weight',en,st,idx,med,sig});}));
-  });
-  const dup=[];const seen=new Map();entries.forEach(en=>{const sig=JSON.stringify([en.date,en.day,en.exercise,en.sets,en.note||'',en.bodyweightUsed??null]);if(seen.has(sig))dup.push({type:'duplicate',en,original:seen.get(sig)});else seen.set(sig,en);});
-  return [...issues,...dup];
-}
-async function renderDataQuality(){
-  const el=document.getElementById('dashQuality');if(!el)return;const issues=await scanDataQuality();
-  if(!issues.length){el.innerHTML='<div class="intel-good">✓ Inga misstänkta värden eller exakta dubbletter hittades.</div>';return;}
-  el.innerHTML=issues.slice(0,4).map((x,i)=>x.type==='weight'?`<div class="quality-item"><strong>⚠️ Misstänkt värde</strong><br>${x.en.exercise}: ${x.st.weight} kg · normalt omkring ${Math.round(x.med*100)/100} kg<div class="intel-actions"><button data-quality-edit="${i}">Ändra</button><button data-quality-accept="${i}">Det stämmer</button></div></div>`:`<div class="quality-item"><strong>⚠️ Möjlig dubblett</strong><br>${x.en.day} · ${fmtDate(x.en.date)} · ${x.en.exercise}<div class="intel-actions"><button data-quality-delete="${i}">Rensa dubbletten</button></div></div>`).join('')+(issues.length>4?`<div class="intel-muted">+${issues.length-4} fler problem</div>`:'');
-  el.onclick=async ev=>{const attr=['qualityEdit','qualityAccept','qualityDelete'].find(k=>ev.target.dataset[k]!=null);if(!attr)return;const x=issues[Number(ev.target.dataset[attr])];if(attr==='qualityEdit'){const v=prompt(`Ny vikt för ${x.en.exercise}:`,String(x.med));if(v==null)return;const n=Number(String(v).replace(',','.'));if(!n||n<0)return;const clean={...x.en,sets:x.en.sets.map((st,j)=>j===x.idx?{...st,weight:n}:{...st})};const key=clean._key;delete clean._key;await window.storage.set(key,JSON.stringify(clean));invalidateEntriesCache();}else if(attr==='qualityAccept'){const a=await acceptedQuality();a[x.sig]=true;await window.storage.set('quality:accepted',JSON.stringify(a));}else{await window.storage.delete(x.en._key);invalidateEntriesCache();}await renderDataQuality();};
-}
-
-
-let homeMessageIndex=0;
-async function latestDraftInfo(){try{const list=await window.storage.list('draft:quick:');const drafts=[];for(const k of list.keys||[]){const r=await window.storage.get(k);if(r?.value){const d=JSON.parse(r.value);if(Date.now()-d.savedAt<7*86400000)drafts.push(d);}}drafts.sort((a,b)=>b.savedAt-a.savedAt);return drafts[0]||null;}catch(e){return null;}}
-async function renderHomeMessages(){
-  const el=document.getElementById('homeMessageCenter');if(!el)return;
-  const items=[],draft=await latestDraftInfo();
-  if(draft){const done=draft.blocks.reduce((a,b)=>a+b.rows.filter(r=>r.done).length,0),total=draft.blocks.reduce((a,b)=>a+b.rows.length,0);items.push({kind:'current',title:`${draft.day} pågår`,copy:`${done}/${total} set klara. Fortsätt där du slutade.`,action:'resume',label:'Fortsätt pass'});}
-  const quality=await scanDataQuality();if(quality.length)items.push({kind:'danger',title:'Datakvalitet behöver granskas',copy:`${quality.length} ${quality.length===1?'misstänkt värde eller dubblett':'misstänkta värden eller dubbletter'} påverkar statistiken.`,action:'quality',label:'Granska'});
-  const rec=await recoveryAnalysis(),ignoreUntil=Number(await readMeta('recovery:ignoreUntil'))||0;if(rec.suggest&&ignoreUntil<=Date.now())items.push({kind:'current',title:'Deload kan vara lämplig',copy:`${rec.details.length} huvudövningar visar möjlig ackumulerad trötthet.`,action:'deload',label:'Planera deload'});
-  if(window._backupReminderDue)items.push({kind:'current',title:'Dags att säkerhetskopiera',copy:'Ingen färsk backup finns. Molnbackup används automatiskt när den är ansluten.',action:'backup',label:'Säkerhetskopiera nu'});
-  const run=runCoordinationMessage(todayStr(),(RUN_TARGETS[SCHEDULE[todayIndex()]?.name]||{}).type||'Lugn distans');if(run.warn)items.push({kind:'current',title:'Styrka och löpning',copy:run.text.replace(/^⚠️\s*/,''),action:'run',label:'Öppna löpning'});
-  const weekly=document.getElementById('dashWeekly'),weeklySec=document.getElementById('dashWeeklySec');if(weekly?.textContent.trim()){items.push({kind:'good',title:'Förra veckan',copy:weekly.textContent.trim().replace(/\s+/g,' ').slice(0,220),action:'weekly',label:'Visa sammanfattning'});weeklySec.style.display='none';}
-  if(!items.length){el.className='home-message show good';el.innerHTML='<div class="home-message-title">Allt är i ordning</div><div class="home-message-copy">Inga viktiga meddelanden just nu.</div>';return;}
-  homeMessageIndex=Math.min(homeMessageIndex,items.length-1);const m=items[homeMessageIndex];el.className='home-message show '+m.kind;
-  el.innerHTML=`<div class="home-message-title">${m.title}</div><div class="home-message-copy">${m.copy}</div><div class="home-message-actions"><button class="primary" id="homeMessageAction">${m.label}</button>${items.length>1?'<button id="homeMessageNext">Nästa</button>':''}</div>${items.length>1?`<div class="home-message-more">Meddelande ${homeMessageIndex+1} av ${items.length} · +${items.length-1} till</div>`:''}`;
-  document.getElementById('homeMessageNext')?.addEventListener('click',()=>{homeMessageIndex=(homeMessageIndex+1)%items.length;renderHomeMessages();});
-  document.getElementById('homeMessageAction')?.addEventListener('click',async()=>{if(m.action==='resume'){currentDay=draft.day;goToMode('strength');renderTabs();renderExercises();setLogMode('quick');}else if(m.action==='quality'){document.getElementById('dashQualitySec').style.display='block';document.getElementById('dashQualitySec').scrollIntoView({behavior:'smooth'});}else if(m.action==='deload')await planDeload();else if(m.action==='backup'){const cfg=await loadCloudConfig();if(cfg)await cloudBackup({manual:true});else document.getElementById('exportDataBtn').click();}else if(m.action==='run')goToMode('run');else if(m.action==='weekly'){const sec=document.getElementById('dashWeeklySec');sec.style.display='block';sec.scrollIntoView({behavior:'smooth'});}});
-}
-
 // ---------- DATA BACKUP (export / import) ----------
-
-async function buildBackupData(){
-  const [entries,runs,weights,wellness,phases]=await Promise.all([loadAllEntries(),loadAllRuns(),loadAllWeights(),loadAllWellness(),loadPhases()]);
-  let planConfig=null;try{const r=await window.storage.get('plan:config');if(r?.value)planConfig=JSON.parse(r.value);}catch(e){}
-  const weekIndex=await loadWeekPlanIndex(),weekPlans={};for(const wk of weekIndex){try{const r=await window.storage.get('weekplan:'+wk);if(r?.value)weekPlans[wk]=JSON.parse(r.value);}catch(e){}}
-  return {exportedAt:new Date().toISOString(),appVersion:APP_VERSION,entries,runs,weights,wellness,phases,planConfig,weekPlans,settings:{weightSteps:WEIGHT_STEPS,swapFavorites:SWAP_FAVORITES},counts:{entries:entries.length,runs:runs.length,weights:weights.length,wellness:wellness.length}};
-}
-function backupCount(b){return ['entries','runs','weights','wellness'].reduce((n,k)=>n+(Array.isArray(b?.[k])?b[k].length:0),0);}
-async function mergeBackupData(data){
-  let added=0;
-  for(const entry of data.entries||[]){const key=entry._key||('entry:'+entry.date+':'+String(entry.exercise||'').replace(/[^a-zA-Z0-9]/g,'')+':cloud:'+btoa(unescape(encodeURIComponent(JSON.stringify([entry.date,entry.exercise,entry.sets])))).slice(0,18));const clean={...entry};delete clean._key;try{await window.storage.get(key);}catch(e){added++;}await window.storage.set(key,JSON.stringify(clean));}
-  for(const run of data.runs||[]){const key=run._key||('run:'+run.date+':cloud:'+btoa(unescape(encodeURIComponent(JSON.stringify([run.date,run.distance,run.time,run.type])))).slice(0,18));const clean={...run};delete clean._key;try{await window.storage.get(key);}catch(e){added++;}await window.storage.set(key,JSON.stringify(clean));}
-  for(const w of data.weights||[])await window.storage.set('weight:'+w.date,JSON.stringify({date:w.date,kg:w.kg}));
-  for(const x of data.wellness||[])await window.storage.set('wellness:'+x.date,JSON.stringify(x));
-  const localPhases=await loadPhases(),phaseMap=new Map(localPhases.map(x=>[x.startDate+'|'+x.name,x]));for(const x of data.phases||[])phaseMap.set(x.startDate+'|'+x.name,x);await savePhases([...phaseMap.values()]);
-  try{await window.storage.get('plan:config');}catch(e){if(data.planConfig)await window.storage.set('plan:config',JSON.stringify(data.planConfig));}
-  if(data.weekPlans){const localIndex=await loadWeekPlanIndex();const merged=new Set(localIndex);for(const [wk,val] of Object.entries(data.weekPlans)){try{await window.storage.get('weekplan:'+wk);}catch(e){await window.storage.set('weekplan:'+wk,JSON.stringify(val));}merged.add(wk);}await window.storage.set('weekplan:index',JSON.stringify([...merged].sort()));weekIndexCache=null;}
-  if(data.settings){if(data.settings.weightSteps)await window.storage.set('settings:weightSteps',JSON.stringify({...data.settings.weightSteps,...WEIGHT_STEPS}));if(data.settings.swapFavorites)await window.storage.set('settings:swapFavorites',JSON.stringify({...data.settings.swapFavorites,...SWAP_FAVORITES}));}
-  invalidateEntriesCache();invalidateRunsCache();invalidateWeightsCache();invalidateWellnessCache();phasesCache=null;resolvedWeekCache.clear();await loadIntelligenceSettings();await loadPlanConfig();await applyV153Migration(true);await renderHistory();await renderRunHistory();await renderAllStats();await renderPhases();await renderSchedule();return added;
-}
-function encodeBase64Utf8(text){const bytes=new TextEncoder().encode(text);let binary='';for(let i=0;i<bytes.length;i+=0x8000)binary+=String.fromCharCode(...bytes.subarray(i,i+0x8000));return btoa(binary);}
-function decodeBase64Utf8(text){const binary=atob(String(text||'').replace(/\n/g,'')),bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));return new TextDecoder().decode(bytes);}
-async function loadCloudConfig(){try{const r=await window.storage.get('meta:cloudConfig');return JSON.parse(r.value);}catch(e){return null;}}
-async function cloudFetch(config,method='GET',body){const url=`https://api.github.com/repos/${encodeURIComponent(config.owner)}/${encodeURIComponent(config.repo)}/contents/traningslogg-backup.json`;const res=await fetch(url,{method,headers:{Accept:'application/vnd.github+json',Authorization:`Bearer ${config.token}`,'X-GitHub-Api-Version':'2022-11-28',...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});return res;}
-function githubError(status){if(status===401)return'Ogiltig eller utgången åtkomstnyckel. Skapa en ny fine-grained token.';if(status===403)return'Nyckeln saknar behörigheten Contents: Read and write.';if(status===404)return'Repot hittades inte. Kontrollera namn och att nyckeln har åtkomst till repot.';return`GitHub svarade med fel ${status}. Försök igen.`;}
-async function getCloudFile(config){const res=await cloudFetch(config);if(res.status===404)return null;if(!res.ok)throw new Error(githubError(res.status));const json=await res.json();return {sha:json.sha,data:JSON.parse(decodeBase64Utf8(json.content))};}
-function setCloudStatus(text,kind=''){const el=document.getElementById('cloudStatus');if(el){el.textContent=text;el.className='cloud-status '+kind;}safeStorageSet('meta:cloudStatus',JSON.stringify({text,kind,at:Date.now()}));}
-let cloudTimer=null,cloudBusy=false,cloudMute=0;
-window.cloudMutationHook=(key)=>{if(cloudMute||/^(meta:|ui:|draft:|healthcheck:)/.test(String(key)))return;clearTimeout(cloudTimer);cloudTimer=setTimeout(()=>cloudBackup({automatic:true}).catch(()=>{}),4500);};
-async function cloudBackup({manual=false,automatic=false,connecting=false,force=false}={}){
-  if(cloudBusy)return false;const config=await loadCloudConfig();if(!config)return false;if(!navigator.onLine&&!connecting){setCloudStatus('Ingen nätanslutning. Backup görs när nätet är tillbaka.','current');return false;}cloudBusy=true;
-  try{cloudMute++;const local=await buildBackupData(),lastRaw=await readMeta('meta:cloudLastCounts'),last=lastRaw?JSON.parse(lastRaw):null,localTotal=backupCount(local);cloudMute--;
-    if(last&&!force&&localTotal<last.total*.7&&last.total-localTotal>=5){await window.storage.set('meta:cloudPaused','true');setCloudStatus(`Automatisk backup pausad: datamängden minskade kraftigt (${last.total} → ${localTotal}). Tryck Säkerhetskopiera nu och bekräfta om det är avsiktligt.`,'error');if(!manual)return false;if(!confirm('Datamängden har minskat kraftigt. Vill du ändå ersätta molnkopian med den mindre datamängden?'))return false;force=true;}
-    if(manual&&await readMeta('meta:cloudPaused')==='true'&&!force){if(!confirm('Automatisk backup är pausad. Bekräfta att nuvarande lokala data ska säkerhetskopieras.'))return false;force=true;}
-    setCloudStatus('Kontaktar GitHub…','current');let remote=await getCloudFile(config);const ever=await readMeta('meta:cloudEverSynced');
-    if(!ever&&remote&&backupCount(remote.data)>localTotal){await window.storage.set('meta:cloudPullRequired','true');setCloudStatus(`Molnkopian har fler loggar (${backupCount(remote.data)}) än appen (${localTotal}). Tryck Hämta från molnet innan första backupen.`,'error');return false;}
-    const payload={message:`Träningslogg backup ${new Date().toLocaleString('sv-SE')}`,content:encodeBase64Utf8(JSON.stringify(local,null,2)),...(remote?.sha?{sha:remote.sha}:{})};let res=await cloudFetch(config,'PUT',payload);
-    if(res.status===409||res.status===422){remote=await getCloudFile(config);const retry={...payload,...(remote?.sha?{sha:remote.sha}:{})};res=await cloudFetch(config,'PUT',retry);}
-    if(!res.ok)throw new Error(githubError(res.status));const now=new Date().toISOString();await window.storage.set('meta:cloudEverSynced','true');await window.storage.set('meta:cloudPaused','false');await window.storage.set('meta:cloudPullRequired','false');await window.storage.set('meta:cloudLastCounts',JSON.stringify({total:localTotal,at:now}));await window.storage.set('meta:cloudLastSuccess',now);await markBackupDone();setCloudStatus(`Senaste lyckade molnbackup: ${new Date(now).toLocaleString('sv-SE',{dateStyle:'short',timeStyle:'short'})}`,'good');renderHomeMessages().catch(()=>{});return true;
-  }catch(e){setCloudStatus(e.message||'Molnbackup misslyckades.','error');if(connecting)throw e;return false;}finally{cloudBusy=false;cloudMute=Math.max(0,cloudMute-1);renderCloudUI().catch(()=>{});}
-}
-async function cloudRestore(){const config=await loadCloudConfig();if(!config)return;cloudBusy=true;try{setCloudStatus('Hämtar molnkopian…','current');const remote=await getCloudFile(config);if(!remote)throw new Error('Ingen traningslogg-backup.json finns i repot ännu.');cloudMute++;const added=await mergeBackupData(remote.data);cloudMute--;const local=await buildBackupData(),now=new Date().toISOString();await window.storage.set('meta:cloudEverSynced','true');await window.storage.set('meta:cloudPaused','false');await window.storage.set('meta:cloudPullRequired','false');await window.storage.set('meta:cloudLastCounts',JSON.stringify({total:backupCount(local),at:now}));await markBackupDone();setCloudStatus(`Molnkopian hämtades. ${added} nya loggar lades till; inget lokalt raderades.`,'good');await renderHomeMessages();}catch(e){setCloudStatus(e.message||'Kunde inte hämta molnkopian.','error');}finally{cloudMute=Math.max(0,cloudMute-1);cloudBusy=false;}}
-async function renderCloudUI(){const cfg=await loadCloudConfig(),form=document.getElementById('cloudBackupForm'),connected=document.getElementById('cloudConnected');if(!form)return;form.classList.toggle('hidden',!!cfg);connected.classList.toggle('show',!!cfg);if(cfg){document.getElementById('cloudOwner').value=cfg.owner;document.getElementById('cloudRepo').value=cfg.repo;const saved=await readMeta('meta:cloudStatus');if(saved){try{const x=JSON.parse(saved);const el=document.getElementById('cloudStatus');el.textContent=x.text;el.className='cloud-status '+(x.kind||'');return;}catch(e){}}const last=await readMeta('meta:cloudLastSuccess');if(last)setCloudStatus(`Senaste lyckade molnbackup: ${new Date(last).toLocaleString('sv-SE',{dateStyle:'short',timeStyle:'short'})}`,'good');}}
-document.getElementById('cloudConnectBtn').onclick=async()=>{const owner=document.getElementById('cloudOwner').value.trim(),repo=document.getElementById('cloudRepo').value.trim(),token=document.getElementById('cloudToken').value.trim();if(!owner||!repo||!token){setCloudStatus('Fyll i användarnamn, repo och åtkomstnyckel.','error');return;}const btn=document.getElementById('cloudConnectBtn');btn.disabled=true;btn.textContent='Testar…';try{await window.storage.set('meta:cloudConfig',JSON.stringify({owner,repo,token}));const result=await cloudBackup({manual:true,connecting:true});await renderCloudUI();if(result!==false)document.getElementById('cloudToken').value='';}catch(e){await window.storage.delete('meta:cloudConfig');setCloudStatus(e.message,'error');}finally{btn.disabled=false;btn.textContent='Spara och testa';}};
-document.getElementById('cloudBackupNowBtn').onclick=()=>cloudBackup({manual:true});document.getElementById('cloudRestoreBtn').onclick=()=>cloudRestore();document.getElementById('cloudDisconnectBtn').onclick=async()=>{if(!confirm('Koppla bort GitHub från den här enheten? Molnfilen raderas inte.'))return;for(const k of ['meta:cloudConfig','meta:cloudEverSynced','meta:cloudPaused','meta:cloudPullRequired','meta:cloudLastCounts','meta:cloudLastSuccess'])await window.storage.delete(k);setCloudStatus('Inte ansluten.');await renderCloudUI();};
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')cloudBackup({automatic:true}).catch(()=>{});});window.addEventListener('online',()=>{clearTimeout(cloudTimer);cloudTimer=setTimeout(()=>cloudBackup({automatic:true}).catch(()=>{}),1200);});
-window.__cloudTest={buildBackupData,mergeBackupData,cloudBackup,cloudRestore,getCloudFile,backupCount};
-
 document.getElementById('exportDataBtn').onclick = async () => {
   const statusEl = document.getElementById('dataBackupStatus');
   try{
-    const backup = await buildBackupData();
-    const {entries,runs,weights,wellness}=backup;
-    const weekIndex=Object.keys(backup.weekPlans||{});
+    const [entries, runs, weights, wellness] = await Promise.all([
+      loadAllEntries(), loadAllRuns(), loadAllWeights(), loadAllWellness()
+    ]);
+    let planConfig = null;
+    try{
+      const res = await window.storage.get('plan:config');
+      if(res && res.value) planConfig = JSON.parse(res.value);
+    }catch(e){ /* no plan config saved — defaults will be used on import */ }
+
+    const weekIndex = await loadWeekPlanIndex();
+    const weekPlans = {};
+    for(const wk of weekIndex){
+      try{
+        const res = await window.storage.get('weekplan:' + wk);
+        if(res && res.value) weekPlans[wk] = JSON.parse(res.value);
+      }catch(e){ /* skip missing */ }
+    }
+
+    const backup = {
+      exportedAt: new Date().toISOString(),
+      entries, runs, weights, wellness, planConfig, weekPlans
+    };
     const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
     await _saveFileForViewer(`traningslogg-backup-${todayStr()}.json`, blob, 'application/json');
     await markBackupDone();
@@ -6969,12 +6674,6 @@ document.getElementById('importDataFile').onchange = async (e) => {
     if(data.planConfig){
       await window.storage.set('plan:config', JSON.stringify(data.planConfig));
     }
-    if(Array.isArray(data.phases)){ await savePhases(data.phases); }
-    if(data.settings){
-      if(data.settings.weightSteps) await window.storage.set('settings:weightSteps',JSON.stringify(data.settings.weightSteps));
-      if(data.settings.swapFavorites) await window.storage.set('settings:swapFavorites',JSON.stringify(data.settings.swapFavorites));
-      await loadIntelligenceSettings();
-    }
 
     let weekPlanCount = 0;
     if(data.weekPlans){
@@ -6992,7 +6691,6 @@ document.getElementById('importDataFile').onchange = async (e) => {
     invalidateWellnessCache();
     resolvedWeekCache.clear();
     await loadPlanConfig();
-    await applyV153Migration(true);
     viewedWeekMonday = getMondayOfCurrentWeek();
     await loadViewedWeek();
     renderWeekNavHeader();
@@ -7027,11 +6725,186 @@ document.getElementById('weekPrevBtn').onclick = () => navigateWeek(-7);
 document.getElementById('weekNextBtn').onclick = () => navigateWeek(7);
 document.getElementById('weekTodayBtn').onclick = () => navigateWeek(0, true);
 
+
+// ================= v1.8.1: navigation under pågående pass =================
+let workoutPanelMinimized = false;
+let workoutDockTouchY = null;
+
+function currentWorkoutRow(){
+  const blocks = [...document.querySelectorAll('#quickLogExercises .quick-ex-block')];
+  for(const block of blocks){
+    const row = [...block.querySelectorAll('.quick-set-row')].find(r => !r.classList.contains('done'));
+    if(row) return { block, row, number:[...block.querySelectorAll('.quick-set-row')].indexOf(row)+1 };
+  }
+  return null;
+}
+function workoutHasActiveDraft(){
+  return !!quickSessionStart || document.querySelectorAll('#quickLogExercises .quick-set-row.done').length > 0;
+}
+async function ensureWorkoutDraft(){
+  if(!quickSessionStart) quickSessionStart = Date.now();
+  quickDraftDirty = true;
+  await flushQuickDraft();
+}
+function updateWorkoutDock(){
+  const dock = document.getElementById('workoutDock');
+  if(!dock) return;
+  const quickVisible = document.getElementById('quickLogCard').style.display !== 'none';
+  const hasRows = !!document.querySelector('#quickLogExercises .quick-set-row');
+  const strengthActive = document.getElementById('strengthView').classList.contains('active');
+  const shouldShow = hasRows && quickVisible && (strengthActive || workoutHasActiveDraft());
+  dock.classList.toggle('show', shouldShow);
+  document.body.classList.toggle('workout-dock-visible', shouldShow);
+  if(!shouldShow) return;
+  const compact = workoutPanelMinimized || !strengthActive;
+  dock.classList.toggle('compact', compact);
+  const st = workoutStats();
+  document.getElementById('workoutDockCompactTitle').textContent = `${currentDay} · pass pågår`;
+  document.getElementById('workoutDockCompactMeta').textContent = `${st.done}/${st.total} set klara`;
+  const cur = currentWorkoutRow();
+  const complete = document.getElementById('workoutCompleteBtn');
+  complete.disabled = !cur;
+  if(cur){
+    const w = cur.row.querySelector('.quick-weight-input').value;
+    const r = cur.row.querySelector('.quick-reps-input').value;
+    document.getElementById('workoutDockTitle').textContent = `${cur.block.dataset.exercise} · Set ${cur.number}`;
+    document.getElementById('workoutDockValues').textContent = `${w || '–'} kg × ${r || '–'} reps`;
+  }else{
+    document.getElementById('workoutDockTitle').textContent = `${currentDay} · Passet är klart ✓`;
+    document.getElementById('workoutDockValues').textContent = `${st.done}/${st.total} set klara`;
+  }
+  const restActive = document.getElementById('qrest').classList.contains('show') && qrestEnd > Date.now();
+  const rest = document.getElementById('workoutDockRest');
+  rest.classList.toggle('show', restActive);
+  if(restActive){
+    document.getElementById('workoutRestLabel').textContent = document.getElementById('qrestLabel').textContent || 'Vila';
+    document.getElementById('workoutRestTime').textContent = formatTimerDisplay(Math.max(0,Math.ceil((qrestEnd-Date.now())/1000)));
+  }
+}
+const _v181UpdateWorkoutUX = updateWorkoutUX;
+updateWorkoutUX = function(){ _v181UpdateWorkoutUX(); updateWorkoutDock(); };
+const _v181GoToMode = goToMode;
+goToMode = function(mode){
+  const leavingWorkout = mode !== 'strength' && document.getElementById('strengthView').classList.contains('active') && workoutHasActiveDraft();
+  if(leavingWorkout){ workoutPanelMinimized = true; quickDraftDirty = true; flushQuickDraft(); }
+  _v181GoToMode(mode);
+  setTimeout(updateWorkoutDock,0);
+};
+
+document.getElementById('quickLogExercises').addEventListener('input', () => {
+  if(!quickSessionStart) quickSessionStart = Date.now();
+  updateWorkoutDock();
+});
+document.getElementById('quickLogExercises').addEventListener('click', () => setTimeout(updateWorkoutDock,0));
+document.getElementById('workoutMinimizeBtn').onclick = async () => {
+  await ensureWorkoutDraft();
+  workoutPanelMinimized = true;
+  stopQuickRest();
+  goToMode('home');
+  await renderHomeDraft();
+  updateWorkoutDock();
+};
+document.getElementById('workoutDockCompact').onclick = async () => {
+  workoutPanelMinimized = false;
+  goToMode('strength');
+  setLogMode('quick');
+  updateWorkoutDock();
+  setTimeout(() => document.getElementById('workoutHead').scrollIntoView({behavior:'smooth',block:'start'}),100);
+};
+document.getElementById('workoutCompleteBtn').onclick = () => {
+  const cur = currentWorkoutRow();
+  if(cur) cur.row.querySelector('.quick-set-done-btn').click();
+  setTimeout(updateWorkoutDock,0);
+};
+document.getElementById('workoutRestMinus').onclick = () => document.getElementById('qrestMinus').click();
+document.getElementById('workoutRestPlus').onclick = () => document.getElementById('qrestPlus').click();
+document.getElementById('workoutSkipRest').onclick = () => { stopQuickRest(); updateWorkoutDock(); };
+document.getElementById('workoutEndBtn').onclick = async () => {
+  if(!confirm('Avsluta passet? Inga övningar loggas och det automatiskt sparade utkastet tas bort.')) return;
+  stopQuickRest();
+  await discardQuickDraft(currentDay, false);
+  quickSessionStart = null;
+  workoutPanelMinimized = false;
+  await renderQuickLogForm();
+  updateWorkoutDock();
+  await renderHomeDraft();
+};
+const dockEl = document.getElementById('workoutDock');
+dockEl.addEventListener('touchstart',e=>{workoutDockTouchY=e.touches[0].clientY;},{passive:true});
+dockEl.addEventListener('touchend',async e=>{if(workoutDockTouchY!=null && e.changedTouches[0].clientY-workoutDockTouchY>60 && !dockEl.classList.contains('compact')){await ensureWorkoutDraft();workoutPanelMinimized=true;goToMode('home');await renderHomeDraft();updateWorkoutDock();}workoutDockTouchY=null;},{passive:true});
+setInterval(updateWorkoutDock,250);
+
+// ================= GitHub-molnbackup =================
+const GITHUB_FILE = 'traningslogg-backup.json';
+let cloudBackupTimer = null, cloudBackupBusy = false;
+function cloudStatus(text, type){ const el=document.getElementById('githubCloudStatus'); if(!el)return; el.textContent=text; el.className='cloud-status'+(type?' '+type:''); }
+async function firstStored(keys){ for(const k of keys){ try{const r=await window.storage.get(k);if(r&&r.value)return r.value;}catch(e){} } return null; }
+async function getGithubConfig(){
+  const user=(await firstStored(['github:username','cloud:github:username','githubBackup:username']))||localStorage.getItem('githubUsername')||'Nybbe84';
+  const repo=(await firstStored(['github:repo','cloud:github:repo','githubBackup:repo']))||localStorage.getItem('githubRepo')||'traningslogg-data';
+  const token=(await firstStored(['github:token','cloud:github:token','githubBackup:token']))||localStorage.getItem('githubToken')||'';
+  return {user,repo,token};
+}
+async function saveGithubConfig(){
+  const cfg={user:document.getElementById('githubUserInput').value.trim(),repo:document.getElementById('githubRepoInput').value.trim(),token:document.getElementById('githubTokenInput').value.trim()};
+  if(!cfg.user||!cfg.repo||!cfg.token) throw new Error('Fyll i användare, repo och token.');
+  await window.storage.set('github:username',cfg.user); await window.storage.set('github:repo',cfg.repo); await window.storage.set('github:token',cfg.token);
+  return cfg;
+}
+async function buildCloudBackup(){
+  const [entries,runs,weights,wellness]=await Promise.all([loadAllEntries(),loadAllRuns(),loadAllWeights(),loadAllWellness()]);
+  let planConfig=null; try{const r=await window.storage.get('plan:config');if(r&&r.value)planConfig=JSON.parse(r.value);}catch(e){}
+  const weekIndex=await loadWeekPlanIndex(), weekPlans={};
+  for(const wk of weekIndex){try{const r=await window.storage.get('weekplan:'+wk);if(r&&r.value)weekPlans[wk]=JSON.parse(r.value);}catch(e){}}
+  return {exportedAt:new Date().toISOString(),appVersion:APP_VERSION,entries,runs,weights,wellness,planConfig,weekPlans};
+}
+function githubHeaders(token){return {'Accept':'application/vnd.github+json','Authorization':'Bearer '+token,'X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'};}
+function utf8ToBase64(s){const bytes=new TextEncoder().encode(s);let bin='';bytes.forEach(b=>bin+=String.fromCharCode(b));return btoa(bin);}
+async function cloudBackupNow(cfgOverride){
+  if(cloudBackupBusy) return;
+  const cfg=cfgOverride||await getGithubConfig();
+  if(!cfg.token) throw new Error('GitHub-token saknas.');
+  if(!navigator.onLine) throw new Error('Ingen internetanslutning.');
+  cloudBackupBusy=true; cloudStatus('Säkerhetskopierar…');
+  try{
+    const api=`https://api.github.com/repos/${encodeURIComponent(cfg.user)}/${encodeURIComponent(cfg.repo)}/contents/${GITHUB_FILE}`;
+    let sha=null; const existing=await fetch(api,{headers:githubHeaders(cfg.token)});
+    if(existing.ok){const j=await existing.json();sha=j.sha;} else if(existing.status!==404){const t=await existing.text();throw new Error(`GitHub svarade ${existing.status}: ${t.slice(0,140)}`);}
+    const backup=await buildCloudBackup();
+    const body={message:`Automatisk backup ${new Date().toLocaleString('sv-SE')}`,content:utf8ToBase64(JSON.stringify(backup,null,2))}; if(sha)body.sha=sha;
+    const res=await fetch(api,{method:'PUT',headers:githubHeaders(cfg.token),body:JSON.stringify(body)});
+    if(!res.ok){const t=await res.text();throw new Error(`GitHub svarade ${res.status}: ${t.slice(0,180)}`);}
+    const now=new Date().toISOString(); await window.storage.set('meta:lastCloudBackup',now); await markBackupDone();
+    cloudStatus(`✓ Senaste molnbackup: ${new Date(now).toLocaleString('sv-SE',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}`,'ok');
+  }finally{cloudBackupBusy=false;}
+}
+function scheduleCloudBackup(){
+  clearTimeout(cloudBackupTimer); cloudBackupTimer=setTimeout(async()=>{try{const cfg=await getGithubConfig();if(cfg.token&&navigator.onLine)await cloudBackupNow(cfg);}catch(e){cloudStatus('Molnbackup väntar: '+e.message,'error');}},1800);
+}
+async function initGithubCloud(){
+  const cfg=await getGithubConfig(); document.getElementById('githubUserInput').value=cfg.user; document.getElementById('githubRepoInput').value=cfg.repo; document.getElementById('githubTokenInput').value=cfg.token;
+  const last=await firstStored(['meta:lastCloudBackup']); if(last)cloudStatus(`✓ Senaste molnbackup: ${new Date(last).toLocaleString('sv-SE',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}`,'ok'); else cloudStatus(cfg.token?'Ansluten. Ingen molnbackup registrerad ännu.':'Inte ansluten.');
+}
+document.getElementById('githubSaveTestBtn').onclick=async()=>{const b=document.getElementById('githubSaveTestBtn');b.disabled=true;try{const cfg=await saveGithubConfig();await cloudBackupNow(cfg);}catch(e){cloudStatus('Kunde inte ansluta: '+e.message,'error');}finally{b.disabled=false;}};
+document.getElementById('githubBackupNowBtn').onclick=async()=>{try{await cloudBackupNow();}catch(e){cloudStatus('Backup misslyckades: '+e.message,'error');}};
+document.getElementById('githubRestoreBtn').onclick=async()=>{
+  try{
+    const cfg=await getGithubConfig();if(!cfg.token)throw new Error('GitHub-token saknas.');
+    if(!confirm('Hämta backupen från GitHub och importera den på den här enheten? Befintliga poster behålls och poster med samma nyckel uppdateras.'))return;
+    cloudStatus('Hämtar backup…'); const api=`https://api.github.com/repos/${encodeURIComponent(cfg.user)}/${encodeURIComponent(cfg.repo)}/contents/${GITHUB_FILE}`;
+    const r=await fetch(api,{headers:githubHeaders(cfg.token)});if(!r.ok)throw new Error(`GitHub svarade ${r.status}`);const j=await r.json();
+    const bin=atob(String(j.content||'').replace(/\s/g,'')),bytes=Uint8Array.from(bin,c=>c.charCodeAt(0)),text=new TextDecoder().decode(bytes);JSON.parse(text);
+    const dt=new DataTransfer();dt.items.add(new File([text],GITHUB_FILE,{type:'application/json'}));const input=document.getElementById('importDataFile');input.files=dt.files;await input.onchange({target:input});cloudStatus('✓ Backup hämtad och importerad.','ok');
+  }catch(e){cloudStatus('Återställning misslyckades: '+e.message,'error');}
+};
+const _cloudStorageSet=window.storage.set.bind(window.storage);
+window.storage.set=async function(key,value){const result=await _cloudStorageSet(key,value);if(/^(entry:|run:|weight:|wellness:|plan:config|weekplan:)/.test(String(key)))scheduleCloudBackup();return result;};
+window.addEventListener('online',scheduleCloudBackup);
+initGithubCloud();
+
 // init
 (async () => {
   await checkStorageHealth();
-  await loadIntelligenceSettings();
-  await renderCloudUI();
   await loadPlanConfig();
   await applyLegsAndCoreMigration();
   await applyBicepsVolumeMigration();
@@ -7043,8 +6916,7 @@ document.getElementById('weekTodayBtn').onclick = () => navigateWeek(0, true);
   await applyBackReliefMigration();
   await applyRepRangeTuneMigration();
   await applyHypertrophyUXMigration();
-  await applyHackSquatAndLegPressMigration();
-  await applyV153Migration();
+    await applyHackSquatAndLegPressMigration();
   const todaysPlan = SCHEDULE[todayIndex()];
   if(todaysPlan.mode === 'strength'){ currentDay = todaysPlan.label; }
   viewedWeekMonday = getMondayOfCurrentWeek();
@@ -7064,9 +6936,9 @@ document.getElementById('weekTodayBtn').onclick = () => navigateWeek(0, true);
   }catch(e){ /* no preference saved yet — quick stays default */ }
   setLogMode(lastLogMode, true);
 
-  try{const sm=await readMeta('ui:statsMode');if(sm)setStatsMode(sm);}catch(e){}
+  const av=document.getElementById('appVersionLabel'); if(av) av.textContent='Appversion '+APP_VERSION;
   goToMode('home');
-  await renderHomeMessages();
+  updateWorkoutDock();
 })();
 </script>
 <script>
