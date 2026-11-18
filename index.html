@@ -1682,6 +1682,17 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
       <div class="cloud-status" id="githubCloudStatus" role="status" aria-live="polite">Inte ansluten.</div>
     </div>
 
+    <div class="card" id="garminTestCard">
+      <h2>Garmin Connect (test)</h2>
+      <div class="chart-note" style="margin-top:0;">Testar om appen kan hämta data direkt från Garmin Personal API. Nyckeln sparas bara lokalt på den här enheten och skickas endast till Garmin. Inget importeras ännu – detta är bara ett anslutningstest.</div>
+      <div style="margin-top:12px;"><label>Personal API Key</label><input id="garminKeyInput" type="password" autocomplete="off" placeholder="GCDC_…"></div>
+      <div class="cloud-actions" style="margin-top:10px;">
+        <button class="btn" id="garminTestBtn">Anslut och testa</button>
+        <button class="btn secondary" id="garminForgetBtn">Glöm nyckel</button>
+      </div>
+      <div class="cloud-status" id="garminStatus" role="status" aria-live="polite" style="white-space:pre-line;">Inte testad.</div>
+    </div>
+
     <div class="card">
       <h2>Data &amp; säkerhetskopiering</h2>
       <div class="chart-note" style="margin-top:0;">All din logg sparas lokalt på den här enheten. Exportera regelbundet för att ha en egen säkerhetskopia och för att flytta data mellan enheter.</div>
@@ -1693,7 +1704,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
       <div class="form-error" id="dataBackupError" style="display:none;"></div>
       <div class="chart-note" id="dataBackupStatus"></div>
       <div class="chart-note" id="lastBackupLabel" style="margin-top:8px;"></div>
-      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 1.8.1</div>
+      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 1.8.2</div>
     </div>
   </div>
 </div>
@@ -1724,7 +1735,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
 <div class="exercise-swap-modal" id="sessionSummaryModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 class="summary-head" id="summaryTitle">Pass klart ✓</h2><button class="swap-close" id="summaryClose">×</button></div><div class="summary-stats" id="summaryStats"></div><div id="summaryBody"></div><button class="btn" id="summaryOk" style="margin-top:14px;">Klar</button></div></div>
 <div class="exercise-swap-modal" id="exerciseSwapModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 id="swapTitle">Byt övning</h2><button class="swap-close" id="swapClose">×</button></div><input id="swapSearch" type="search" placeholder="Sök bland alla övningar..." style="margin-top:12px"><div id="swapRecommendedWrap"><div class="swap-section">Rekommenderade alternativ</div><div class="swap-list" id="swapRecommended"></div></div><div class="swap-section">Alla matchningar</div><div class="swap-list" id="swapResults"></div><div id="swapConfirm" style="display:none"><div class="chart-note" id="swapConfirmText" style="margin-top:14px"></div><div class="swap-actions"><button class="btn" id="swapToday">Bara idag</button><button class="btn secondary" id="swapPermanent">Gör permanent</button></div></div></div></div>
 <script>
-const APP_VERSION = '1.8.1';
+const APP_VERSION = '1.8.2';
 // ---------- FRISTÅENDE LOKAL LAGRING ----------
 // IndexedDB används primärt. localStorage används som reserv.
 const STORAGE_PREFIX = 'traningslogg:';
@@ -6868,12 +6879,25 @@ async function cloudBackupNow(cfgOverride){
   cloudBackupBusy=true; cloudStatus('Säkerhetskopierar…');
   try{
     const api=`https://api.github.com/repos/${encodeURIComponent(cfg.user)}/${encodeURIComponent(cfg.repo)}/contents/${GITHUB_FILE}`;
-    let sha=null; const existing=await fetch(api,{headers:githubHeaders(cfg.token)});
+    let sha=null; const existing=await fetch(api+'?t='+Date.now(),{headers:githubHeaders(cfg.token),cache:'no-store'});
     if(existing.ok){const j=await existing.json();sha=j.sha;} else if(existing.status!==404){const t=await existing.text();throw new Error(`GitHub svarade ${existing.status}: ${t.slice(0,140)}`);}
     const backup=await buildCloudBackup();
-    const body={message:`Automatisk backup ${new Date().toLocaleString('sv-SE')}`,content:utf8ToBase64(JSON.stringify(backup,null,2))}; if(sha)body.sha=sha;
-    const res=await fetch(api,{method:'PUT',headers:githubHeaders(cfg.token),body:JSON.stringify(body)});
-    if(!res.ok){const t=await res.text();throw new Error(`GitHub svarade ${res.status}: ${t.slice(0,180)}`);}
+    const content=utf8ToBase64(JSON.stringify(backup,null,2));
+    let res=null;
+    for(let attempt=0;attempt<2;attempt++){
+      if(attempt>0){ // 409/422: SHA:n var inaktuell – hämta GitHubs aktuella och försök exakt en gång till
+        sha=null; const fresh=await fetch(api+'?t='+Date.now(),{headers:githubHeaders(cfg.token),cache:'no-store'});
+        if(fresh.ok){const fj=await fresh.json();sha=fj.sha;} else if(fresh.status!==404){throw new Error(`GitHub svarade ${fresh.status} när aktuell version skulle hämtas.`);}
+      }
+      const body={message:`Automatisk backup ${new Date().toLocaleString('sv-SE')}`,content}; if(sha)body.sha=sha;
+      res=await fetch(api,{method:'PUT',headers:githubHeaders(cfg.token),body:JSON.stringify(body)});
+      if(res.ok) break;
+      if(!(res.status===409||res.status===422)) break;
+    }
+    if(!res.ok){
+      const friendly={401:'GitHub-token är ogiltig eller har gått ut.',403:'Token saknar behörighet till repot.',404:'Repot hittades inte – kontrollera användare och reponamn.',409:'Backupfilen ändrades samtidigt från en annan enhet. Försök igen om en stund.',422:'GitHub avvisade uppdateringen. Försök igen om en stund.'};
+      throw new Error(friendly[res.status]||`GitHub svarade ${res.status}.`);
+    }
     const now=new Date().toISOString(); await window.storage.set('meta:lastCloudBackup',now); await markBackupDone();
     cloudStatus(`✓ Senaste molnbackup: ${new Date(now).toLocaleString('sv-SE',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}`,'ok');
   }finally{cloudBackupBusy=false;}
@@ -6901,6 +6925,87 @@ const _cloudStorageSet=window.storage.set.bind(window.storage);
 window.storage.set=async function(key,value){const result=await _cloudStorageSet(key,value);if(/^(entry:|run:|weight:|wellness:|plan:config|weekplan:)/.test(String(key)))scheduleCloudBackup();return result;};
 window.addEventListener('online',scheduleCloudBackup);
 initGithubCloud();
+
+// ================= Garmin Personal API – anslutningstest =================
+const GARMIN_HOST='https://personal.connectapi.garmin.com';
+function garminStatus(text,type){const el=document.getElementById('garminStatus');if(!el)return;el.textContent=text;el.className='cloud-status'+(type?' '+type:'');}
+function garminIsoDate(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function garminJwtExp(tok){try{const p=JSON.parse(atob(tok.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));return p.exp?p.exp*1000:0;}catch(e){return 0;}}
+async function garminFetch(url,opts,stepName){
+  try{ return await fetch(url,opts); }
+  catch(e){
+    if(!navigator.onLine) throw new Error(stepName+': ingen internetanslutning.');
+    const err=new Error(stepName+': webbläsaren blockerade anropet ('+(e.message||'nätverksfel')+').');
+    err.blocked=true; throw err;
+  }
+}
+async function garminGetToken(key,force){
+  if(!force){ try{const r=await window.storage.get('garmin:token');if(r&&r.value){const c=JSON.parse(r.value);if(c.token&&c.exp-Date.now()>3600000)return c.token;}}catch(e){} }
+  const res=await garminFetch(GARMIN_HOST+'/personalapitoken-service/personal-api/personal-api-key/token',
+    {method:'POST',headers:{'Authorization':'ApiKey '+key,'Accept':'*/*'},cache:'no-store'},'Steg 1 (token)');
+  if(res.status===401||res.status===403) throw new Error('Steg 1 (token): Garmin svarade '+res.status+' – nyckeln är fel, har gått ut eller har tagits bort.');
+  if(!res.ok) throw new Error('Steg 1 (token): Garmin svarade '+res.status+'.');
+  let token=(await res.text()).trim();
+  if(token.startsWith('{')){try{const j=JSON.parse(token);token=j.access_token||j.token||token;}catch(e){}}
+  if(token.split('.').length!==3) throw new Error('Steg 1 (token): oväntat svar från Garmin.');
+  const exp=garminJwtExp(token)||Date.now()+20*3600000;
+  await window.storage.set('garmin:token',JSON.stringify({token,exp}));
+  return token;
+}
+async function garminGet(path,token,stepName){
+  const res=await garminFetch(GARMIN_HOST+path,{headers:{'Authorization':'Bearer '+token,'Accept':'*/*'},cache:'no-store'},stepName);
+  if(res.status===401) throw new Error(stepName+': token avvisades (401).');
+  if(!res.ok) throw new Error(stepName+': Garmin svarade '+res.status+'.');
+  const t=await res.text(); try{return JSON.parse(t);}catch(e){return t;}
+}
+function garminFindSteps(data){
+  const out=[]; const seen=new Set();
+  (function walk(o){ if(!o||typeof o!=='object')return; if(Array.isArray(o)){o.forEach(walk);return;}
+    const date=o.calendarDate||o.date; const steps=o.totalSteps??o.steps??(o.values&&o.values.totalSteps)??(typeof o.value==='number'?o.value:undefined);
+    if(date&&typeof steps==='number'&&!seen.has(date)){seen.add(date);out.push({date,steps});}
+    Object.values(o).forEach(v=>{if(v&&typeof v==='object')walk(v);});
+  })(data);
+  return out.sort((a,b)=>a.date<b.date?-1:1);
+}
+async function garminRunTest(){
+  const btn=document.getElementById('garminTestBtn'); btn.disabled=true;
+  const lines=[];
+  const log=(l,type)=>{lines.push(l);garminStatus(lines.join('\n'),type);};
+  try{
+    let key=document.getElementById('garminKeyInput').value.trim();
+    if(!key){ try{const r=await window.storage.get('garmin:apikey');if(r&&r.value)key=r.value;}catch(e){} }
+    if(!key) throw new Error('Fyll i din Personal API Key.');
+    await window.storage.set('garmin:apikey',key);
+    log('Steg 1: hämtar token från Garmin…');
+    const token=await garminGetToken(key,true);
+    lines[lines.length-1]='✓ Steg 1: token hämtad.';
+    const end=new Date(), start=new Date(); start.setDate(end.getDate()-6);
+    log('Steg 2: hämtar steg för senaste veckan…');
+    const steps=await garminGet(`/usersummary-service/stats/steps/daily/${garminIsoDate(start)}/${garminIsoDate(end)}`,token,'Steg 2 (steg)');
+    const days=garminFindSteps(steps);
+    lines[lines.length-1]= days.length ? '✓ Steg 2: steg hämtade\n'+days.map(d=>'   '+d.date+': '+d.steps.toLocaleString('sv-SE')+' steg').join('\n')
+                                       : '✓ Steg 2: svar mottaget, men inga stegvärden hittades. Början av svaret:\n   '+JSON.stringify(steps).slice(0,220);
+    log('Steg 3: hämtar senaste aktiviteterna…');
+    const acts=await garminGet('/activitylist-service/activities/search/activities?start=0&limit=5',token,'Steg 3 (aktiviteter)');
+    const list=Array.isArray(acts)?acts:(acts&&(acts.activityList||acts.activities))||[];
+    lines[lines.length-1]='✓ Steg 3: '+list.length+' aktiviteter hämtade'+(list.length?'\n'+list.map(a=>{
+      const km=a.distance?(a.distance/1000).toLocaleString('sv-SE',{maximumFractionDigits:2})+' km':''; const min=a.duration?Math.round(a.duration/60)+' min':'';
+      return '   '+String(a.startTimeLocal||'').slice(0,10)+' · '+(a.activityName||(a.activityType&&a.activityType.typeKey)||'Aktivitet')+(km?' · '+km:'')+(min?' · '+min:'');}).join('\n'):'');
+    log('\nAllt fungerar! Garmin går att nå direkt från appen.','ok');
+    document.getElementById('garminKeyInput').value='';
+  }catch(e){
+    if(lines.length&&lines[lines.length-1].endsWith('…')) lines.pop();
+    lines.push('✗ '+e.message);
+    if(e.blocked) lines.push('\nSlutsats: Garmin tillåter troligen inte anrop direkt från en webbapp (CORS). Vi behöver en liten mellanhand, t.ex. en gratis Cloudflare Worker.');
+    garminStatus(lines.join('\n'),'error');
+  }finally{btn.disabled=false;}
+}
+document.getElementById('garminTestBtn').onclick=garminRunTest;
+document.getElementById('garminForgetBtn').onclick=async()=>{
+  try{ if(window.storage.delete){await window.storage.delete('garmin:apikey');await window.storage.delete('garmin:token');} else {await window.storage.set('garmin:apikey','');await window.storage.set('garmin:token','');} }catch(e){}
+  document.getElementById('garminKeyInput').value=''; garminStatus('Nyckeln är borttagen från den här enheten.');
+};
+(async()=>{try{const r=await window.storage.get('garmin:apikey');if(r&&r.value)garminStatus('Nyckel sparad på enheten. Tryck "Anslut och testa".');}catch(e){}})();
 
 // init
 (async () => {
