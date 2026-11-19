@@ -1182,7 +1182,8 @@
 
   /* v1.1 live-träningsvy */
   .quick-last{font-size:12px;color:var(--muted);margin:5px 0 9px;line-height:1.45}
-  .quick-progression{font-size:12px;color:var(--good);margin:0 0 9px;font-weight:700}
+  .quick-progression{font-size:12px;color:var(--muted);margin:0 0 9px;font-weight:600}
+  .quick-progression.up{color:#1a1a1a;background:#E8A33D;display:inline-block;padding:4px 10px;border-radius:12px;font-weight:800}
   .quick-set-row.done{opacity:.7;background:#27ae6012;border-radius:9px}
   .quick-set-done-btn{width:34px;height:34px;flex:0 0 34px;border:1px solid var(--line);border-radius:9px;background:var(--surface2);color:var(--muted);font-weight:900;font-size:16px;padding:0}
   .quick-set-done-btn.done{background:var(--good);border-color:var(--good);color:#fff}
@@ -1774,7 +1775,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
       <div class="form-error" id="dataBackupError" style="display:none;"></div>
       <div class="chart-note" id="dataBackupStatus"></div>
       <div class="chart-note" id="lastBackupLabel" style="margin-top:8px;"></div>
-      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 2.2.3</div>
+      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 2.2.4</div>
     </div>
   </div>
 </div>
@@ -1805,7 +1806,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
 <div class="exercise-swap-modal" id="sessionSummaryModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 class="summary-head" id="summaryTitle">Pass klart ✓</h2><button class="swap-close" id="summaryClose">×</button></div><div class="summary-stats" id="summaryStats"></div><div id="summaryBody"></div><button class="btn" id="summaryOk" style="margin-top:14px;">Klar</button></div></div>
 <div class="exercise-swap-modal" id="exerciseSwapModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 id="swapTitle">Byt övning</h2><button class="swap-close" id="swapClose">×</button></div><input id="swapSearch" type="search" placeholder="Sök bland alla övningar..." style="margin-top:12px"><div id="swapRecommendedWrap"><div class="swap-section">Rekommenderade alternativ</div><div class="swap-list" id="swapRecommended"></div></div><div class="swap-section">Alla matchningar</div><div class="swap-list" id="swapResults"></div><div id="swapConfirm" style="display:none"><div class="chart-note" id="swapConfirmText" style="margin-top:14px"></div><div class="swap-actions"><button class="btn" id="swapToday">Bara idag</button><button class="btn secondary" id="swapPermanent">Gör permanent</button></div></div></div></div>
 <script>
-const APP_VERSION = '2.2.3';
+const APP_VERSION = '2.2.4';
 // ---------- FRISTÅENDE LOKAL LAGRING ----------
 // IndexedDB används primärt. localStorage används som reserv.
 const STORAGE_PREFIX = 'traningslogg:';
@@ -5239,7 +5240,7 @@ function progressionSuggestion(ex,lastEntry){
   const anyLow=sets.some(x => Number(x.reps)<range.min);
   const w=Math.max(...sets.map(x=>Number(x.weight)||0)); if(!w) return '';
   const step=w>=50 ? 2.5 : 1;
-  if(allTop) return `Förslag idag: ${Math.round((w+step)*10)/10} kg · ${range.min}–${range.max} reps`;
+  if(allTop) return `⬆ Öka till ${Math.round((w+step)*10)/10} kg idag (från ${w} kg) · ${range.min}–${range.max} reps`;
   if(anyLow) return `Förslag idag: behåll ${w} kg tills alla set når minst ${range.min} reps`;
   return `Förslag idag: behåll ${w} kg och bygg mot ${range.max} reps i alla set`;
 }
@@ -5294,7 +5295,7 @@ async function renderQuickLogForm(){
     block.innerHTML = `
       <div class="quick-ex-header"><div class="quick-ex-name">${ex.name} <span class="target">mål: ${targetLabel}</span></div><div class="quick-tools"><button type="button" class="quick-more-btn">•••</button><div class="quick-tools-menu"><button type="button" data-tool="swap">Byt övning</button><button type="button" data-tool="warm">Uppvärmning</button></div></div></div>
       ${lastEntry ? `<div class="quick-last">Senast ${fmtDate(lastEntry.date)}: ${formatLastSets(lastEntry)}</div>` : `<div class="quick-last">Ingen tidigare logg</div>`}
-      ${progressionSuggestion(ex,lastEntry) ? `<div class="quick-progression">↗ ${progressionSuggestion(ex,lastEntry)}</div>` : ''}
+      ${(()=>{const t=progressionSuggestion(ex,lastEntry); if(!t) return ''; const up=t.startsWith('⬆'); return `<div class="quick-progression${up?' up':''}">${up?'':'→ '}${t}</div>`;})()}
       ${supersetTag}
       <div class="ss-slot"></div>
       <div class="warm-slot"></div>
@@ -7318,7 +7319,11 @@ function garminBBFromArray(rec){
   if(Array.isArray(desc)) for(const d of desc){ const key=String(d.bodyBatteryValueDescriptorKey||d.key||''); const i=d.bodyBatteryValueDescriptorIndex??d.index;
     if(typeof i!=='number')continue; if(/level|value/i.test(key)&&!/status|version|time/i.test(key))idx=i; if(/time/i.test(key))tIdx=i; }
   const pts=[];
-  for(const e of arr){ if(!Array.isArray(e))continue;
+  for(const e of arr){
+    if(e&&typeof e==='object'&&!Array.isArray(e)){ // objektformat {timestamp, level/value}
+      let v=null,t=0; for(const [k,x] of Object.entries(e)){ if(typeof x!=='number')continue; if(/time|date/i.test(k))t=x; else if(/level|value|battery/i.test(k)&&!/status|version/i.test(k))v=x; }
+      if(typeof v==='number'&&v>=0&&v<=100)pts.push({t,v}); continue; }
+    if(!Array.isArray(e))continue;
     let v=idx>=0?e[idx]:null;
     if(typeof v!=='number'){ const nums=e.filter((x,j)=>j!==tIdx&&typeof x==='number'&&x>=0&&x<=100); v=nums.length?nums[nums.length-1]:null; }
     if(typeof v==='number'&&v>=0&&v<=100)pts.push({t:Number(e[tIdx])||0,v}); }
@@ -7328,7 +7333,8 @@ function garminBBFromArray(rec){
 function garminExtract(rec,fields){const out={};for(const f of fields){const v=garminNum(rec,GARMIN_FIELDS[f]);if(v!=null)out[f]=v;}
   if(out.sleepScore==null&&rec&&rec.sleepScores&&rec.sleepScores.overall&&typeof rec.sleepScores.overall.value==='number')out.sleepScore=rec.sleepScores.overall.value;
   const want=f=>fields.includes(f)&&out[f]==null;
-  if(['bbHigh','bbLow','bbNow'].some(want)){ const bb=garminBBFromArray(rec); if(bb)for(const k of ['bbHigh','bbLow','bbNow'])if(want(k))out[k]=bb[k]; }
+  if(['bbHigh','bbLow','bbNow'].some(want)){ const bb=garminBBFromArray(rec); if(bb)for(const k of ['bbHigh','bbLow','bbNow'])if(want(k))out[k]=bb[k];
+    if(rec&&typeof rec.charged==='number')out.bbCharged=rec.charged; if(rec&&typeof rec.drained==='number')out.bbDrained=rec.drained; }
   const hr=garminChildObj(rec,/^heartRate$/i), st=garminChildObj(rec,/^stress$/i), bbo=garminChildObj(rec,/^bodyBattery$/i);
   if(want('restingHR')&&hr){const v=garminFuzzy(hr,/rest/i,/seven|7|avg|average|time|date/i);if(v!=null&&v>20&&v<150)out.restingHR=v;}
   if(want('stress')&&st){const v=garminFuzzy(st,/^(avg|average|overall)|avg.*level|average.*(level|value)/i,/duration|percent|time|seconds|count|max|min/i);if(v!=null&&v<=100)out.stress=v;}
@@ -7340,7 +7346,11 @@ function garminExtract(rec,fields){const out={};for(const f of fields){const v=g
   return out;}
 function garminDiagKeys(data){const r=garminDayRecords(data)[0];if(!r)return '(inga dagsposter) '+JSON.stringify(data).slice(0,160);
   let txt=Object.keys(r.rec).slice(0,40).join(', ');
-  for(const name of ['heartRate','stress','bodyBattery']){ const o=r.rec[name]; if(o&&typeof o==='object'){
+  if('bodyBatteryValuesArray' in r.rec){ const a=r.rec.bodyBatteryValuesArray;
+    txt+='\n   värden: '+(Array.isArray(a)?a.length+' st, första: '+JSON.stringify(a.slice(0,2)).slice(0,140):JSON.stringify(a));
+    txt+='\n   beskrivning: '+JSON.stringify(r.rec.bodyBatteryValueDescriptorDTOList||null).slice(0,220);
+    txt+='\n   charged/drained: '+r.rec.charged+' / '+r.rec.drained; }
+  for(const name of ['heartRate','stress','bodyBattery']){ const o=r.rec[name]; if(o!=null&&typeof o==='object'&&!Object.keys(o).length){txt+='\n   '+name+': tomt '+JSON.stringify(o);continue;} if(o&&typeof o==='object'){
     const inner=Array.isArray(o)?(o[0]&&typeof o[0]==='object'?o[0]:{}):o;
     txt+='\n   '+name+': '+Object.entries(inner).slice(0,25).map(([k,v])=>k+(v&&typeof v==='object'?(Array.isArray(v)?'[…]':'{…}'):'')).join(', ');
     for(const [k,v] of Object.entries(inner)){ if(Array.isArray(v)&&v[0]&&typeof v[0]==='object'){txt+='\n     '+k+'[0]: '+Object.keys(v[0]).slice(0,15).join(', ');break;} }
@@ -7515,6 +7525,8 @@ async function renderGarminDash(){
   if(bb!=null){ const lvl=bb>=60?'dash-up':bb<30?'dash-down':'';
     rows.push(`<div class="dash-row"><span>🔋 Body Battery${bbWhen?` <span class="dash-empty" style="font-size:11px;">(${bbWhen})</span>`:''}</span><span><strong class="${lvl}">${Math.round(bb)}</strong>${bbDay.bbHigh!=null||bbDay.bbLow!=null?` <span class="dash-empty" style="font-size:11px;">${bbDay.bbHigh!=null?'max '+Math.round(bbDay.bbHigh):''}${bbDay.bbHigh!=null&&bbDay.bbLow!=null?' · ':''}${bbDay.bbLow!=null?'min '+Math.round(bbDay.bbLow):''}</span>`:''}</span></div>`);
     if(!bbWhen&&bb<30) rows.push('<div class="dash-empty" style="font-size:11px;">Lågt Body Battery – överväg ett lättare pass idag.</div>');
+  } else if(days.some(d=>d&&d.bbCharged!=null)){ const i=days.findIndex(d=>d&&d.bbCharged!=null), d=days[i];
+    rows.push(`<div class="dash-row"><span>🔋 Body Battery${i?` <span class="dash-empty" style="font-size:11px;">(${i===1?'igår':i+' dagar sedan'})</span>`:''}</span><span><strong class="dash-up">+${Math.round(d.bbCharged)}</strong>${d.bbDrained!=null?` <span class="dash-down">−${Math.round(d.bbDrained)}</span>`:''} <span class="dash-empty" style="font-size:11px;">laddat / förbrukat</span></span></div>`);
   } else if(cfg.opts.health) rows.push('<div class="dash-row"><span>🔋 Body Battery</span><span class="dash-empty" style="font-size:11px;">ingen data ännu – synka eller se Datakontroll</span></div>');
   if(today.stress) rows.push(`<div class="dash-row"><span>Stress</span><span><strong>${Math.round(today.stress)}</strong></span></div>`);
   if(today.restingHR&&avg('restingHR')&&today.restingHR-avg('restingHR')>=5)
@@ -7561,14 +7573,14 @@ async function garminAlerts(){
 async function renderGarminCheck(){
   const el=document.getElementById('garminCheck'); if(!el) return;
   const days=[]; for(let i=0;i<14;i++) days.push(await garminGetJSON('garminday:'+garminDaysAgo(i),null));
-  const metrics=[['Steg','steps'],['Sömn','sleepSec'],['Vilopuls','restingHR'],['Body Battery',['bbNow','bbHigh']],['Stress','stress']];
+  const metrics=[['Steg','steps'],['Sömn','sleepSec'],['Vilopuls','restingHR'],['Body Battery',['bbNow','bbHigh','bbCharged']],['Stress','stress']];
   const all=await loadAllGarminDays();
   const rows=metrics.map(([name,f])=>{
     const has=d=>d&&(Array.isArray(f)?f.some(x=>d[x]!=null):d[f]!=null);
     const n=days.filter(has).length, cls=n>=10?'ok':n>0?'warn':'bad';
     const latest=days.find(has); let val='–';
     if(latest){const k=Array.isArray(f)?f.find(x=>latest[x]!=null):f; const v=latest[k];
-      val=k==='sleepSec'?(Math.floor(v/3600)+' h '+Math.round(v%3600/60)+' min'):Math.round(v).toLocaleString('sv-SE');}
+      val=k==='bbCharged'?('+'+Math.round(v)+(latest.bbDrained!=null?' / −'+Math.round(latest.bbDrained):'')):k==='sleepSec'?(Math.floor(v/3600)+' h '+Math.round(v%3600/60)+' min'):Math.round(v).toLocaleString('sv-SE');}
     return `<tr><td>${name}</td><td class="${cls}">${n}/14 ${cls==='ok'?'✓':cls==='warn'?'!':'✗'}</td><td>${val}</td></tr>`;
   }).join('');
   el.innerHTML=`<table><tr><th>Data</th><th>Dagar (14 d)</th><th>Senaste</th></tr>${rows}</table><div class="chart-note" style="margin-top:6px;">Totalt ${all.length} Garmin-dagar sparade${all.length?' sedan '+fmtDate(all[0].date):''}. ✗ betyder att Garmin inte skickat det värdet – skicka då en skärmdump av texten nedan.</div>`;
