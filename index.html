@@ -1741,7 +1741,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
       <div class="form-error" id="dataBackupError" style="display:none;"></div>
       <div class="chart-note" id="dataBackupStatus"></div>
       <div class="chart-note" id="lastBackupLabel" style="margin-top:8px;"></div>
-      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 2.1.3</div>
+      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 2.1.4</div>
     </div>
   </div>
 </div>
@@ -1772,7 +1772,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
 <div class="exercise-swap-modal" id="sessionSummaryModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 class="summary-head" id="summaryTitle">Pass klart ✓</h2><button class="swap-close" id="summaryClose">×</button></div><div class="summary-stats" id="summaryStats"></div><div id="summaryBody"></div><button class="btn" id="summaryOk" style="margin-top:14px;">Klar</button></div></div>
 <div class="exercise-swap-modal" id="exerciseSwapModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 id="swapTitle">Byt övning</h2><button class="swap-close" id="swapClose">×</button></div><input id="swapSearch" type="search" placeholder="Sök bland alla övningar..." style="margin-top:12px"><div id="swapRecommendedWrap"><div class="swap-section">Rekommenderade alternativ</div><div class="swap-list" id="swapRecommended"></div></div><div class="swap-section">Alla matchningar</div><div class="swap-list" id="swapResults"></div><div id="swapConfirm" style="display:none"><div class="chart-note" id="swapConfirmText" style="margin-top:14px"></div><div class="swap-actions"><button class="btn" id="swapToday">Bara idag</button><button class="btn secondary" id="swapPermanent">Gör permanent</button></div></div></div></div>
 <script>
-const APP_VERSION = '2.1.3';
+const APP_VERSION = '2.1.4';
 // ---------- FRISTÅENDE LOKAL LAGRING ----------
 // IndexedDB används primärt. localStorage används som reserv.
 const STORAGE_PREFIX = 'traningslogg:';
@@ -7045,10 +7045,52 @@ const GARMIN_FIELDS={
   sleepSec:['sleepTimeSeconds','totalSleepSeconds','sleepingSeconds','sleepDurationSeconds','sleepTimeInSeconds','totalSleepTimeInSeconds'],
   sleepScore:['overallSleepScore','sleepScore','sleepScoreValue'],
 };
+// v2.1.4: sök inom ett nästlat objekt (t.ex. heartRate, stress, bodyBattery) efter fält vars namn matchar ett mönster
+function garminFuzzy(o,inc,exc,depth=0){
+  if(o==null||typeof o!=='object'||depth>3)return null;
+  if(Array.isArray(o)){ // föredra summeringsrad (TOTAL) i listor
+    const sorted=[...o].sort((a,b)=>(/total/i.test(JSON.stringify(b&&(b.type||b.aggregationType||b.activityType)||''))?1:0)-(/total/i.test(JSON.stringify(a&&(a.type||a.aggregationType||a.activityType)||''))?1:0));
+    for(const x of sorted){const r=garminFuzzy(x,inc,exc,depth+1);if(r!=null)return r;} return null; }
+  for(const [k,v] of Object.entries(o)){ if(typeof v==='number'&&isFinite(v)&&v>=0&&inc.test(k)&&!(exc&&exc.test(k)))return v; }
+  for(const v of Object.values(o)){ if(v&&typeof v==='object'){const r=garminFuzzy(v,inc,exc,depth+1);if(r!=null)return r;} }
+  return null;
+}
+function garminChildObj(rec,re){ if(!rec||typeof rec!=='object')return null; for(const [k,v] of Object.entries(rec)){ if(re.test(k)&&v&&typeof v==='object')return v; } return null; }
+// Body Battery-rapport: bodyBatteryValuesArray = [[tid, …, nivå, …], …] beskrivet av bodyBatteryValueDescriptorDTOList
+function garminBBFromArray(rec){
+  const arr=rec&&rec.bodyBatteryValuesArray; if(!Array.isArray(arr)||!arr.length)return null;
+  let idx=-1, tIdx=0; const desc=rec.bodyBatteryValueDescriptorDTOList||rec.bodyBatteryValueDescriptorsDTOList;
+  if(Array.isArray(desc)) for(const d of desc){ const key=String(d.bodyBatteryValueDescriptorKey||d.key||''); const i=d.bodyBatteryValueDescriptorIndex??d.index;
+    if(typeof i!=='number')continue; if(/level|value/i.test(key)&&!/status|version|time/i.test(key))idx=i; if(/time/i.test(key))tIdx=i; }
+  const pts=[];
+  for(const e of arr){ if(!Array.isArray(e))continue;
+    let v=idx>=0?e[idx]:null;
+    if(typeof v!=='number'){ const nums=e.filter((x,j)=>j!==tIdx&&typeof x==='number'&&x>=0&&x<=100); v=nums.length?nums[nums.length-1]:null; }
+    if(typeof v==='number'&&v>=0&&v<=100)pts.push({t:Number(e[tIdx])||0,v}); }
+  if(!pts.length)return null; pts.sort((a,b)=>a.t-b.t);
+  const vals=pts.map(p=>p.v); return {bbHigh:Math.max(...vals),bbLow:Math.min(...vals),bbNow:pts[pts.length-1].v};
+}
 function garminExtract(rec,fields){const out={};for(const f of fields){const v=garminNum(rec,GARMIN_FIELDS[f]);if(v!=null)out[f]=v;}
   if(out.sleepScore==null&&rec&&rec.sleepScores&&rec.sleepScores.overall&&typeof rec.sleepScores.overall.value==='number')out.sleepScore=rec.sleepScores.overall.value;
+  const want=f=>fields.includes(f)&&out[f]==null;
+  if(['bbHigh','bbLow','bbNow'].some(want)){ const bb=garminBBFromArray(rec); if(bb)for(const k of ['bbHigh','bbLow','bbNow'])if(want(k))out[k]=bb[k]; }
+  const hr=garminChildObj(rec,/^heartRate$/i), st=garminChildObj(rec,/^stress$/i), bbo=garminChildObj(rec,/^bodyBattery$/i);
+  if(want('restingHR')&&hr){const v=garminFuzzy(hr,/rest/i,/seven|7|avg|average|time|date/i);if(v!=null&&v>20&&v<150)out.restingHR=v;}
+  if(want('stress')&&st){const v=garminFuzzy(st,/^(avg|average|overall)|avg.*level|average.*(level|value)/i,/duration|percent|time|seconds|count|max|min/i);if(v!=null&&v<=100)out.stress=v;}
+  if(bbo){
+    if(want('bbHigh')){const v=garminFuzzy(bbo,/max|highest|high/i,/time|date/i);if(v!=null&&v<=100)out.bbHigh=v;}
+    if(want('bbLow')){const v=garminFuzzy(bbo,/min|lowest|low/i,/time|date/i);if(v!=null&&v<=100)out.bbLow=v;}
+    if(want('bbNow')){const v=garminFuzzy(bbo,/mostrecent|latest|current|endofday|^end(value|level)?$|wake/i,/time|date/i);if(v!=null&&v<=100)out.bbNow=v;}
+  }
   return out;}
-function garminDiagKeys(data){const r=garminDayRecords(data)[0];if(!r)return '(inga dagsposter) '+JSON.stringify(data).slice(0,160);return Object.keys(r.rec).slice(0,40).join(', ');}
+function garminDiagKeys(data){const r=garminDayRecords(data)[0];if(!r)return '(inga dagsposter) '+JSON.stringify(data).slice(0,160);
+  let txt=Object.keys(r.rec).slice(0,40).join(', ');
+  for(const name of ['heartRate','stress','bodyBattery']){ const o=r.rec[name]; if(o&&typeof o==='object'){
+    const inner=Array.isArray(o)?(o[0]&&typeof o[0]==='object'?o[0]:{}):o;
+    txt+='\n   '+name+': '+Object.entries(inner).slice(0,25).map(([k,v])=>k+(v&&typeof v==='object'?(Array.isArray(v)?'[…]':'{…}'):'')).join(', ');
+    for(const [k,v] of Object.entries(inner)){ if(Array.isArray(v)&&v[0]&&typeof v[0]==='object'){txt+='\n     '+k+'[0]: '+Object.keys(v[0]).slice(0,15).join(', ');break;} }
+  } }
+  return txt;}
 
 function garminRanges(daysBack,chunk){ // [[start,end],...] äldst först, max chunk dagar per anrop
   const out=[]; let endOff=0;
@@ -7152,7 +7194,8 @@ async function garminSync(manual){
   try{
     if(manual) await garminCall(cfg,'/health','Anslutning');
     if(cfg.opts.health){
-      try{const backfilled=await garminGetStr('garmin:backfill90');
+      try{ if(!(await garminGetStr('migr:garminFields214'))){ try{await window.storage.delete('garmin:backfill90');}catch(_){} await window.storage.set('migr:garminFields214','1'); }
+        const backfilled=await garminGetStr('garmin:backfill90');
         // v2.1.2: ingen fast 14-dagarsgräns – hämta alla dagar sedan senaste lyckade hälsosynk (min 14, max 365)
         let daysBack=90;
         if(backfilled){ daysBack=14;
