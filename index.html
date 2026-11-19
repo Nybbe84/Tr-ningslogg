@@ -242,6 +242,24 @@
     margin-bottom: 8px;
   }
   .lib-ex-card:last-child{ margin-bottom: 0; }
+  .lib-filters{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .lib-chip{width:auto;min-height:32px;margin:0;padding:5px 11px;border-radius:16px;background:var(--panel-2);border:1px solid var(--line);color:var(--muted);font-size:12px;font-weight:600}
+  .lib-chip.active{background:var(--library);border-color:var(--library);color:#fff}
+  .lib-tags{display:flex;flex-wrap:wrap;gap:5px;margin:2px 0 6px}
+  .lib-tag{font-size:11px;padding:2px 8px;border-radius:10px;background:var(--panel);border:1px solid var(--line);color:var(--muted)}
+  .lib-tag.eq{color:var(--library);border-color:#4FA6A655}
+  .lib-tag.plan{color:#5BC48A;border-color:#5BC48A55}
+  .lib-tag.custom{color:#E8A33D;border-color:#E8A33D55}
+  .lib-star{color:#E8A33D;font-size:13px}
+  .lib-muscles{font-size:12px;color:var(--muted);margin-bottom:4px}
+  .lib-muscles strong{color:var(--text);font-weight:600}
+  .lib-cues{margin:-4px 0 10px;font-size:12px;color:var(--muted)}
+  .lib-cues summary{cursor:pointer;color:var(--library);font-weight:600}
+  .lib-cues ul{margin:6px 0 0;padding-left:18px;line-height:1.45}
+  .lib-del-btn{width:auto;margin:0;padding:0 10px;background:var(--panel);border:1px solid var(--line);border-radius:8px;color:var(--muted)}
+  .lib-custom-form{margin-top:10px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2)}
+  .lib-custom-form label{display:block;font-size:12px;color:var(--muted);margin:8px 0 3px}
+  .lib-custom-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
   .lib-ex-name{
     font-weight: 600;
     font-size: 14px;
@@ -1647,7 +1665,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
   <!-- MORE VIEW -->
   <div class="view" id="moreView">
     <div class="card"><h2>Mer</h2><div class="more-grid">
-      <button class="more-link" id="moreLibraryBtn"><span>📚</span><strong>Övningsbibliotek</strong><small>Sök och lägg till övningar</small></button>
+      <button class="more-link" id="moreLibraryBtn"><span>📚</span><strong>Övningsbibliotek</strong><small>Nästan 100 övningar · filter, teknik och egna övningar</small></button>
       <button class="more-link" id="moreSettingsBtn"><span>⚙️</span><strong>Inställningar</strong><small>Program, kategorier, faser och backup</small></button>
     </div></div>
   </div>
@@ -1656,8 +1674,23 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
   <div class="view" id="libraryView">
     <div class="card">
       <h2>Övningsbibliotek</h2>
-      <div class="chart-note" style="margin-top:0;">Bläddra per muskelgrupp eller sök. Lägg till en övning direkt i en av dina kategorier med knappen på varje kort.</div>
-      <input type="text" id="librarySearch" placeholder="Sök övning, t.ex. 'curl' eller 'säte'..." style="margin-top:10px;">
+      <div class="chart-note" style="margin-top:0;">Sök på övning, muskel eller utrustning. Filtrera med knapparna och lägg till direkt i en av dina dagar.</div>
+      <input type="search" id="librarySearch" placeholder="Sök, t.ex. 'säte', 'kabel rygg' eller 'curl'..." style="margin-top:10px;">
+      <div class="lib-filters" id="libraryFilters"></div>
+      <div class="chart-note" id="libraryCount" style="margin-top:6px;"></div>
+      <button type="button" class="btn secondary" id="customExToggle" style="margin-top:10px;">+ Egen övning</button>
+      <div id="customExForm" class="lib-custom-form" style="display:none;">
+        <label>Namn</label><input id="customExName" placeholder="t.ex. Kabelrodd på knä">
+        <div class="lib-custom-grid">
+          <div><label>Muskelgrupp</label><select id="customExGroup"></select></div>
+          <div><label>Utrustning</label><select id="customExEq"></select></div>
+          <div><label>Primär muskel</label><input id="customExMuscle" placeholder="t.ex. Lats"></div>
+          <div><label>Reps</label><input id="customExReps" placeholder="8-12"></div>
+        </div>
+        <label>Beskrivning / anteckning</label><input id="customExDesc" placeholder="Valfritt – t.ex. maskin nr 12, sätesinställning 4">
+        <button type="button" class="btn" id="customExSave" style="margin-top:10px;">Spara övning</button>
+        <div class="chart-note" id="customExStatus"></div>
+      </div>
     </div>
     <div id="libraryGroups"></div>
   </div>
@@ -1741,7 +1774,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
       <div class="form-error" id="dataBackupError" style="display:none;"></div>
       <div class="chart-note" id="dataBackupStatus"></div>
       <div class="chart-note" id="lastBackupLabel" style="margin-top:8px;"></div>
-      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 2.1.4</div>
+      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 2.2.0</div>
     </div>
   </div>
 </div>
@@ -1772,7 +1805,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
 <div class="exercise-swap-modal" id="sessionSummaryModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 class="summary-head" id="summaryTitle">Pass klart ✓</h2><button class="swap-close" id="summaryClose">×</button></div><div class="summary-stats" id="summaryStats"></div><div id="summaryBody"></div><button class="btn" id="summaryOk" style="margin-top:14px;">Klar</button></div></div>
 <div class="exercise-swap-modal" id="exerciseSwapModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 id="swapTitle">Byt övning</h2><button class="swap-close" id="swapClose">×</button></div><input id="swapSearch" type="search" placeholder="Sök bland alla övningar..." style="margin-top:12px"><div id="swapRecommendedWrap"><div class="swap-section">Rekommenderade alternativ</div><div class="swap-list" id="swapRecommended"></div></div><div class="swap-section">Alla matchningar</div><div class="swap-list" id="swapResults"></div><div id="swapConfirm" style="display:none"><div class="chart-note" id="swapConfirmText" style="margin-top:14px"></div><div class="swap-actions"><button class="btn" id="swapToday">Bara idag</button><button class="btn secondary" id="swapPermanent">Gör permanent</button></div></div></div></div>
 <script>
-const APP_VERSION = '2.1.4';
+const APP_VERSION = '2.2.0';
 // ---------- FRISTÅENDE LOKAL LAGRING ----------
 // IndexedDB används primärt. localStorage används som reserv.
 const STORAGE_PREFIX = 'traningslogg:';
@@ -3853,128 +3886,295 @@ document.getElementById('addCategoryBtn').onclick = async () => {
   refreshQuickLogIfVisible();
 };
 
-// ---------- EXERCISE LIBRARY ----------
-const LIBRARY = {
+// ---------- EXERCISE LIBRARY (v2.2.0) ----------
+// Fält: name, eq (utrustning), p (primär muskel), s (sekundär), r (rekommenderade reps),
+// desc, cues (teknikpunkter), alt (andra namn – för sök och "finns i schemat"), top (toppval för hypertrofi)
+const LIB_EQUIPMENT = ['Maskin','Kabel','Hantel','Skivstång','Smith','Kroppsvikt'];
+const LIBRARY_BASE = {
   "Bröst": [
-    { name: "Smith-bänkpress", desc: "Stabil bröstpress i Smith-maskin för hypertrofi och säker träning nära failure." },
-    { name: "Lutande Smith-bänkpress", desc: "Stabil lutande press för övre bröstet." },
-    { name: "Bänkpress (skivstång)", desc: "Klassiskt baslyft för bröst, främre axlar och triceps. Sänk stången kontrollerat till bröstet och pressa upp explosivt." },
-    { name: "Hantelpress", desc: "Som bänkpress men med hantlar — större rörelseomfång och mer träning av stabiliserande muskler." },
-    { name: "Lutande bänkpress", desc: "Bänken lutas 30–45 grader för att lägga extra fokus på övre bröstet." },
-    { name: "Dips (bröstfokus)", desc: "Luta överkroppen framåt under rörelsen för att belasta nedre bröst och triceps mer." },
-    { name: "Cross-over i kabel", desc: "Isolationsövning med konstant spänning genom hela rörelsen — bra för bröstets inre del." },
-    { name: "Flyes med hantlar", desc: "Bågrörelse som sträcker ut och kontraherar bröstmuskeln utan att triceps hjälper till lika mycket." }
+    {name:"Smith-bänkpress",eq:"Smith",p:"Bröst",s:"Främre axlar, triceps",r:"6-10",top:true,alt:["Bänkpress i Smith-maskin"],desc:"Stabil bröstpress där du kan gå nära failure utan spotter.",cues:["Skulderbladen ihop och ner, lätt svank","Sänk till nedre bröstet, armbågar ca 45–60°","Kontrollerad sänkning 2–3 s"]},
+    {name:"Lutande Smith-bänkpress",eq:"Smith",p:"Övre bröst",s:"Främre axlar, triceps",r:"6-10",top:true,alt:["Lutande bänkpress i Smith-maskin"],desc:"Lutande press för övre bröstet med stabil bana.",cues:["Bänken på 30° räcker – brantare tar mer axel","Sänk mot övre bröstet/nyckelbenet","Tryck upp utan att låsa helt"]},
+    {name:"Bänkpress (skivstång)",eq:"Skivstång",p:"Bröst",s:"Främre axlar, triceps",r:"6-10",alt:["Bänkpress med skivstång"],desc:"Klassisk tung bröstövning.",cues:["Fötterna i golvet, skulderbladen ihop","Stången mot nedre bröstet","Använd spotter eller säkerhetsstänger nära failure"]},
+    {name:"Lutande bänkpress (skivstång)",eq:"Skivstång",p:"Övre bröst",s:"Främre axlar, triceps",r:"6-10",alt:["Lutande skivstångspress","Lutande bänkpress"],desc:"Lutande press med skivstång för övre bröstet.",cues:["30° lutning","Stången mot övre bröstet","Armbågar lätt inåt"]},
+    {name:"Hantelpress",eq:"Hantel",p:"Bröst",s:"Främre axlar, triceps",r:"8-12",alt:["Hantelpress bänk"],desc:"Större rörelseomfång än skivstång och jämnar ut sidoskillnader.",cues:["Djup sänkning med kontroll","Hantlarna går lätt ihop i toppen","Håll skulderbladen bakåt"]},
+    {name:"Lutande hantelpress",eq:"Hantel",p:"Övre bröst",s:"Främre axlar, triceps",r:"8-12",top:true,alt:["Lutande hantelbänk"],desc:"En av de bästa övningarna för övre bröstet.",cues:["30° lutning","Djup stretch i botten","Tryck uppåt-inåt"]},
+    {name:"Bröstpress i maskin",eq:"Maskin",p:"Bröst",s:"Främre axlar, triceps",r:"8-12",top:true,alt:["Chest press"],desc:"Stabil och säker att köra nära failure – utmärkt för hypertrofi.",cues:["Ställ sitsen så handtagen är i bröstbenshöjd","Skulderbladen mot ryggstödet","Långsam sänkning"]},
+    {name:"Lutande bröstpress i maskin",eq:"Maskin",p:"Övre bröst",s:"Främre axlar, triceps",r:"8-12",top:true,alt:["Incline chest press"],desc:"Övre bröst med maskinens stabilitet.",cues:["Handtagen i höjd med övre bröstet","Full sträckning utan att axlarna åker fram","Kontrollerad negativ"]},
+    {name:"Dips (bröstfokus)",eq:"Kroppsvikt",p:"Nedre bröst",s:"Triceps, främre axlar",r:"6-12",alt:[],desc:"Framåtlutad dips för nedre bröstet. Lägg till vikt när 12 reps går lätt.",cues:["Luta överkroppen framåt","Gå ner tills axeln är strax under armbågen","Undvik om axlarna känns"]},
+    {name:"Maskinflyes",eq:"Maskin",p:"Bröst",s:"Främre axlar",r:"12-15",top:true,alt:["Pec deck","Butterfly","Peck deck"],desc:"Isolerar bröstet med konstant motstånd.",cues:["Lätt böjda armbågar som är låsta i vinkeln","Stretch i ytterläget utan att tappa axeln framåt","Kläm ihop 1 s"]},
+    {name:"Cross-over i kabel",eq:"Kabel",p:"Bröst",s:"Främre axlar",r:"12-15",alt:["Cross-over/flyes","Kabelflyes","Cable crossover"],desc:"Konstant spänning genom hela rörelsen.",cues:["Ett steg fram, lätt framåtlutad","Armarna i en båge, möts framför bröstet","Kontrollerad väg tillbaka"]},
+    {name:"Lågt kabelflyes",eq:"Kabel",p:"Övre bröst",s:"Främre axlar",r:"12-15",alt:["Low-to-high cable fly"],desc:"Flyes nerifrån och upp – träffar övre bröstet.",cues:["Trissorna i lägsta läget","Lyft i båge upp mot hakan","Armbågarna lätt böjda"]},
+    {name:"Flyes med hantlar",eq:"Hantel",p:"Bröst",s:"Främre axlar",r:"10-15",alt:["Hantelflyes"],desc:"Stor stretch i bottenläget.",cues:["Lätt böjda armbågar","Sänk tills du känner stretch – inte djupare","Lyft i en båge"]},
+    {name:"Armhävningar",eq:"Kroppsvikt",p:"Bröst",s:"Triceps, främre axlar, bål",r:"8-20",alt:["Push-ups"],desc:"Bra som avslutning eller när utrustning saknas.",cues:["Rak kropp från huvud till häl","Bröstet nästan till golvet","Höj fötterna för svårare variant"]}
   ],
   "Rygg": [
-    { name: "Sälrodd", desc: "Liggande rodd på hög bänk (seal row). Bröstet vilar mot bänken, så ländryggen avlastas helt och ryggen gör allt jobb. Neutralt grepp med armbågarna i ca 45° träffar både lats och övre rygg." },
-    { name: "Marklyft", desc: "Helkroppslyft med fokus på nedre rygg, säte och baksida lår — grunden i de flesta styrkeprogram." },
-    { name: "Chins/Pull-ups", desc: "Kroppsviktsövning som bygger bredd i ryggen (latissimus) och styrka i biceps." },
-    { name: "Latsdrag", desc: "Maskinvariant av chins — bra för att bygga volym innan du klarar fler kroppsviktsdrag." },
-    { name: "Stående rodd", desc: "Bygger tjocklek i mellersta ryggen. Dra med armbågarna, inte bara händerna." },
-    { name: "Hantelrodd enarm", desc: "Ensidig övning som minskar obalanser mellan sidorna och ger stort rörelseomfång." },
-    { name: "Rumänsk marklyft", desc: "Fokuserar på baksida lår och nedre rygg med nästan raka ben och höftfällning." }
+    {name:"Latsdrag",eq:"Kabel",p:"Lats",s:"Biceps, bakre axlar",r:"8-12",top:true,alt:["Chins/latsdrag","Lat pulldown"],desc:"Grundövning för en bredare rygg.",cues:["Lätt bakåtlutning","Dra armbågarna ner mot sidorna","Full sträckning i toppen"]},
+    {name:"Latsdrag med smalt grepp",eq:"Kabel",p:"Lats",s:"Biceps, mellersta rygg",r:"8-12",alt:["Neutralt latsdrag","V-grepp latsdrag"],desc:"Neutralt grepp ger ofta större rörelse och starkare drag.",cues:["V-handtag eller neutralt grepp","Dra mot övre bröstet","Sträck ut lats i toppen"]},
+    {name:"Chins/Pull-ups",eq:"Kroppsvikt",p:"Lats",s:"Biceps, mellersta rygg",r:"6-12",alt:["Chins","Pull-ups","Chins/latsdrag"],desc:"Kroppsviktsdrag – lägg till vikt när du klarar 12.",cues:["Starta från helt raka armar","Bröstet mot stången","Ingen gung"]},
+    {name:"Assisterade chins",eq:"Maskin",p:"Lats",s:"Biceps",r:"8-12",alt:["Assisted pull-up"],desc:"Chins med motvikt – minska hjälpen över tid.",cues:["Samma teknik som vanliga chins","Kontrollerad sänkning","Minska motvikten när 12 går"]},
+    {name:"Sälrodd",eq:"Skivstång",p:"Mellersta rygg",s:"Lats, bakre axlar, biceps",r:"8-12",top:true,alt:["Seal row"],desc:"Liggande rodd på hög bänk – noll belastning på ländryggen.",cues:["Bröstet mot bänken hela tiden","Dra mot nedre bröstet","Kläm skulderbladen 1 s"]},
+    {name:"Bröststödd hantelrodd",eq:"Hantel",p:"Mellersta rygg",s:"Lats, bakre axlar",r:"8-12",top:true,alt:["Chest supported row"],desc:"Rodd på lutande bänk – skonsam för ländryggen.",cues:["Bänk på 30–45°","Armbågarna bakåt-utåt","Ingen ryck med överkroppen"]},
+    {name:"Bröststödd maskinrodd",eq:"Maskin",p:"Mellersta rygg",s:"Lats, bakre axlar",r:"8-12",top:true,alt:["Maskinrodd","Seated row machine"],desc:"Stabil rodd där du kan pressa nära failure.",cues:["Bröstet mot dynan","Full sträckning framåt","Dra med armbågarna, inte händerna"]},
+    {name:"Sittande kabelrodd",eq:"Kabel",p:"Mellersta rygg",s:"Lats, biceps",r:"8-12",alt:["Kabelrodd","Seated cable row"],desc:"Klassisk rodd med jämnt motstånd.",cues:["Rak rygg, minimal svank-gung","Dra mot naveln","Låt skulderbladen glida fram i sträckningen"]},
+    {name:"Enarms kabelrodd",eq:"Kabel",p:"Lats",s:"Mellersta rygg",r:"10-12",alt:[],desc:"En arm i taget ger stort rörelseomfång.",cues:["Dra armbågen mot höften","Lätt rotation framåt i sträckningen","Byt arm utan vila"]},
+    {name:"Hantelrodd enarm",eq:"Hantel",p:"Lats",s:"Mellersta rygg, biceps",r:"8-12",alt:["Enarms hantelrodd"],desc:"Stöd mot bänk, en arm i taget.",cues:["Rak rygg parallell med golvet","Dra mot höften","Ingen rotation i överkroppen"]},
+    {name:"T-bar-rodd",eq:"Skivstång",p:"Mellersta rygg",s:"Lats, bakre axlar",r:"8-12",alt:["T-bar row"],desc:"Tung rodd för tjocklek i ryggen. Välj bröststödd variant om möjligt.",cues:["Neutral rygg","Dra mot magen","Kontrollerad sänkning"]},
+    {name:"Stående rodd",eq:"Skivstång",p:"Mellersta rygg",s:"Lats, ländrygg, biceps",r:"6-10",alt:["Skivstångsrodd","Barbell row"],desc:"Tung rodd som även belastar ländryggen.",cues:["Höftfällning ca 45°","Dra mot naveln","Byt till bröststödd rodd vid ländryggsbesvär"]},
+    {name:"Kabelpullover",eq:"Kabel",p:"Lats",s:"Bröst, triceps",r:"12-15",alt:["Straight-arm pulldown","Raka armar latsdrag"],desc:"Isolerar lats utan biceps.",cues:["Raka armar, lätt böj","Dra stången i en båge ner mot låren","Känn stretch i toppen"]},
+    {name:"Marklyft",eq:"Skivstång",p:"Baksida, säte, ländrygg",s:"Rygg, grepp",r:"4-8",alt:["Deadlift"],desc:"Tung helkroppsövning – hög trötthetskostnad, få set räcker.",cues:["Stången nära kroppen","Neutral rygg, spänn bålen","Res dig genom att trycka golvet ifrån dig"]},
+    {name:"Shrugs med hantlar",eq:"Hantel",p:"Trapezius",s:"Grepp",r:"10-15",alt:["Axelryckningar"],desc:"Isolerar övre trapezius.",cues:["Lyft rakt upp mot öronen","Paus 1 s i toppen","Ingen rullning"]}
   ],
   "Axlar": [
-    { name: "Militärpress (stående skivstång)", desc: "Baslyft för hela axelpartiet som samtidigt kräver bra bålstabilitet." },
-    { name: "Hantelpress sittande", desc: "Säkrare variant med ryggstöd — bra för att isolera axlarna mer specifikt." },
-    { name: "Sidolyft", desc: "Isolerar mellersta deltamuskeln — nyckeln till bredare axlar." },
-    { name: "Framåtlyft", desc: "Riktar in sig specifikt på den främre delen av axeln." },
-    { name: "Bakåtflyes / Reverse pec-deck", desc: "Tränar bakre axeldelen, ofta underutvecklad men viktig för hållningen." },
-    { name: "Face pulls", desc: "Kabelövning som stärker bakre axlar och rotatorkuff — bra skadeförebyggande övning." }
+    {name:"Militärpress",eq:"Skivstång",p:"Främre axlar",s:"Sidoaxlar, triceps",r:"6-10",alt:["Militärpress (stående skivstång)","Stående militärpress","Overhead press"],desc:"Stående press med skivstång – tung basövning.",cues:["Spänn säte och bål","Stången nära ansiktet","Huvudet fram när stången passerat"]},
+    {name:"Hantelpress axlar",eq:"Hantel",p:"Främre axlar",s:"Sidoaxlar, triceps",r:"8-12",top:true,alt:["Hantelpress sittande","Axelpress med hantlar","Sittande hantelpress"],desc:"Sittande axelpress med hantlar.",cues:["Ryggstöd nästan lodrätt","Hantlarna ner till öronhöjd","Tryck upp utan att slå ihop"]},
+    {name:"Axelpress i maskin",eq:"Maskin",p:"Främre axlar",s:"Sidoaxlar, triceps",r:"8-12",top:true,alt:["Shoulder press machine"],desc:"Stabil axelpress – lätt att gå nära failure.",cues:["Handtagen i axelhöjd vid start","Rygg mot dynan","Kontrollerad sänkning"]},
+    {name:"Smith-axelpress",eq:"Smith",p:"Främre axlar",s:"Triceps",r:"8-12",alt:[],desc:"Sittande press i Smith-maskin.",cues:["Bänken så stången går framför ansiktet","Sänk till hakan","Undvik att låsa helt"]},
+    {name:"Sidolyft",eq:"Hantel",p:"Sidoaxlar",s:"Trapezius",r:"12-20",top:true,alt:["Lateral raise"],desc:"Den viktigaste övningen för bredare axlar.",cues:["Lyft ut åt sidan till axelhöjd","Lätt framåtlutning, lillfingret inte högst","Lätt vikt, strikt form, nära failure"]},
+    {name:"Sidolyft i kabel",eq:"Kabel",p:"Sidoaxlar",s:"",r:"12-20",top:true,alt:["Cable lateral raise"],desc:"Jämnare motstånd än hantlar – spänning även i bottenläget.",cues:["Trissan lågt, kabeln bakom eller framför kroppen","En arm i taget","Kontrollerad sänkning"]},
+    {name:"Sidolyft i maskin",eq:"Maskin",p:"Sidoaxlar",s:"",r:"12-20",alt:["Lateral raise machine"],desc:"Maskinvariant av sidolyft – enkelt att progressa.",cues:["Armbågarna mot dynorna","Lyft till axelhöjd","Paus kort i toppen"]},
+    {name:"Framåtlyft",eq:"Hantel",p:"Främre axlar",s:"",r:"10-15",alt:["Front raise"],desc:"Främre axlar får oftast nog från pressar – valfri.",cues:["Lyft till ögonhöjd","Ingen gung","Lätt vikt"]},
+    {name:"Reverse pec-deck",eq:"Maskin",p:"Bakre axlar",s:"Mellersta rygg",r:"12-20",top:true,alt:["Bakåtflyes / Reverse pec-deck","Reverse flyes","Omvänd butterfly"],desc:"Bästa isoleringen för bakre axlar.",cues:["Lätt böjda armbågar","För armarna bakåt i en båge","Fokus på bakre axeln, inte skulderbladen"]},
+    {name:"Bakåtflyes med hantlar",eq:"Hantel",p:"Bakre axlar",s:"Mellersta rygg",r:"12-20",alt:["Bakåtflyes"],desc:"Framåtlutad eller liggande på lutande bänk.",cues:["Bröstet mot lutande bänk ger striktast form","Lyft ut åt sidorna","Lätt vikt"]},
+    {name:"Facepulls",eq:"Kabel",p:"Bakre axlar",s:"Rotatorkuff, trapezius",r:"12-20",alt:["Face pulls","Face pull"],desc:"Bakre axlar och axelhälsa.",cues:["Rep i ögonhöjd","Dra mot ansiktet och rotera ut","Armbågarna högt"]},
+    {name:"Upright row i kabel",eq:"Kabel",p:"Sidoaxlar",s:"Trapezius",r:"10-15",alt:["Upright row"],desc:"Brett grepp, dra till bröstbenshöjd.",cues:["Brett grepp","Armbågarna leder","Stoppa vid bröstbenet om axeln protesterar"]}
   ],
   "Biceps": [
-    { name: "Hantelcurl", desc: "Grundövning för biceps. Kör kontrollerat med full sträckning i botten." },
-    { name: "Skivstångscurl", desc: "Tillåter tyngre vikter än hantelcurl tack vare stabilare grepp." },
-    { name: "Hammarcurl", desc: "Neutralt grepp som även tränar underarmens brachialis." },
-    { name: "Koncentrationscurl", desc: "Isolerar biceps genom att låsa armbågen mot benet under rörelsen." },
-    { name: "Predikarstolscurl", desc: "Eliminerar fusk genom att fixera överarmen mot en vinklad dyna." }
+    {name:"Hantelcurl",eq:"Hantel",p:"Biceps",s:"Underarm",r:"10-15",alt:["Bicepscurl"],desc:"Grundövning för biceps.",cues:["Armbågarna stilla vid sidan","Supinera (vrid utåt) under lyftet","Kontrollerad sänkning"]},
+    {name:"Skivstångscurl",eq:"Skivstång",p:"Biceps",s:"Underarm",r:"8-12",alt:["EZ-stångscurl","EZ-curl"],desc:"Tyngre curl – EZ-stång är skonsammare för handlederna.",cues:["Ingen gung från höften","Hela rörelseomfånget","Armbågarna fram minimalt"]},
+    {name:"Hammarcurl",eq:"Hantel",p:"Brachialis",s:"Biceps, underarm",r:"10-15",alt:["Hammer curl"],desc:"Neutralt grepp – bygger tjocklek i överarmen.",cues:["Tummarna uppåt","Lyft mot axeln","Kontrollerad sänkning"]},
+    {name:"Lutande hantelcurl",eq:"Hantel",p:"Biceps (långa huvudet)",s:"",r:"10-15",top:true,alt:["Incline curl"],desc:"Stretch i bottenläget – mycket effektiv för biceps.",cues:["Bänk på 45–60°","Låt armarna hänga rakt ner","Ingen framåtrörelse i axeln"]},
+    {name:"Kabelcurl bakifrån (bayesian)",eq:"Kabel",p:"Biceps (långa huvudet)",s:"",r:"10-15",top:true,alt:["Bayesian curl"],desc:"Kabeln bakom kroppen ger spänning i stretchat läge.",cues:["Ställ dig med ryggen mot trissan","Armen sträckt bakåt i start","Curla utan att armbågen åker fram"]},
+    {name:"Kabelcurl",eq:"Kabel",p:"Biceps",s:"Underarm",r:"10-15",alt:["Cable curl"],desc:"Jämnt motstånd genom hela rörelsen.",cues:["Rak stång eller rep","Armbågarna stilla","Paus i toppen"]},
+    {name:"Predikarstolscurl",eq:"Skivstång",p:"Biceps (korta huvudet)",s:"",r:"8-12",alt:["Scottcurl","Preacher curl"],desc:"Låst överarm – ingen fusk möjlig.",cues:["Armhålan mot dynans kant","Sänk nästan helt rakt","Kontrollerad botten"]},
+    {name:"Curl i maskin",eq:"Maskin",p:"Biceps",s:"",r:"10-15",alt:["Bicepsmaskin"],desc:"Stabil isolering – bra att köra till failure.",cues:["Armbågen i linje med maskinens axel","Full rörelse","Långsam sänkning"]},
+    {name:"Koncentrationscurl",eq:"Hantel",p:"Biceps",s:"",r:"10-15",alt:[],desc:"Sittande, armbågen mot insidan av låret.",cues:["Armbågen still mot låret","Kläm i toppen","Långsam sänkning"]}
   ],
   "Triceps": [
-    { name: "Triceps pushdown (kabel)", desc: "Populär isolationsövning — håll armbågarna fixerade längs sidan genom hela rörelsen." },
-    { name: "Dips (tricepsfokus)", desc: "Håll överkroppen upprätt för att maximera belastningen på triceps." },
-    { name: "Fransk press", desc: "Sträck armarna över huvudet eller liggande för att tänja tricepsens långa huvud." },
-    { name: "Close-grip bänkpress", desc: "Smalt grepp flyttar en större del av belastningen från bröst till triceps." },
-    { name: "Kickbacks", desc: "Isolationsövning med hantel — bra som avslutande övning för triceps." }
+    {name:"Triceps pushdown",eq:"Kabel",p:"Triceps",s:"",r:"10-15",top:true,alt:["Triceps pushdown (kabel)","Pushdown","Tricepsnedtryck"],desc:"Stabil isolering i kabel med rep eller stång.",cues:["Armbågarna låsta vid sidan","Tryck ner till raka armar","Kontrollerad väg upp"]},
+    {name:"Tricepsextension över huvudet i kabel",eq:"Kabel",p:"Triceps (långa huvudet)",s:"",r:"10-15",top:true,alt:["Overhead triceps extension","Overhead kabel"],desc:"Stretch av långa huvudet – den bästa för tricepsmassa.",cues:["Ryggen mot trissan, rep bakom huvudet","Armbågarna pekar framåt-uppåt","Full stretch bakom huvudet"]},
+    {name:"Enarms tricepsextension med hantel",eq:"Hantel",p:"Triceps (långa huvudet)",s:"",r:"10-15",alt:["Overhead hantelextension"],desc:"Över huvudet med en hantel, sittande eller stående.",cues:["Armbågen pekar uppåt","Sänk bakom huvudet","Sträck utan att låsa hårt"]},
+    {name:"Fransk press",eq:"Skivstång",p:"Triceps",s:"",r:"8-12",alt:["Skull crushers","Skullcrusher"],desc:"Liggande extension med EZ-stång.",cues:["Sänk stången bakom pannan","Armbågarna pekar mot taket","Lätt bakåtvinkel ger mer stretch"]},
+    {name:"Dips (tricepsfokus)",eq:"Kroppsvikt",p:"Triceps",s:"Bröst, främre axlar",r:"8-12",alt:["Dips"],desc:"Upprätt överkropp flyttar fokus till triceps.",cues:["Upprätt överkropp","Armbågarna bakåt, inte utåt","Gå ner till 90° i armbågen"]},
+    {name:"Dips i maskin",eq:"Maskin",p:"Triceps",s:"Bröst",r:"8-12",alt:["Assisterade dips","Dipsmaskin"],desc:"Maskinvariant – lätt att justera belastningen.",cues:["Armbågarna nära kroppen","Full sträckning","Långsam sänkning"]},
+    {name:"Close-grip bänkpress",eq:"Skivstång",p:"Triceps",s:"Bröst, främre axlar",r:"6-10",alt:["Smal bänkpress"],desc:"Tung tricepsövning med axelbrett grepp.",cues:["Grepp i axelbredd, inte smalare","Armbågarna nära kroppen","Sänk mot nedre bröstet"]},
+    {name:"Kickbacks",eq:"Hantel",p:"Triceps",s:"",r:"12-15",alt:["Triceps kickback"],desc:"Lätt isolering – kör gärna i kabel för jämnare motstånd.",cues:["Överarmen parallell med golvet","Sträck helt","Ingen svingning"]}
   ],
   "Ben (fram)": [
-    { name: "Knäböj (skivstång)", desc: "Kungen av benövningar. Tränar hela underkroppen med extra fokus på quadriceps och säte." },
-    { name: "Frontböj", desc: "Mer upprätt hållning ger större fokus på quadriceps och bålstabilitet." },
-    { name: "Benspark (leg extension)", desc: "Isolationsövning för quadriceps — bra komplement till tunga baslyft." },
-    { name: "Bulgarian split squat", desc: "Enbensövning som bygger styrka och balans, ofta skonsammare mot ryggen." },
-    { name: "Hack squat", desc: "Guidad knäböjsvariant med ryggstöd. Stabil rörelse som gör det lättare att belasta quadriceps nära failure med mindre krav på balans och bål." },
-    { name: "Hack squat (maskin)", desc: "Guidad rörelse som tillåter tunga vikter med mindre krav på balans." }
+    {name:"Hack squat",eq:"Maskin",p:"Framsida lår",s:"Säte",r:"8-12",top:true,alt:["Hacksquat","Hack squat (maskin)"],desc:"Stabil knäböj i maskin – utmärkt för framsida lår.",cues:["Fötterna mitt på plattan, axelbrett","Gå djupt med kontroll","Knäna följer tårna"]},
+    {name:"Benpress",eq:"Maskin",p:"Framsida lår",s:"Säte, baksida",r:"8-12",top:true,alt:["Leg press"],desc:"Tung benövning utan belastning på ryggen.",cues:["Fötter lägre på plattan = mer framsida lår","Ländryggen kvar mot dynan i botten","Lås inte knäna i toppen"]},
+    {name:"Pendulum squat",eq:"Maskin",p:"Framsida lår",s:"Säte",r:"8-12",top:true,alt:["Pendelböj"],desc:"Maskinböj med mycket djup och låg ryggbelastning.",cues:["Djupt i botten","Jämn takt","Håll ryggen mot dynan"]},
+    {name:"Knäböj (skivstång)",eq:"Skivstång",p:"Framsida lår",s:"Säte, bål",r:"6-10",alt:["Knäböj","Squat"],desc:"Klassisk basövning – hög trötthetskostnad.",cues:["Spänn bålen innan varje rep","Knäna ut i linje med tårna","Djup så långt ryggen är neutral"]},
+    {name:"Smith-knäböj",eq:"Smith",p:"Framsida lår",s:"Säte",r:"8-12",alt:["Knäböj i Smith"],desc:"Knäböj med fast bana – fötterna lite framför kroppen.",cues:["Fötterna något fram","Gå djupt","Kontrollerad sänkning"]},
+    {name:"Frontböj",eq:"Skivstång",p:"Framsida lår",s:"Övre rygg, bål",r:"6-10",alt:["Front squat"],desc:"Upprätt överkropp ger mer framsida lår.",cues:["Armbågarna högt","Upprätt överkropp","Djup sittposition"]},
+    {name:"Goblet squat",eq:"Hantel",p:"Framsida lår",s:"Säte, bål",r:"10-15",alt:[],desc:"Knäböj med hantel framför bröstet – bra uppvärmning eller avslutare.",cues:["Hanteln mot bröstet","Armbågarna mellan knäna i botten","Upprätt rygg"]},
+    {name:"Benspark",eq:"Maskin",p:"Framsida lår",s:"",r:"10-15",top:true,alt:["Benspark (leg extension)","Leg extension"],desc:"Isolerar framsida lår.",cues:["Knäleden i linje med maskinens axel","Paus 1 s i toppen","Långsam sänkning"]},
+    {name:"Bulgarian split squat",eq:"Hantel",p:"Framsida lår, säte",s:"Baksida",r:"8-12 per ben",top:true,alt:["Bulgarisk utfallsböj"],desc:"Enbensövning – lång stegposition ger mer säte, kort mer lår.",cues:["Bakre foten på bänk","Sänk rakt ner","Lätt framåtlutning för säte"]},
+    {name:"Utfallssteg",eq:"Hantel",p:"Framsida lår, säte",s:"Baksida",r:"10-12 per ben",alt:["Gående utfall","Lunges"],desc:"Gående eller stillastående med hantlar.",cues:["Långa steg för mer säte","Bakre knät nästan i golvet","Tryck ifrån med främre hälen"]},
+    {name:"Step-ups",eq:"Hantel",p:"Framsida lår, säte",s:"",r:"10-12 per ben",alt:["Uppkliv"],desc:"Kliv upp på låda eller bänk.",cues:["Hela foten på lådan","Driv med främre benet – inte frånskjut","Kontrollerat ner"]},
+    {name:"Sissy squat",eq:"Kroppsvikt",p:"Framsida lår",s:"",r:"10-15",alt:[],desc:"Kroppsviktsövning med stor stretch på framsida lår.",cues:["Håll i något för balans","Knäna fram, höften rak","Gå så djupt du kontrollerar"]}
   ],
   "Baksida lår & säte": [
-    { name: "Rumänsk marklyft", desc: "Central övning för hamstrings och säte — nästan raka ben, höftfällning." },
-    { name: "Liggande lårcurl", desc: "Isolerar hamstrings genom knäböjning i maskin." },
-    { name: "Höftlyft / Hip thrust", desc: "En av de bästa isolationsövningarna för sätesmusklerna — tillåter tung belastning." },
-    { name: "Stiff-legged deadlift", desc: "Liknar rumänsk marklyft men med rakare ben för större stretch i hamstrings." },
-    { name: "Sittande lårcurl", desc: "Alternativ vinkel till liggande variant — bra för variation." }
+    {name:"Rumänsk marklyft",eq:"Skivstång",p:"Baksida lår",s:"Säte, ländrygg",r:"8-12",top:true,alt:["RDL","Romanian deadlift"],desc:"Höftfällning – den bästa stretchövningen för baksida lår.",cues:["Höften bakåt, lätt böjda knän","Stången nära benen","Stanna när ryggen vill runda"]},
+    {name:"Stiff-legged deadlift",eq:"Skivstång",p:"Baksida lår",s:"Säte, ländrygg",r:"8-10",alt:["Raka ben marklyft"],desc:"Rakare ben än RDL – ännu mer stretch.",cues:["Nästan raka knän","Neutral rygg","Kontrollerad sänkning"]},
+    {name:"Liggande lårcurl",eq:"Maskin",p:"Baksida lår",s:"Vader",r:"10-15",top:true,alt:["Lying leg curl"],desc:"Isolerar baksida lår.",cues:["Höften mot dynan","Full sträckning","Långsam sänkning"]},
+    {name:"Sittande lårcurl",eq:"Maskin",p:"Baksida lår",s:"",r:"10-15",top:true,alt:["Seated leg curl"],desc:"Sittande ger mer stretch – ofta bättre än liggande för hypertrofi.",cues:["Lårdynan tätt mot låren","Luta överkroppen lätt framåt","Paus i botten"]},
+    {name:"Nordic curl",eq:"Kroppsvikt",p:"Baksida lår",s:"",r:"4-8",alt:["Nordic hamstring curl"],desc:"Mycket tung excentrisk övning – bra för skadeprevention för löpare.",cues:["Fötterna fast","Sänk så långsamt du kan","Ta emot med händerna"]},
+    {name:"Höftlyft",eq:"Skivstång",p:"Säte",s:"Baksida lår",r:"8-12",top:true,alt:["Höftlyft / Hip thrust","Hip thrust"],desc:"Bästa övningen för säteslyft med tung belastning.",cues:["Skulderbladen mot bänk","Hakan in, blick framåt","Lås ut höften och kläm 1 s"]},
+    {name:"Höftlyft i maskin",eq:"Maskin",p:"Säte",s:"Baksida lår",r:"8-12",alt:["Hip thrust machine","Glute drive"],desc:"Enklare uppstart än med skivstång.",cues:["Fötterna under knäna i toppen","Kläm i toppen","Kontrollerad sänkning"]},
+    {name:"Glute bridge",eq:"Kroppsvikt",p:"Säte",s:"Baksida lår",r:"12-20",alt:["Sätesbrygga"],desc:"Höftlyft från golvet – bra uppvärmning.",cues:["Hälarna nära rumpan","Tryck genom hälarna","Kläm i toppen"]},
+    {name:"Abduktion i maskin",eq:"Maskin",p:"Säte (gluteus medius)",s:"",r:"12-20",alt:["Abduktor","Hip abduction"],desc:"Sätesmuskelns översida – stabiliserar höft och knä vid löpning.",cues:["Lätt framåtlutning ger mer säte","Pressa ut kontrollerat","Paus i ytterläget"]},
+    {name:"Adduktion i maskin",eq:"Maskin",p:"Insida lår",s:"",r:"12-20",alt:["Adduktor","Hip adduction"],desc:"Insida lår – stora muskler som ofta glöms.",cues:["Stor stretch i ytterläget","Kläm ihop","Långsam väg tillbaka"]},
+    {name:"45° ryggresning (sätesfokus)",eq:"Kroppsvikt",p:"Säte",s:"Baksida lår, ländrygg",r:"10-15",alt:["Hyperextension säte"],desc:"Rund övre rygg och tår utåt flyttar fokus till sätet.",cues:["Dynan under höftbenen","Rund lätt övre ryggen","Pressa med sätet"]},
+    {name:"Kabel pull-through",eq:"Kabel",p:"Säte",s:"Baksida lår",r:"12-15",alt:["Pull through"],desc:"Höftfällning med kabel – skonsam för ländryggen.",cues:["Ryggen mot trissan, repet mellan benen","Höften bakåt","Kläm sätet i toppen"]},
+    {name:"Sätesspark i kabel",eq:"Kabel",p:"Säte",s:"",r:"12-15 per ben",alt:["Glute kickback","Kabelkickback säte"],desc:"Isolerar sätet ett ben i taget.",cues:["Lätt framåtlutning","Spark bakåt med höften, inte ländryggen","Kläm i ytterläget"]}
   ],
   "Vader": [
-    { name: "Stående vadpress", desc: "Tränar den yttre vadmuskeln (gastrocnemius) med raka ben." },
-    { name: "Sittande vadpress", desc: "Fokuserar på den inre vadmuskeln (soleus) med böjda knän." },
-    { name: "Vadpress i benpress-maskin", desc: "Alternativ belastningsform som är skonsam mot ryggen." }
+    {name:"Stående vadlyft",eq:"Maskin",p:"Vader (gastrocnemius)",s:"",r:"10-20",top:true,alt:["Stående vadpress","Calf raise"],desc:"Raka knän – träffar den stora vadmuskeln.",cues:["Djup stretch i botten, paus 1–2 s","Upp på tårna så högt det går","Ingen studs"]},
+    {name:"Sittande vadpress",eq:"Maskin",p:"Vader (soleus)",s:"",r:"12-20",alt:["Seated calf raise"],desc:"Böjda knän – träffar soleus, viktig för löpare.",cues:["Paus i botten","Full rörelse","Långsamt tempo"]},
+    {name:"Vadpress i benpress",eq:"Maskin",p:"Vader",s:"",r:"10-20",alt:["Vadpress","Vadpress i benpress-maskin"],desc:"Vadpress med tårna på kanten av benpressplattan.",cues:["Raka knän, inte låsta","Djup stretch","Säkerhetsspärrarna på"]},
+    {name:"Enbens vadlyft med hantel",eq:"Hantel",p:"Vader",s:"",r:"10-15 per ben",alt:[],desc:"Ett ben i taget på trappsteg.",cues:["Håll i något för balans","Full stretch i botten","Paus i toppen"]}
   ],
   "Bål / Core": [
-    { name: "Planka", desc: "Isometrisk övning som bygger stabilitet i hela bålen." },
-    { name: "Hängande benlyft", desc: "Avancerad övning för nedre delen av raka magmuskeln och höftböjarna." },
-    { name: "Cable crunch", desc: "Tillåter progressiv belastning för raka magmuskeln, till skillnad från vanliga crunches." },
-    { name: "Russian twist", desc: "Tränar sneda magmusklerna genom kontrollerad rotation." },
-    { name: "Ryggresning (hyperextension)", desc: "Stärker nedre rygg och säte — bra skadeförebyggande övning." }
+    {name:"Cable crunch",eq:"Kabel",p:"Raka magmuskeln",s:"",r:"12-15",top:true,alt:["Kabelcrunch"],desc:"Belastad magövning – går att progressa som övrig träning.",cues:["Knästående, rep vid huvudet","Rulla ihop ryggen, inte höften","Utandning i botten"]},
+    {name:"Crunch i maskin",eq:"Maskin",p:"Raka magmuskeln",s:"",r:"12-15",alt:["Abdominal machine"],desc:"Stabil maskinvariant av crunch.",cues:["Rulla ihop","Kontrollerad väg tillbaka","Inget drag med armarna"]},
+    {name:"Hängande benlyft",eq:"Kroppsvikt",p:"Nedre mage, höftböjare",s:"Grepp",r:"10-15",alt:["Hanging leg raise"],desc:"Tung magövning – fäll bäckenet uppåt.",cues:["Ingen gung","Lyft bäckenet, inte bara benen","Böjda knän för enklare variant"]},
+    {name:"Knälyft i dipsställning",eq:"Kroppsvikt",p:"Nedre mage",s:"Höftböjare",r:"10-15",alt:["Captain's chair"],desc:"Enklare än hängande benlyft – bra start.",cues:["Ryggen mot dynan","Knäna mot bröstet","Långsamt ner"]},
+    {name:"Ab wheel",eq:"Kroppsvikt",p:"Raka magmuskeln",s:"Lats, axlar",r:"8-12",alt:["Rullhjul","Ab roller"],desc:"Tung antiextension från knästående.",cues:["Rund lätt ryggen, ingen svank","Rulla så långt du kontrollerar","Dra tillbaka med magen"]},
+    {name:"Pallof press",eq:"Kabel",p:"Sneda magmusklerna",s:"Bål",r:"10-12 per sida",alt:[],desc:"Antirotation – bra för stabilitet och löpning.",cues:["Sidan mot trissan","Tryck rakt fram och håll 2 s","Höften still"]},
+    {name:"Planka",eq:"Kroppsvikt",p:"Bål",s:"Axlar",r:"30-60 s",alt:["Plankan","Plank"],desc:"Statisk bålövning.",cues:["Rak linje från huvud till häl","Spänn säte och mage","Andas lugnt"]},
+    {name:"Sidoplanka",eq:"Kroppsvikt",p:"Sneda magmusklerna",s:"Säte",r:"30-45 s per sida",alt:["Side plank"],desc:"Sidostabilitet – bra för löpare.",cues:["Armbågen under axeln","Höften uppe","Rak linje"]},
+    {name:"Dead bug",eq:"Kroppsvikt",p:"Djupa bålmuskler",s:"",r:"8-10 per sida",alt:[],desc:"Skonsam bålövning – bra vid ländryggsbesvär.",cues:["Ländryggen tryckt mot golvet","Motsatt arm och ben ut","Andas ut när du sträcker"]},
+    {name:"Russian twist",eq:"Kroppsvikt",p:"Sneda magmusklerna",s:"",r:"15-20 per sida",alt:[],desc:"Rotation sittande – byt till Pallof press vid ländryggsbesvär.",cues:["Rak rygg","Rotera från bröstkorgen","Vikt i händerna för svårare"]},
+    {name:"Ryggresning (hyperextension)",eq:"Kroppsvikt",p:"Ländrygg",s:"Säte, baksida lår",r:"12-15",alt:["Hyperextension","Ryggresning"],desc:"Stärker ländrygg och säte.",cues:["Neutral rygg","Upp till rak linje – inte översträck","Kontrollerat tempo"]}
   ]
 };
+// Namnvarianter som är samma övning – historiken slås ihop i statistiken (planens namn först)
+const LIB_HISTORY_ALIASES = {
+  "Hack squat":["Hacksquat","Hack squat (maskin)"],
+  "Planka":["Plankan"],
+  "Lutande Smith-bänkpress":["Lutande bänkpress i Smith-maskin"],
+  "Facepulls":["Face pulls"],
+  "Benspark":["Benspark (leg extension)"],
+  "Triceps pushdown":["Triceps pushdown (kabel)"],
+  "Hantelpress axlar":["Hantelpress sittande"],
+  "Militärpress":["Militärpress (stående skivstång)"],
+  "Stående vadlyft":["Stående vadpress"],
+  "Höftlyft":["Höftlyft / Hip thrust"],
+  "Reverse pec-deck":["Bakåtflyes / Reverse pec-deck"]
+};
+let LIBRARY = {};
+let LIB_CUSTOM = []; // egna övningar: {name,group,eq,p,r,desc,custom:true}
+function rebuildLibrary(){
+  LIBRARY = {};
+  Object.entries(LIBRARY_BASE).forEach(([g,items])=>{ LIBRARY[g]=items.map(x=>({...x})); });
+  for(const c of LIB_CUSTOM){ const g=LIBRARY[c.group]?c.group:'Egna övningar'; (LIBRARY[g]=LIBRARY[g]||[]).push({alt:[],cues:[],s:'',...c,custom:true}); }
+}
+rebuildLibrary();
+async function loadCustomLibrary(){
+  try{const r=await window.storage.get('library:custom'); LIB_CUSTOM=(r&&r.value)?JSON.parse(r.value):[];}catch(e){LIB_CUSTOM=[];}
+  if(!Array.isArray(LIB_CUSTOM))LIB_CUSTOM=[];
+  rebuildLibrary();
+}
+async function saveCustomLibrary(){ await window.storage.set('library:custom',JSON.stringify(LIB_CUSTOM)); rebuildLibrary(); }
+function libAllItems(){ const a=[]; Object.entries(LIBRARY).forEach(([group,items])=>items.forEach(x=>a.push({...x,group}))); return a; }
+function libNorm(s){return String(s||'').trim().toLowerCase();}
+function libFind(name){ const n=libNorm(name); return libAllItems().find(x=>libNorm(x.name)===n)||libAllItems().find(x=>(x.alt||[]).some(a=>libNorm(a)===n))||null; }
+// Vilka dagar i schemat har övningen (namn, alternativa namn eller länkad historik)
+function libPlanDays(ex){
+  const days=[]; Object.keys(PLAN).forEach(day=>{ if(libInDay(ex,day))days.push(day); }); return days;
+}
+// Planens namn jämförs med alla namn; planens historik-alias bara med huvudnamnet (t.ex. Knäböj som gammalt namn för Hack squat)
+function libInDay(ex,day){
+  const names=new Set([ex.name,...(ex.alt||[]),...(LIB_HISTORY_ALIASES[ex.name]||[])].map(libNorm));
+  const core=new Set([ex.name,...(LIB_HISTORY_ALIASES[ex.name]||[])].map(libNorm));
+  return (PLAN[day]||[]).some(e=>names.has(libNorm(e.name))||(e.aliases||[]).some(a=>core.has(libNorm(a))));
+}
+// Engångsmigrering: koppla ihop namnvarianter med planens övningar så historiken slås ihop
+async function applyLibraryAliasMigration(){
+  const K='migration:v220-library-aliases'; try{const r=await window.storage.get(K);if(r&&r.value==='done')return;}catch(e){}
+  let changed=false;
+  Object.values(PLAN).forEach(list=>(list||[]).forEach(e=>{
+    const add=LIB_HISTORY_ALIASES[e.name]; if(!add)return;
+    const cur=new Set(e.aliases||[]); add.forEach(a=>{ if(a!==e.name&&!cur.has(a)){cur.add(a);changed=true;} }); e.aliases=[...cur];
+  }));
+  if(changed){ rebuildProgramFromPlan(); await savePlanConfig(); }
+  try{await window.storage.set(K,'done');}catch(e){}
+}
 
 let libraryExpanded = {};
 let librarySearchTerm = '';
+let libraryEq = 'Alla';
+let libraryOnlyTop = false;
+let libraryOnlyPlan = false;
+const libEsc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function renderLibraryFilters(){
+  const el=document.getElementById('libraryFilters'); if(!el) return;
+  const chip=(label,active,attr)=>`<button type="button" class="lib-chip${active?' active':''}" ${attr}>${label}</button>`;
+  el.innerHTML = ['Alla',...LIB_EQUIPMENT].map(eq=>chip(eq,libraryEq===eq,`data-eq="${eq}"`)).join('')
+    + chip('★ Toppval',libraryOnlyTop,'data-flag="top"') + chip('I mitt schema',libraryOnlyPlan,'data-flag="plan"');
+}
 
 function renderLibrary(){
   const container = document.getElementById('libraryGroups');
+  renderLibraryFilters();
   container.innerHTML = '';
-  const term = librarySearchTerm.trim().toLowerCase();
+  const term = libNorm(librarySearchTerm);
   const categoryOptions = Object.keys(PLAN);
+  const filtersOn = !!term || libraryEq!=='Alla' || libraryOnlyTop || libraryOnlyPlan;
+  let total=0;
 
   Object.keys(LIBRARY).forEach(groupName => {
-    const exercises = LIBRARY[groupName].filter(ex =>
-      !term || ex.name.toLowerCase().includes(term) || ex.desc.toLowerCase().includes(term)
-    );
+    const exercises = LIBRARY[groupName].filter(ex => {
+      if(libraryEq!=='Alla' && ex.eq!==libraryEq) return false;
+      if(libraryOnlyTop && !ex.top) return false;
+      if(libraryOnlyPlan && !libPlanDays(ex).length) return false;
+      if(!term) return true;
+      const hay=[ex.name,ex.desc,ex.p,ex.s,ex.eq,groupName,...(ex.alt||[])].map(libNorm).join(' | ');
+      return term.split(/\s+/).every(w=>hay.includes(w));
+    });
     if(exercises.length === 0) return;
-
-    const isExpanded = term ? true : !!libraryExpanded[groupName];
+    total+=exercises.length;
+    const isExpanded = filtersOn ? true : !!libraryExpanded[groupName];
 
     const group = document.createElement('div');
     group.className = 'lib-group';
     group.innerHTML = `
-      <div class="lib-group-header" data-group="${groupName}">
-        <h3>${groupName}</h3>
+      <div class="lib-group-header" data-group="${libEsc(groupName)}">
+        <h3>${libEsc(groupName)}</h3>
         <span class="lib-group-count">${exercises.length} övningar ${isExpanded ? '▲' : '▼'}</span>
       </div>
       <div class="lib-group-body" style="display:${isExpanded ? 'block' : 'none'};">
-        ${exercises.map((ex, i) => `
-          <div class="lib-ex-card">
-            <div class="lib-ex-name">${ex.name}</div>
-            <div class="lib-ex-desc">${ex.desc}</div>
-            <div class="lib-ex-add">
-              <select class="lib-cat-select" data-group="${groupName}" data-idx="${i}">
-                ${categoryOptions.map(c => `<option value="${c}" ${c === currentDay ? 'selected' : ''}>${c}</option>`).join('')}
-              </select>
-              <button class="lib-add-btn" data-group="${groupName}" data-idx="${i}">+ Lägg till</button>
+        ${exercises.map(ex => {
+          const days=libPlanDays(ex);
+          const defDay = days.length ? (categoryOptions.find(c=>!days.includes(c))||currentDay) : currentDay;
+          return `
+          <div class="lib-ex-card" data-name="${libEsc(ex.name)}">
+            <div class="lib-ex-name">${libEsc(ex.name)}${ex.top?' <span class="lib-star" title="Toppval för hypertrofi">★</span>':''}</div>
+            <div class="lib-tags">
+              ${ex.eq?`<span class="lib-tag eq">${libEsc(ex.eq)}</span>`:''}
+              ${ex.r?`<span class="lib-tag">${libEsc(ex.r)} reps</span>`:''}
+              ${ex.custom?'<span class="lib-tag custom">Egen</span>':''}
+              ${days.length?`<span class="lib-tag plan">I schemat: ${libEsc(days.join(', '))}</span>`:''}
             </div>
-          </div>
-        `).join('')}
+            ${ex.p?`<div class="lib-muscles"><strong>${libEsc(ex.p)}</strong>${ex.s?` · ${libEsc(ex.s)}`:''}</div>`:''}
+            ${ex.desc?`<div class="lib-ex-desc">${libEsc(ex.desc)}</div>`:''}
+            ${(ex.cues&&ex.cues.length)?`<details class="lib-cues"><summary>Teknik</summary><ul>${ex.cues.map(c=>`<li>${libEsc(c)}</li>`).join('')}</ul></details>`:''}
+            <div class="lib-ex-add">
+              <select class="lib-cat-select">
+                ${categoryOptions.map(c => `<option value="${libEsc(c)}" ${c === defDay ? 'selected' : ''}>${libEsc(c)}</option>`).join('')}
+              </select>
+              <button class="lib-add-btn">+ Lägg till</button>
+              ${ex.custom?'<button class="lib-del-btn" title="Ta bort egen övning">🗑</button>':''}
+            </div>
+          </div>`; }).join('')}
       </div>
     `;
     container.appendChild(group);
   });
 
+  const countEl=document.getElementById('libraryCount');
+  if(countEl) countEl.textContent = filtersOn ? `${total} träffar` : `${libAllItems().length} övningar · ★ = toppval för muskeltillväxt`;
   if(container.innerHTML === ''){
-    container.innerHTML = '<div class="empty">Inga övningar matchade sökningen.</div>';
+    container.innerHTML = '<div class="empty">Inga övningar matchade. Lägg till den som egen övning ovan.</div>';
   }
 }
 
 document.getElementById('librarySearch').oninput = (e) => {
   librarySearchTerm = e.target.value;
   renderLibrary();
+};
+document.getElementById('libraryFilters').addEventListener('click', e => {
+  const b=e.target.closest('.lib-chip'); if(!b) return;
+  if(b.dataset.eq) libraryEq=b.dataset.eq;
+  if(b.dataset.flag==='top') libraryOnlyTop=!libraryOnlyTop;
+  if(b.dataset.flag==='plan') libraryOnlyPlan=!libraryOnlyPlan;
+  renderLibrary();
+});
+
+// Egen övning
+function fillCustomForm(){
+  const gs=document.getElementById('customExGroup'), es=document.getElementById('customExEq');
+  gs.innerHTML=Object.keys(LIBRARY_BASE).map(g=>`<option>${libEsc(g)}</option>`).join('');
+  es.innerHTML=LIB_EQUIPMENT.map(x=>`<option>${x}</option>`).join('');
+}
+document.getElementById('customExToggle').onclick=()=>{
+  const f=document.getElementById('customExForm'); const open=f.style.display==='none';
+  if(open){ fillCustomForm(); document.getElementById('customExName').value=librarySearchTerm||''; document.getElementById('customExStatus').textContent=''; }
+  f.style.display=open?'':'none';
+};
+document.getElementById('customExSave').onclick=async()=>{
+  const st=document.getElementById('customExStatus');
+  const name=document.getElementById('customExName').value.trim();
+  if(!name){st.textContent='Fyll i ett namn.';return;}
+  if(libFind(name)){st.textContent='Det finns redan en övning med det namnet – sök på den istället.';return;}
+  LIB_CUSTOM.push({name,group:document.getElementById('customExGroup').value,eq:document.getElementById('customExEq').value,
+    p:document.getElementById('customExMuscle').value.trim(),r:document.getElementById('customExReps').value.trim()||'8-12',
+    desc:document.getElementById('customExDesc').value.trim(),createdAt:new Date().toISOString()});
+  await saveCustomLibrary();
+  ['customExName','customExMuscle','customExReps','customExDesc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('customExForm').style.display='none';
+  librarySearchTerm=name; document.getElementById('librarySearch').value=name; renderLibrary();
 };
 
 document.getElementById('libraryGroups').addEventListener('click', async (e) => {
@@ -3985,31 +4185,34 @@ document.getElementById('libraryGroups').addEventListener('click', async (e) => 
     renderLibrary();
     return;
   }
+  const card = e.target.closest('.lib-ex-card'); if(!card) return;
+  const ex = libFind(card.dataset.name); if(!ex) return;
+
+  if(e.target.classList.contains('lib-del-btn')){
+    if(!confirm(`Ta bort "${ex.name}" från biblioteket? Loggad historik och schemat påverkas inte.`)) return;
+    LIB_CUSTOM=LIB_CUSTOM.filter(c=>c.name!==ex.name); await saveCustomLibrary(); renderLibrary(); return;
+  }
 
   if(e.target.classList.contains('lib-add-btn')){
-    const groupName = e.target.getAttribute('data-group');
-    const idx = parseInt(e.target.getAttribute('data-idx'));
-    const ex = LIBRARY[groupName][idx];
-    const card = e.target.closest('.lib-ex-card');
     const select = card.querySelector('.lib-cat-select');
     const targetCategory = select.value;
     if(!targetCategory) return;
-
-    const already = (PLAN[targetCategory] || []).some(p => p.name === ex.name);
+    const already = libInDay(ex,targetCategory);
     if(already){
       e.target.textContent = 'Redan tillagd';
       setTimeout(() => { e.target.textContent = '+ Lägg till'; }, 1500);
       return;
     }
-
-    PLAN[targetCategory].push({ name: ex.name, sets: 3, reps: '8-12', kg: '', bodyweight: false, rest: 90, aliases: [] });
+    const reps = String(ex.r||'8-12').replace(/\s*per ben|\s*per sida/,'').trim() || '8-12';
+    const bw = ex.eq==='Kroppsvikt';
+    const rest = /^(4|6)-/.test(reps) ? 120 : (/^1[0-5]-|^12-20/.test(reps) ? 60 : 90);
+    PLAN[targetCategory].push({ name: ex.name, sets: 3, reps: ex.r||'8-12', kg: '', bodyweight: bw, rest, aliases: [...(LIB_HISTORY_ALIASES[ex.name]||[])] });
     rebuildProgramFromPlan();
     await savePlanConfig();
     if(currentDay === targetCategory) renderExercises();
     refreshQuickLogIfVisible();
-
     e.target.textContent = 'Tillagd ✓';
-    setTimeout(() => { e.target.textContent = '+ Lägg till'; }, 1500);
+    setTimeout(() => { renderLibrary(); }, 1200);
   }
 });
 
@@ -4301,6 +4504,7 @@ function swapLibraryItems(){
   return a;
 }
 function swapGroupFor(name){
+  const hit=libFind(name); if(hit) return hit.group;
   const n=String(name||'').toLowerCase();
   for(const [g,items] of Object.entries(LIBRARY)) if(items.some(x=>x.name.toLowerCase()===n)) return g;
   const words=n.split(/[^a-zåäö0-9]+/).filter(x=>x.length>=4);
@@ -4314,10 +4518,13 @@ async function latestEntryAnyDay(name){
 function renderSwapOptions(){
   if(!exerciseSwapState)return;
   const q=(document.getElementById('swapSearch').value||'').trim().toLowerCase();
-  const all=swapLibraryItems().filter(x=>x.name!==exerciseSwapState.original && (!q||x.name.toLowerCase().includes(q)||(x.desc||'').toLowerCase().includes(q)));
+  const all=swapLibraryItems().filter(x=>x.name!==exerciseSwapState.original && (!q||[x.name,x.desc,x.p,x.s,x.eq,x.group,...(x.alt||[])].map(libNorm).join(' | ').includes(q)));
   const group=swapGroupFor(exerciseSwapState.original);
-  const rec=all.filter(x=>x.group===group).slice(0,6);
-  const html=x=>`<button class="swap-option" data-name="${x.name.replace(/"/g,'&quot;')}">${x.name}<small>${x.group} · ${x.desc||''}</small></button>`;
+  const orig=libFind(exerciseSwapState.original), origEq=orig&&orig.eq, origP=orig&&libNorm(orig.p);
+  const origNames=new Set(orig?[orig.name,...(orig.alt||[])].map(libNorm):[]);
+  const score=x=>(origP&&libNorm(x.p)===origP?4:0)+(x.top?2:0)+(origEq&&x.eq!==origEq?1:0);
+  const rec=all.filter(x=>x.group===group&&!origNames.has(libNorm(x.name))).sort((a,b)=>score(b)-score(a)).slice(0,6);
+  const html=x=>`<button class="swap-option" data-name="${x.name.replace(/"/g,'&quot;')}">${x.name}${x.top?' <span class="lib-star">★</span>':''}<small>${[x.eq,x.p,x.r?x.r+' reps':''].filter(Boolean).join(' · ')}${x.desc?' — '+x.desc:''}</small></button>`;
   document.getElementById('swapRecommendedWrap').style.display=(!q&&rec.length)?'':'none';
   document.getElementById('swapRecommended').innerHTML=rec.map(html).join('');
   document.getElementById('swapResults').innerHTML=all.slice(0,40).map(html).join('')||'<div class="empty">Inga träffar.</div>';
@@ -4336,7 +4543,8 @@ async function chooseSwap(name){
 }
 function planExerciseFromLibrary(name,old){
   for(const day of Object.keys(PLAN)){const x=(PLAN[day]||[]).find(e=>e.name===name);if(x)return JSON.parse(JSON.stringify(x));}
-  return {name,sets:old?.sets||3,reps:old?.reps||'8-12',kg:'',bodyweight:false,rest:old?.rest||90,aliases:[]};
+  const lib=libFind(name);
+  return {name,sets:old?.sets||3,reps:(lib&&lib.r)||old?.reps||'8-12',kg:'',bodyweight:!!(lib&&lib.eq==='Kroppsvikt'),rest:old?.rest||90,aliases:[...((lib&&LIB_HISTORY_ALIASES[lib.name])||[])]};
 }
 async function fillSwappedBlock(block, ex, last, original){
   block.dataset.exercise=ex.name; block.dataset.originalExercise=original; block.dataset.bw=ex.bodyweight?'1':'0'; block.dataset.rest=String(ex.rest||90);
@@ -6681,7 +6889,7 @@ document.getElementById('exportDataBtn').onclick = async () => {
 
     const backup = {
       exportedAt: new Date().toISOString(),
-      appVersion: APP_VERSION, entries, runs, weights, wellness, garminDays, planConfig, weekPlans
+      appVersion: APP_VERSION, entries, runs, weights, wellness, garminDays, planConfig, weekPlans, customLibrary: LIB_CUSTOM
     };
     const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
     await _saveFileForViewer(`traningslogg-backup-${todayStr()}.json`, blob, 'application/json');
@@ -6740,6 +6948,12 @@ document.getElementById('importDataFile').onchange = async (e) => {
     }
     if(data.planConfig){
       await window.storage.set('plan:config', JSON.stringify(data.planConfig));
+    }
+    if(Array.isArray(data.customLibrary) && data.customLibrary.length){
+      // slå ihop egna övningar på namn (befintliga behålls)
+      const have=new Set(LIB_CUSTOM.map(c=>libNorm(c.name)));
+      for(const c of data.customLibrary){ if(c&&c.name&&!have.has(libNorm(c.name))){LIB_CUSTOM.push(c);have.add(libNorm(c.name));} }
+      await saveCustomLibrary();
     }
 
     let weekPlanCount = 0;
@@ -6932,7 +7146,8 @@ async function buildCloudBackup(){
   let planConfig=null; try{const r=await window.storage.get('plan:config');if(r&&r.value)planConfig=JSON.parse(r.value);}catch(e){}
   const weekIndex=await loadWeekPlanIndex(), weekPlans={};
   for(const wk of weekIndex){try{const r=await window.storage.get('weekplan:'+wk);if(r&&r.value)weekPlans[wk]=JSON.parse(r.value);}catch(e){}}
-  return {exportedAt:new Date().toISOString(),appVersion:APP_VERSION,entries,runs,weights,wellness,garminDays,planConfig,weekPlans};
+  let customLibrary=[]; try{const r=await window.storage.get('library:custom');if(r&&r.value)customLibrary=JSON.parse(r.value);}catch(e){}
+  return {exportedAt:new Date().toISOString(),appVersion:APP_VERSION,entries,runs,weights,wellness,garminDays,planConfig,weekPlans,customLibrary};
 }
 function githubHeaders(token){return {'Accept':'application/vnd.github+json','Authorization':'Bearer '+token,'X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'};}
 function utf8ToBase64(s){const bytes=new TextEncoder().encode(s);let bin='';bytes.forEach(b=>bin+=String.fromCharCode(b));return btoa(bin);}
@@ -6987,7 +7202,7 @@ document.getElementById('githubRestoreBtn').onclick=async()=>{
   }catch(e){cloudStatus('Återställning misslyckades: '+e.message,'error');}
 };
 const _cloudStorageSet=window.storage.set.bind(window.storage);
-window.storage.set=async function(key,value){const result=await _cloudStorageSet(key,value);if(/^(entry:|run:|weight:|wellness:|garminday:|plan:config|weekplan:)/.test(String(key)))scheduleCloudBackup();return result;};
+window.storage.set=async function(key,value){const result=await _cloudStorageSet(key,value);if(/^(entry:|run:|weight:|wellness:|garminday:|plan:config|weekplan:|library:custom)/.test(String(key)))scheduleCloudBackup();return result;};
 window.addEventListener('online',scheduleCloudBackup);
 initGithubCloud();
 
@@ -7479,6 +7694,7 @@ document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==
   await applyRepRangeTuneMigration();
   await applyHypertrophyUXMigration();
     await applyHackSquatAndLegPressMigration();
+  try{ await loadCustomLibrary(); await applyLibraryAliasMigration(); }catch(e){ console.warn('Övningsbibliotek:',e); }
   // v2.0.1: städa bort pass som startats automatiskt bara genom att man klickade runt (inga avbockade set)
   try{
     const done201=await window.storage.get('migr:autostartCleanup201');
