@@ -1774,7 +1774,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
       <div class="form-error" id="dataBackupError" style="display:none;"></div>
       <div class="chart-note" id="dataBackupStatus"></div>
       <div class="chart-note" id="lastBackupLabel" style="margin-top:8px;"></div>
-      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 2.2.1</div>
+      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 2.2.3</div>
     </div>
   </div>
 </div>
@@ -1805,7 +1805,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
 <div class="exercise-swap-modal" id="sessionSummaryModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 class="summary-head" id="summaryTitle">Pass klart ✓</h2><button class="swap-close" id="summaryClose">×</button></div><div class="summary-stats" id="summaryStats"></div><div id="summaryBody"></div><button class="btn" id="summaryOk" style="margin-top:14px;">Klar</button></div></div>
 <div class="exercise-swap-modal" id="exerciseSwapModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 id="swapTitle">Byt övning</h2><button class="swap-close" id="swapClose">×</button></div><input id="swapSearch" type="search" placeholder="Sök bland alla övningar..." style="margin-top:12px"><div id="swapRecommendedWrap"><div class="swap-section">Rekommenderade alternativ</div><div class="swap-list" id="swapRecommended"></div></div><div class="swap-section">Alla matchningar</div><div class="swap-list" id="swapResults"></div><div id="swapConfirm" style="display:none"><div class="chart-note" id="swapConfirmText" style="margin-top:14px"></div><div class="swap-actions"><button class="btn" id="swapToday">Bara idag</button><button class="btn secondary" id="swapPermanent">Gör permanent</button></div></div></div></div>
 <script>
-const APP_VERSION = '2.2.1';
+const APP_VERSION = '2.2.3';
 // ---------- FRISTÅENDE LOKAL LAGRING ----------
 // IndexedDB används primärt. localStorage används som reserv.
 const STORAGE_PREFIX = 'traningslogg:';
@@ -2032,7 +2032,7 @@ const DEFAULT_PLAN = {
     {name:"Triceps pushdown", sets:3, reps:"12-15", kg:27.5, bodyweight:false, rest:60, supersetWith:"Sidolyft"},
     {name:"Dips", sets:3, reps:"8-12", kg:"", bodyweight:true, rest:90},
     {name:"Cable crunch", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
-    {name:"Russian twist", sets:3, reps:"15-20 per sida", kg:"", bodyweight:true, rest:45}
+    {name:"Hängande benlyft", sets:3, reps:"10-15", kg:"", bodyweight:true, rest:60}
   ],
   "Pull": [
     {name:"Marklyft", sets:4, reps:"5-6", kg:"", bodyweight:false, rest:150},
@@ -2058,7 +2058,7 @@ const DEFAULT_PLAN = {
     {name:"Tricepsextension över huvudet i kabel", sets:3, reps:"10-15", kg:"", bodyweight:false, rest:60, supersetWith:"Kabelcurl"},
     {name:"Kabelcurl", sets:3, reps:"10-15", kg:"", bodyweight:false, rest:60, supersetWith:"Tricepsextension över huvudet i kabel"},
     {name:"Cable crunch", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
-    {name:"Russian twist", sets:3, reps:"15-20 per sida", kg:"", bodyweight:true, rest:45}
+    {name:"Hängande benlyft", sets:3, reps:"10-15", kg:"", bodyweight:true, rest:60}
   ],
   "Lower": [
     {name:"Benpress", sets:4, reps:"8-12", kg:"", bodyweight:false, rest:120},
@@ -4069,6 +4069,17 @@ async function applyUpperSplitMigration(){
   if(changed){ rebuildProgramFromPlan(); await savePlanConfig(); try{resolvedWeekCache.clear();}catch(e){} }
   try{await window.storage.set(K,'done');}catch(e){}
 }
+// v2.2.3: Russian twist -> Hängande benlyft i alla dagar (egen övning, ingen historik-koppling)
+async function applyLegRaiseMigration(){
+  const K='migration:v223-leg-raise'; try{const r=await window.storage.get(K);if(r&&r.value==='done')return;}catch(e){}
+  let changed=false;
+  Object.keys(PLAN).forEach(day=>{ const list=PLAN[day]||[]; const i=list.findIndex(e=>e.name==='Russian twist'); if(i<0)return;
+    if(list.some(e=>e.name==='Hängande benlyft')){ list.splice(i,1); }
+    else { const o=list[i]; list[i]={name:'Hängande benlyft',sets:o.sets||3,reps:'10-15',kg:'',bodyweight:true,rest:60,aliases:[],supersetWith:o.supersetWith||null}; }
+    changed=true; });
+  if(changed){ rebuildProgramFromPlan(); await savePlanConfig(); try{resolvedWeekCache.clear();}catch(e){} }
+  try{await window.storage.set(K,'done');}catch(e){}
+}
 // Engångsmigrering: koppla ihop namnvarianter med planens övningar så historiken slås ihop
 async function applyLibraryAliasMigration(){
   const K='migration:v220-library-aliases'; try{const r=await window.storage.get(K);if(r&&r.value==='done')return;}catch(e){}
@@ -5015,20 +5026,29 @@ async function renderDashboard(){
   const lastMonday = new Date(monday); lastMonday.setDate(monday.getDate() - 7);
   const idx = todayIndex();
   const inRange = (d, from, days) => { const t = new Date(d+'T12:00:00'); const end = new Date(from); end.setDate(from.getDate()+days); return t >= from && t < end; };
-  const volThis = entries.filter(e => inRange(e.date, monday, 7)).reduce((a,e) => a + entryVolume(e), 0);
-  const volLastSame = entries.filter(e => inRange(e.date, lastMonday, idx+1)).reduce((a,e) => a + entryVolume(e), 0);
-  let volCmp = '';
-  if(volLastSame > 0 && volThis > 0){
-    const d = (volThis - volLastSame) / volLastSame * 100;
-    volCmp = ` <span class="${d >= 0 ? 'dash-up' : 'dash-down'}">${d >= 0 ? '+' : ''}${d.toFixed(0)} %</span>`;
-  }
+  const pctTag = (cur, prev) => { if(!(prev > 0) || !(cur > 0)) return ''; const d = (cur - prev) / prev * 100;
+    return ` <span class="${d >= 0 ? 'dash-up' : 'dash-down'}">${d >= 0 ? '+' : ''}${d.toFixed(0)} %</span>`; };
+  // v2.2.2 Styrka: jämför varje pass som körts i veckan med samma pass (t.ex. Push) förra veckan
+  const thisWeekEntries = entries.filter(e => inRange(e.date, monday, 7));
+  const lastWeekEntries = entries.filter(e => inRange(e.date, lastMonday, 7));
+  const volThis = thisWeekEntries.reduce((a,e) => a + entryVolume(e), 0);
+  const sessionLabels = [...new Set(thisWeekEntries.map(e => e.day).filter(Boolean))];
+  const matched = sessionLabels.filter(l => lastWeekEntries.some(e => e.day === l));
+  const volThisMatched = thisWeekEntries.filter(e => matched.includes(e.day)).reduce((a,e) => a + entryVolume(e), 0);
+  const volLastMatched = lastWeekEntries.filter(e => matched.includes(e.day)).reduce((a,e) => a + entryVolume(e), 0);
+  const volCmp = pctTag(volThisMatched, volLastMatched);
+  const volLastSame = volLastMatched;
+  // v2.2.2 Löpning: förra veckan fram till samma veckodag
+  let kmLastSame = 0;
+  try{ const runs = await loadAllRuns(); kmLastSame = runs.filter(r => inRange(r.date, lastMonday, idx+1)).reduce((a,r) => a + (Number(r.distance) || 0), 0); }catch(e){}
+  const kmCmp = pctTag(ws.kmDone || 0, kmLastSame);
   const pct = Math.min(100, Math.round((ws.sessionsRatio || 0) * 100));
   weekEl.innerHTML = `
     <div class="dash-row"><span><strong>${ws.completedCount ?? 0}/${ws.totalCount ?? 0}</strong> pass</span><span class="dash-tag ${ws.pacingClass || 'ontrack'}">${ws.pacingText || '–'}</span></div>
     <div class="dash-bar"><div style="width:${pct}%"></div></div>
-    <div class="dash-row"><span>Löpning</span><span><strong>${(ws.kmDone || 0).toFixed(1)}</strong> / ${ws.kmTarget ?? 0} km</span></div>
+    <div class="dash-row"><span>Löpning</span><span><strong>${(ws.kmDone || 0).toFixed(1)}</strong> / ${ws.kmTarget ?? 0} km${kmCmp}</span></div>
     <div class="dash-row"><span>Styrkevolym</span><span><strong>${Math.round(volThis).toLocaleString('sv-SE')}</strong> kg${volCmp}</span></div>
-    ${volLastSame > 0 ? '<div class="dash-empty" style="font-size:11px;">Jämfört med förra veckan vid samma veckodag.</div>' : ''}`;
+    ${(kmCmp || volCmp) ? `<div class="dash-empty" style="font-size:11px;">${kmCmp ? `Löpning: mot förra veckan t.o.m. samma veckodag (${kmLastSame.toFixed(1)} km).` : ''}${kmCmp && volCmp ? '<br>' : ''}${volCmp ? `Styrka: mot samma pass förra veckan (${matched.join(', ')}).` : ''}</div>` : ''}`;
 
   // --- Utveckling: senaste rekord + trend ---
   const byEx = {};
@@ -7488,8 +7508,14 @@ async function renderGarminDash(){
     rows.push(`<div class="dash-row"><span>😴 Sömn i natt</span><span><strong>${h} h ${m} min</strong>${today.sleepScore?` <span class="dash-empty" style="font-size:11px;">score ${Math.round(today.sleepScore)}</span>`:''}</span></div>`);}
   if(today.restingHR){const a=avg('restingHR');const diff=a?Math.round(today.restingHR-a):0;
     rows.push(`<div class="dash-row"><span>❤️ Vilopuls</span><span><strong>${Math.round(today.restingHR)}</strong>${a&&Math.abs(diff)>=3?` <span class="${diff>0?'dash-down':'dash-up'}">${diff>0?'+':''}${diff} mot snitt</span>`:''}</span></div>`);}
-  const bb=today.bbNow??today.bbHigh;
-  if(bb!=null) rows.push(`<div class="dash-row"><span>🔋 Body Battery</span><span><strong>${Math.round(bb)}</strong>${today.bbHigh!=null&&today.bbNow!=null?` <span class="dash-empty" style="font-size:11px;">max ${Math.round(today.bbHigh)}</span>`:''}</span></div>`);
+  // v2.2.2: visa alltid Body Battery – idag om det finns, annars senaste dag med värde
+  let bbDay=today, bbWhen='';
+  if(today.bbNow==null&&today.bbHigh==null){ const i=days.findIndex(d=>d&&(d.bbNow!=null||d.bbHigh!=null)); if(i>0){bbDay=days[i];bbWhen=i===1?'igår':i+' dagar sedan';} }
+  const bb=bbDay.bbNow??bbDay.bbHigh;
+  if(bb!=null){ const lvl=bb>=60?'dash-up':bb<30?'dash-down':'';
+    rows.push(`<div class="dash-row"><span>🔋 Body Battery${bbWhen?` <span class="dash-empty" style="font-size:11px;">(${bbWhen})</span>`:''}</span><span><strong class="${lvl}">${Math.round(bb)}</strong>${bbDay.bbHigh!=null||bbDay.bbLow!=null?` <span class="dash-empty" style="font-size:11px;">${bbDay.bbHigh!=null?'max '+Math.round(bbDay.bbHigh):''}${bbDay.bbHigh!=null&&bbDay.bbLow!=null?' · ':''}${bbDay.bbLow!=null?'min '+Math.round(bbDay.bbLow):''}</span>`:''}</span></div>`);
+    if(!bbWhen&&bb<30) rows.push('<div class="dash-empty" style="font-size:11px;">Lågt Body Battery – överväg ett lättare pass idag.</div>');
+  } else if(cfg.opts.health) rows.push('<div class="dash-row"><span>🔋 Body Battery</span><span class="dash-empty" style="font-size:11px;">ingen data ännu – synka eller se Datakontroll</span></div>');
   if(today.stress) rows.push(`<div class="dash-row"><span>Stress</span><span><strong>${Math.round(today.stress)}</strong></span></div>`);
   if(today.restingHR&&avg('restingHR')&&today.restingHR-avg('restingHR')>=5)
     rows.push('<div class="dash-empty" style="font-size:11px;">Förhöjd vilopuls – överväg ett lättare pass idag.</div>');
@@ -7714,7 +7740,7 @@ document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==
   await applyRepRangeTuneMigration();
   await applyHypertrophyUXMigration();
     await applyHackSquatAndLegPressMigration();
-  try{ await loadCustomLibrary(); await applyUpperSplitMigration(); await applyLibraryAliasMigration(); }catch(e){ console.warn('Övningsbibliotek:',e); }
+  try{ await loadCustomLibrary(); await applyUpperSplitMigration(); await applyLegRaiseMigration(); await applyLibraryAliasMigration(); }catch(e){ console.warn('Övningsbibliotek:',e); }
   // v2.0.1: städa bort pass som startats automatiskt bara genom att man klickade runt (inga avbockade set)
   try{
     const done201=await window.storage.get('migr:autostartCleanup201');
