@@ -1774,7 +1774,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
       <div class="form-error" id="dataBackupError" style="display:none;"></div>
       <div class="chart-note" id="dataBackupStatus"></div>
       <div class="chart-note" id="lastBackupLabel" style="margin-top:8px;"></div>
-      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 2.2.0</div>
+      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 2.2.1</div>
     </div>
   </div>
 </div>
@@ -1805,7 +1805,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
 <div class="exercise-swap-modal" id="sessionSummaryModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 class="summary-head" id="summaryTitle">Pass klart ✓</h2><button class="swap-close" id="summaryClose">×</button></div><div class="summary-stats" id="summaryStats"></div><div id="summaryBody"></div><button class="btn" id="summaryOk" style="margin-top:14px;">Klar</button></div></div>
 <div class="exercise-swap-modal" id="exerciseSwapModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 id="swapTitle">Byt övning</h2><button class="swap-close" id="swapClose">×</button></div><input id="swapSearch" type="search" placeholder="Sök bland alla övningar..." style="margin-top:12px"><div id="swapRecommendedWrap"><div class="swap-section">Rekommenderade alternativ</div><div class="swap-list" id="swapRecommended"></div></div><div class="swap-section">Alla matchningar</div><div class="swap-list" id="swapResults"></div><div id="swapConfirm" style="display:none"><div class="chart-note" id="swapConfirmText" style="margin-top:14px"></div><div class="swap-actions"><button class="btn" id="swapToday">Bara idag</button><button class="btn secondary" id="swapPermanent">Gör permanent</button></div></div></div></div>
 <script>
-const APP_VERSION = '2.2.0';
+const APP_VERSION = '2.2.1';
 // ---------- FRISTÅENDE LOKAL LAGRING ----------
 // IndexedDB används primärt. localStorage används som reserv.
 const STORAGE_PREFIX = 'traningslogg:';
@@ -2051,11 +2051,12 @@ const DEFAULT_PLAN = {
   ],
   "Upper": [
     {name:"Lutande skivstångspress", sets:4, reps:"6-8", kg:"", bodyweight:false, rest:120},
-    {name:"Kabeldrag", sets:3, reps:"10-12", kg:"", bodyweight:false, rest:60},
+    {name:"Sittande kabelrodd", sets:3, reps:"10-12", kg:"", bodyweight:false, rest:60, aliases:["Kabeldrag"]},
     {name:"Militärpress", sets:3, reps:"8-10", kg:"", bodyweight:false, rest:90},
     {name:"Cross-over/flyes", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
     {name:"Reverse pec-deck", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
-    {name:"Triceps/biceps superset", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
+    {name:"Tricepsextension över huvudet i kabel", sets:3, reps:"10-15", kg:"", bodyweight:false, rest:60, supersetWith:"Kabelcurl"},
+    {name:"Kabelcurl", sets:3, reps:"10-15", kg:"", bodyweight:false, rest:60, supersetWith:"Tricepsextension över huvudet i kabel"},
     {name:"Cable crunch", sets:3, reps:"12-15", kg:"", bodyweight:false, rest:60},
     {name:"Russian twist", sets:3, reps:"15-20 per sida", kg:"", bodyweight:true, rest:45}
   ],
@@ -3915,7 +3916,7 @@ const LIBRARY_BASE = {
     {name:"Sälrodd",eq:"Skivstång",p:"Mellersta rygg",s:"Lats, bakre axlar, biceps",r:"8-12",top:true,alt:["Seal row"],desc:"Liggande rodd på hög bänk – noll belastning på ländryggen.",cues:["Bröstet mot bänken hela tiden","Dra mot nedre bröstet","Kläm skulderbladen 1 s"]},
     {name:"Bröststödd hantelrodd",eq:"Hantel",p:"Mellersta rygg",s:"Lats, bakre axlar",r:"8-12",top:true,alt:["Chest supported row"],desc:"Rodd på lutande bänk – skonsam för ländryggen.",cues:["Bänk på 30–45°","Armbågarna bakåt-utåt","Ingen ryck med överkroppen"]},
     {name:"Bröststödd maskinrodd",eq:"Maskin",p:"Mellersta rygg",s:"Lats, bakre axlar",r:"8-12",top:true,alt:["Maskinrodd","Seated row machine"],desc:"Stabil rodd där du kan pressa nära failure.",cues:["Bröstet mot dynan","Full sträckning framåt","Dra med armbågarna, inte händerna"]},
-    {name:"Sittande kabelrodd",eq:"Kabel",p:"Mellersta rygg",s:"Lats, biceps",r:"8-12",alt:["Kabelrodd","Seated cable row"],desc:"Klassisk rodd med jämnt motstånd.",cues:["Rak rygg, minimal svank-gung","Dra mot naveln","Låt skulderbladen glida fram i sträckningen"]},
+    {name:"Sittande kabelrodd",eq:"Kabel",p:"Mellersta rygg",s:"Lats, biceps",r:"8-12",top:true,alt:["Kabelrodd","Seated cable row","Kabeldrag"],desc:"Klassisk rodd med jämnt motstånd.",cues:["Rak rygg, minimal svank-gung","Dra mot naveln","Låt skulderbladen glida fram i sträckningen"]},
     {name:"Enarms kabelrodd",eq:"Kabel",p:"Lats",s:"Mellersta rygg",r:"10-12",alt:[],desc:"En arm i taget ger stort rörelseomfång.",cues:["Dra armbågen mot höften","Lätt rotation framåt i sträckningen","Byt arm utan vila"]},
     {name:"Hantelrodd enarm",eq:"Hantel",p:"Lats",s:"Mellersta rygg, biceps",r:"8-12",alt:["Enarms hantelrodd"],desc:"Stöd mot bänk, en arm i taget.",cues:["Rak rygg parallell med golvet","Dra mot höften","Ingen rotation i överkroppen"]},
     {name:"T-bar-rodd",eq:"Skivstång",p:"Mellersta rygg",s:"Lats, bakre axlar",r:"8-12",alt:["T-bar row"],desc:"Tung rodd för tjocklek i ryggen. Välj bröststödd variant om möjligt.",cues:["Neutral rygg","Dra mot magen","Kontrollerad sänkning"]},
@@ -4020,7 +4021,8 @@ const LIB_HISTORY_ALIASES = {
   "Militärpress":["Militärpress (stående skivstång)"],
   "Stående vadlyft":["Stående vadpress"],
   "Höftlyft":["Höftlyft / Hip thrust"],
-  "Reverse pec-deck":["Bakåtflyes / Reverse pec-deck"]
+  "Reverse pec-deck":["Bakåtflyes / Reverse pec-deck"],
+  "Sittande kabelrodd":["Kabeldrag"]
 };
 let LIBRARY = {};
 let LIB_CUSTOM = []; // egna övningar: {name,group,eq,p,r,desc,custom:true}
@@ -4048,6 +4050,24 @@ function libInDay(ex,day){
   const names=new Set([ex.name,...(ex.alt||[]),...(LIB_HISTORY_ALIASES[ex.name]||[])].map(libNorm));
   const core=new Set([ex.name,...(LIB_HISTORY_ALIASES[ex.name]||[])].map(libNorm));
   return (PLAN[day]||[]).some(e=>names.has(libNorm(e.name))||(e.aliases||[]).some(a=>core.has(libNorm(a))));
+}
+// v2.2.1: Kabeldrag -> Sittande kabelrodd (historik behålls), superset delas i två spårbara övningar
+async function applyUpperSplitMigration(){
+  const K='migration:v221-upper-split'; try{const r=await window.storage.get(K);if(r&&r.value==='done')return;}catch(e){}
+  let changed=false;
+  Object.keys(PLAN).forEach(day=>{
+    const list=PLAN[day]||[];
+    list.forEach((e,i)=>{ if(e.name==='Kabeldrag'){ list[i]={...e,name:'Sittande kabelrodd',aliases:[...new Set([...(e.aliases||[]),'Kabeldrag'])]};
+      list.forEach(o=>{if(o.supersetWith==='Kabeldrag')o.supersetWith='Sittande kabelrodd';}); changed=true; } });
+    const j=list.findIndex(e=>e.name==='Triceps/biceps superset');
+    if(j>=0){ const o=list[j], sets=o.sets||3, rest=o.rest||60;
+      const tri={name:'Tricepsextension över huvudet i kabel',sets,reps:'10-15',kg:'',bodyweight:false,rest,supersetWith:'Kabelcurl',aliases:[]};
+      const bi={name:'Kabelcurl',sets,reps:'10-15',kg:'',bodyweight:false,rest,supersetWith:'Tricepsextension över huvudet i kabel',aliases:[]};
+      list.forEach(x=>{if(x.supersetWith==='Triceps/biceps superset')x.supersetWith=null;});
+      list.splice(j,1,tri,bi); changed=true; }
+  });
+  if(changed){ rebuildProgramFromPlan(); await savePlanConfig(); try{resolvedWeekCache.clear();}catch(e){} }
+  try{await window.storage.set(K,'done');}catch(e){}
 }
 // Engångsmigrering: koppla ihop namnvarianter med planens övningar så historiken slås ihop
 async function applyLibraryAliasMigration(){
@@ -7694,7 +7714,7 @@ document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==
   await applyRepRangeTuneMigration();
   await applyHypertrophyUXMigration();
     await applyHackSquatAndLegPressMigration();
-  try{ await loadCustomLibrary(); await applyLibraryAliasMigration(); }catch(e){ console.warn('Övningsbibliotek:',e); }
+  try{ await loadCustomLibrary(); await applyUpperSplitMigration(); await applyLibraryAliasMigration(); }catch(e){ console.warn('Övningsbibliotek:',e); }
   // v2.0.1: städa bort pass som startats automatiskt bara genom att man klickade runt (inga avbockade set)
   try{
     const done201=await window.storage.get('migr:autostartCleanup201');
