@@ -1233,6 +1233,11 @@
 .garmin-opts{display:flex;flex-direction:column;gap:6px;margin-top:10px;font-size:14px}
 .garmin-opts label{display:flex;align-items:center;gap:8px;margin:0;text-transform:none;letter-spacing:0;font-size:14px;color:var(--text)}
 .garmin-opts input{width:auto;margin:0}
+#garminCheck table{width:100%;border-collapse:collapse;font-size:12px}#garminCheck td,#garminCheck th{padding:4px 6px;border-bottom:1px solid var(--line);text-align:left}#garminCheck th{color:var(--muted);font-weight:600}#garminCheck .ok{color:var(--good,#3bbf7a)}#garminCheck .warn{color:#e8a33d}#garminCheck .bad{color:var(--danger,#e85b5b)}
+.garmin-alert{font-size:12px;border-radius:9px;padding:7px 9px;margin-bottom:8px;background:rgba(232,163,61,.13);color:#f0b75a}.garmin-alert.bad{background:rgba(232,91,91,.13);color:#ef7a7a}
+.home-mini-chart{position:relative;height:120px;margin-top:8px}
+.seg-toggle{display:flex;gap:6px;margin-top:6px}.seg-toggle button{flex:1;border:1px solid var(--line);background:var(--panel-2);color:var(--muted);border-radius:9px;padding:7px 4px;font-size:12px;font-weight:700}.seg-toggle button.active{border-color:var(--accent);color:var(--text)}
+.gstat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.gstat{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:8px 10px}.gstat .l{font-size:11px;color:var(--muted)}.gstat .v{font:700 20px 'Barlow Condensed',sans-serif}.gstat .d{font-size:11px;margin-left:4px}
 #garminDiag{font-size:11px;color:var(--muted);white-space:pre-wrap;word-break:break-word;margin-top:6px}
 
 /* v1.4.1: notiser under iPhone-ön/notchen */
@@ -1271,7 +1276,7 @@
 .quick-ex-block.complete{padding:10px 12px;opacity:.9}.quick-ex-block.complete .quick-last,.quick-ex-block.complete .quick-progression,.quick-ex-block.complete .superset-tag,.quick-ex-block.complete .ss-slot,.quick-ex-block.complete .warm-slot,.quick-ex-block.complete .quick-set-rows,.quick-ex-block.complete .quick-set-actions,.quick-ex-block.complete .quick-note-input,.quick-ex-block.complete .swap-ex-btn{display:none!important}
 .quick-ex-block.complete .quick-ex-header{margin:0}.quick-ex-block.complete .quick-ex-name:before{content:'✓ ';color:var(--good)}.quick-ex-block.complete .quick-ex-name:after{content:' · klart';color:var(--muted);font-size:12px}.quick-ex-block.complete.expanded .quick-last,.quick-ex-block.complete.expanded .quick-progression,.quick-ex-block.complete.expanded .superset-tag,.quick-ex-block.complete.expanded .ss-slot,.quick-ex-block.complete.expanded .warm-slot,.quick-ex-block.complete.expanded .quick-set-rows,.quick-ex-block.complete.expanded .quick-set-actions,.quick-ex-block.complete.expanded .quick-note-input,.quick-ex-block.complete.expanded .swap-ex-btn{display:initial!important}
 .quick-ex-block.complete.expanded{padding:14px}
-.workout-head{position:sticky;top:calc(env(safe-area-inset-top,0px) + 4px);z-index:80;background:rgba(24,26,30,.96);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:10px 0;backdrop-filter:blur(10px)}.workout-head>div:first-child{display:flex;justify-content:space-between}.workout-head strong{font-size:14px}.workout-head span{font-size:12px;color:var(--muted)}.workout-count{text-align:right;font-size:12px;color:var(--muted);margin-top:3px}.workout-bar{height:5px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:5px}.workout-bar div{height:100%;background:var(--accent);width:0}.workout-now{font-size:12px;color:var(--accent);font-weight:700;margin-top:5px}
+.workout-head{position:sticky;top:calc(env(safe-area-inset-top,0px) + 4px);z-index:80;background:rgba(24,26,30,.96);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:10px 0;backdrop-filter:blur(10px)}.workout-head>div:first-child{display:flex;justify-content:space-between}.workout-head strong{font-size:14px}.workout-head span{font-size:12px;color:var(--muted)}.workout-count{text-align:right;font-size:12px;color:var(--muted);margin-top:3px}.workout-bar{height:5px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:5px}.workout-bar div{height:100%;background:var(--accent);width:0}.workout-now{font-size:12px;color:var(--accent);font-weight:700;margin-top:5px}.workout-start-btn{display:block;width:100%;margin-top:8px;border:0;border-radius:10px;background:var(--accent);color:#fff;font-weight:800;font-size:14px;padding:10px}.workout-head.idle .workout-bar,.workout-head.idle .workout-now{display:none}
 .qrest{border-radius:15px!important;max-width:calc(100vw - 20px);flex-wrap:wrap;justify-content:center}.qrest-copy{display:flex;flex-direction:column;min-width:100px}.qrest-next{font-size:10px;color:var(--muted);max-width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.qrest #qrestStop{min-width:84px}
 .quick-tools{position:relative}.quick-more-btn{border:1px solid var(--line);background:var(--panel-2);color:var(--muted);border-radius:18px;min-width:38px;height:34px;font-weight:800}.quick-tools-menu{display:none;position:absolute;right:0;top:38px;z-index:50;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px;min-width:150px;box-shadow:0 8px 25px #0009}.quick-tools.open .quick-tools-menu{display:flex;flex-direction:column;gap:4px}.quick-tools-menu button{border:0;background:var(--panel-2);color:var(--text);border-radius:8px;padding:9px;text-align:left;font-weight:700}
 
@@ -1442,7 +1447,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
       <label>Datum</label>
       <input type="date" id="quickLogDate">
       <div class="chart-note" style="margin-top:6px;">Förifyllt med planerade set och målvikt — justera det som avviker och spara hela passet på en gång. Lämna en övning tom om du inte körde den.</div>
-      <div class="workout-head" id="workoutHead"><div><strong id="workoutTitle">Pass pågår</strong><span id="workoutDuration">0 min</span></div><div class="workout-count" id="workoutCount">0/0 set</div><div class="workout-bar"><div id="workoutBarFill"></div></div><div class="workout-now" id="workoutNow"></div></div>
+      <div class="workout-head" id="workoutHead"><div><strong id="workoutTitle">Pass pågår</strong><span id="workoutDuration">0 min</span></div><button type="button" class="workout-start-btn" id="workoutStartBtn" style="display:none;">▶ Starta pass</button><div class="workout-count" id="workoutCount">0/0 set</div><div class="workout-bar"><div id="workoutBarFill"></div></div><div class="workout-now" id="workoutNow"></div></div>
       <div class="draft-notice" id="draftNotice"></div>
       <div class="draft-notice" id="otherDraftNotice"></div>
       <div id="quickLogExercises" style="margin-top:14px;"></div>
@@ -1573,6 +1578,19 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
       <div class="chart-note">Stapel = km loggat den veckan. Streckad linje = ditt schemalagda veckomål utifrån löpdagarna i planen.</div>
     </div>
 
+    <div class="card" id="garminStatsCard" style="display:none;">
+      <h2>Steg &amp; sömn</h2>
+      <div class="seg-toggle" id="garminStatsRange">
+        <button type="button" data-range="30" class="active">30 dagar</button>
+        <button type="button" data-range="w12">12 veckor</button>
+        <button type="button" data-range="w26">26 veckor</button>
+      </div>
+      <div class="gstat-grid" id="garminStatsKpis"></div>
+      <div class="chart-wrap"><canvas id="garminStepsChart"></canvas></div>
+      <div class="chart-wrap"><canvas id="garminSleepChart"></canvas></div>
+      <div class="chart-note" id="garminStatsNote">Steg från Garmin. Sömn från Garmin, eller det du loggat själv under Kost &amp; välmående när Garmin saknar data.</div>
+    </div>
+
     <div class="card">
       <h2>Pass-efterlevnad</h2>
       <div class="chart-wrap">
@@ -1694,6 +1712,9 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
       <div style="margin-top:12px;"><label>Worker-adress</label><input id="garminWorkerInput" type="url" autocomplete="off" inputmode="url" placeholder="https://traningslogg-garmin.….workers.dev"></div>
       <div style="height:8px"></div>
       <div><label>Appnyckel (APP_SECRET)</label><input id="garminSecretInput" type="password" autocomplete="off" placeholder="Sparad – fyll bara i för att byta"></div>
+      <div style="height:8px"></div>
+      <div><label>Garmin-nyckeln går ut</label><input id="garminKeyExpiryInput" type="date"></div>
+      <div class="chart-note" id="garminKeyExpiryNote" style="margin-top:4px;">Datumet ser du under Personal API Key i Garmin Connect. Appen påminner dig 14 dagar innan.</div>
       <div class="garmin-opts">
         <label><input type="checkbox" id="garminOptRuns" checked> Importera löppass</label>
         <label><input type="checkbox" id="garminOptHealth" checked> Hämta steg, sömn, vilopuls, Body Battery och stress</label>
@@ -1704,7 +1725,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
         <button class="btn secondary" id="garminForgetBtn">Glöm uppgifter</button>
       </div>
       <div class="cloud-status" id="garminStatus" role="status" aria-live="polite" style="white-space:pre-line;">Inte ansluten.</div>
-      <details style="margin-top:8px;"><summary class="chart-note" style="cursor:pointer;">Felsökning</summary><div id="garminDiag">Ingen synk gjord ännu.</div></details>
+      <details style="margin-top:8px;"><summary class="chart-note" style="cursor:pointer;">Datakontroll &amp; felsökning</summary><div id="garminCheck" style="margin-top:8px;"></div><div id="garminDiag">Ingen synk gjord ännu.</div></details>
     </div>
 
     <div class="card">
@@ -1718,7 +1739,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
       <div class="form-error" id="dataBackupError" style="display:none;"></div>
       <div class="chart-note" id="dataBackupStatus"></div>
       <div class="chart-note" id="lastBackupLabel" style="margin-top:8px;"></div>
-      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 2.0.0</div>
+      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 2.1.0</div>
     </div>
   </div>
 </div>
@@ -1749,7 +1770,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
 <div class="exercise-swap-modal" id="sessionSummaryModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 class="summary-head" id="summaryTitle">Pass klart ✓</h2><button class="swap-close" id="summaryClose">×</button></div><div class="summary-stats" id="summaryStats"></div><div id="summaryBody"></div><button class="btn" id="summaryOk" style="margin-top:14px;">Klar</button></div></div>
 <div class="exercise-swap-modal" id="exerciseSwapModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 id="swapTitle">Byt övning</h2><button class="swap-close" id="swapClose">×</button></div><input id="swapSearch" type="search" placeholder="Sök bland alla övningar..." style="margin-top:12px"><div id="swapRecommendedWrap"><div class="swap-section">Rekommenderade alternativ</div><div class="swap-list" id="swapRecommended"></div></div><div class="swap-section">Alla matchningar</div><div class="swap-list" id="swapResults"></div><div id="swapConfirm" style="display:none"><div class="chart-note" id="swapConfirmText" style="margin-top:14px"></div><div class="swap-actions"><button class="btn" id="swapToday">Bara idag</button><button class="btn secondary" id="swapPermanent">Gör permanent</button></div></div></div></div>
 <script>
-const APP_VERSION = '2.0.0';
+const APP_VERSION = '2.1.0';
 // ---------- FRISTÅENDE LOKAL LAGRING ----------
 // IndexedDB används primärt. localStorage används som reserv.
 const STORAGE_PREFIX = 'traningslogg:';
@@ -2880,7 +2901,7 @@ async function renderSchedule(){
     const mins = estimateSessionMinutes(PLAN[today.label]);
     plan.textContent = `${today.label} · ~${mins} min` + (today.hasRun ? ` · + ${runInfoFor(today.name).type} ${runInfoFor(today.name).km}` : '');
     plan.className = 'plan strength-color';
-    btn.textContent = doneToday ? 'Loggat ✓ — logga mer' : 'Starta pass';
+    btn.textContent = doneToday ? 'Loggat ✓ — logga mer' : 'Öppna pass';
     btn.className = 'today-btn';
   } else if(today.mode === 'run'){
     const info = runInfoFor(today.name);
@@ -4334,6 +4355,7 @@ document.getElementById('swapToday').onclick=()=>applySwap(false); document.getE
 
 // ================= v1.3 =================
 let quickSessionStart = null;
+let quickFormEdited = false, quickFormDay = null;
 
 // ---- 1. Backup-påminnelse ----
 const BACKUP_DAYS = 14, SNOOZE_DAYS = 3;
@@ -4594,10 +4616,14 @@ function serializeQuickDraft(){
       done: r.classList.contains('done')
     }))
   }));
-  return { v:1, day: currentDay, date: quickLogDate.value || todayStr(), savedAt: Date.now(), start: quickSessionStart, blocks };
+  return { v:1, day: quickFormDay || currentDay, date: quickLogDate.value || todayStr(), savedAt: Date.now(), start: quickSessionStart, edited: quickFormEdited, blocks };
 }
 function draftHasProgress(d){
-  return d && d.blocks && (!!d.start || d.blocks.some(b => b.exercise !== b.original || b.note || (b.ssPartner && !b.planSuperset) || b.rows.some(r => r.done)));
+  return d && d.blocks && (!!d.start || !!d.edited || d.blocks.some(b => b.exercise !== b.original || b.note || (b.ssPartner && !b.planSuperset) || b.rows.some(r => r.done)));
+}
+// Ett pass räknas som påbörjat först när du trycker "Starta pass" eller bockar av ett set.
+function draftIsActive(d){
+  return !!(d && d.blocks && (d.start || d.blocks.some(b => b.rows.some(r => r.done))));
 }
 function markQuickDirty(){
   quickDraftDirty = true;
@@ -4673,6 +4699,7 @@ async function applyDraftToForm(d){
     activateSuperset(block, db.ssPartner);
   });
   if(d.start) quickSessionStart = d.start;
+  if(d.edited) quickFormEdited = true;
 }
 
 function setNotice(id, html){
@@ -4688,9 +4715,11 @@ async function restoreQuickDraft(token){
   if(d && d.date === formDate){
     await applyDraftToForm(d);
     if(token !== quickLogRenderToken) return;
-    const t = new Date(d.savedAt).toLocaleTimeString('sv-SE', {hour:'2-digit', minute:'2-digit'});
-    setNotice('draftNotice', `<span>↺ Pågående pass återställt (sparat ${t})</span><button type="button" id="draftDiscardBtn">Släng utkast</button>`);
-  } else if(d){
+    if(draftIsActive(d)){
+      const t = new Date(d.savedAt).toLocaleTimeString('sv-SE', {hour:'2-digit', minute:'2-digit'});
+      setNotice('draftNotice', `<span>↺ Pågående pass återställt (sparat ${t})</span><button type="button" id="draftDiscardBtn">Släng utkast</button>`);
+    }
+  } else if(d && draftIsActive(d)){
     setNotice('draftNotice', `<span>Du har ett påbörjat ${d.day}-pass från ${fmtDate(d.date)}.</span><button type="button" class="primary" id="draftResumeBtn">Fortsätt</button><button type="button" id="draftDiscardBtn">Släng</button>`);
   }
   // utkast för andra dagar
@@ -4701,7 +4730,7 @@ async function restoreQuickDraft(token){
       const day = k.slice(DRAFT_PREFIX.length);
       if(day === currentDay) continue;
       const od = await readQuickDraft(day);
-      if(od) others.push(od);
+      if(od && draftIsActive(od)) others.push(od);
     }
     if(token !== quickLogRenderToken) return;
     if(others.length){
@@ -4918,7 +4947,7 @@ async function renderHomeDraft(){
   const h=new Date().getHours(); document.getElementById('homeGreeting').textContent=h<10?'God morgon':h<17?'God eftermiddag':'God kväll';
   try{
     const list=await window.storage.list('draft:quick:'); const drafts=[];
-    for(const k of (list.keys||[])){ const r=await window.storage.get(k); if(r&&r.value){const d=JSON.parse(r.value);if(Date.now()-d.savedAt<7*86400000)drafts.push(d);} }
+    for(const k of (list.keys||[])){ const r=await window.storage.get(k); if(r&&r.value){const d=JSON.parse(r.value);if(Date.now()-d.savedAt<7*86400000&&draftIsActive(d))drafts.push(d);} }
     drafts.sort((a,b)=>b.savedAt-a.savedAt); const d=drafts[0];
     if(!d){el.style.display='none';return;}
     const done=d.blocks.reduce((a,b)=>a+b.rows.filter(r=>r.done).length,0), total=d.blocks.reduce((a,b)=>a+b.rows.length,0);
@@ -4930,7 +4959,8 @@ function workoutStats(){const rows=[...document.querySelectorAll('#quickLogExerc
 function updateWorkoutUX(){
  const blocks=[...document.querySelectorAll('#quickLogExercises .quick-ex-block')]; if(!blocks.length)return;
  const st=workoutStats(), mins=quickSessionStart?Math.max(1,Math.floor((Date.now()-quickSessionStart)/60000)):0;
- document.getElementById('workoutTitle').textContent=quickSessionStart?`${currentDay} · pass pågår`:currentDay;
+ const started=workoutHasActiveDraft(); document.getElementById('workoutHead').classList.toggle('idle',!started); document.getElementById('workoutStartBtn').style.display=started?'none':'block';
+ document.getElementById('workoutTitle').textContent=started?`${currentDay} · pass pågår`:currentDay;
  document.getElementById('workoutDuration').textContent=quickSessionStart?`${mins} min`:'Redo'; document.getElementById('workoutCount').textContent=`${st.done}/${st.total} set`;
  document.getElementById('workoutBarFill').style.width=(st.total?st.done/st.total*100:0)+'%';
  let current=null;
@@ -4966,6 +4996,7 @@ function progressionSuggestion(ex,lastEntry){
 async function renderQuickLogForm(){
   await flushQuickDraft();
   const myToken = ++quickLogRenderToken;
+  quickSessionStart = null; quickFormEdited = false; quickFormDay = currentDay; // återställs från utkast om passet är påbörjat
   document.getElementById('quickLogDayLabel').textContent = currentDay;
   const exercises = PLAN[currentDay] || [];
 
@@ -5055,7 +5086,7 @@ document.getElementById('quickLogExercises').addEventListener('click', (e) => {
     e.target.classList.toggle('done',nowDone); row.classList.toggle('done',nowDone);
     if(nowDone){
       e.target.textContent='✓';
-      if(!quickSessionStart) quickSessionStart = Date.now();
+      if(!quickSessionStart){ quickSessionStart = Date.now(); workoutPanelMinimized = false; }
       handleSetCompleted(row);
       updateWorkoutUX();
     }
@@ -6628,8 +6659,8 @@ async function renderAllStats(){
 document.getElementById('exportDataBtn').onclick = async () => {
   const statusEl = document.getElementById('dataBackupStatus');
   try{
-    const [entries, runs, weights, wellness] = await Promise.all([
-      loadAllEntries(), loadAllRuns(), loadAllWeights(), loadAllWellness()
+    const [entries, runs, weights, wellness, garminDays] = await Promise.all([
+      loadAllEntries(), loadAllRuns(), loadAllWeights(), loadAllWellness(), loadAllGarminDays()
     ]);
     let planConfig = null;
     try{
@@ -6648,12 +6679,12 @@ document.getElementById('exportDataBtn').onclick = async () => {
 
     const backup = {
       exportedAt: new Date().toISOString(),
-      entries, runs, weights, wellness, planConfig, weekPlans
+      appVersion: APP_VERSION, entries, runs, weights, wellness, garminDays, planConfig, weekPlans
     };
     const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
     await _saveFileForViewer(`traningslogg-backup-${todayStr()}.json`, blob, 'application/json');
     await markBackupDone();
-    statusEl.textContent = `Exporterat ${entries.length} styrkepass, ${runs.length} löppass, ${weights.length} viktloggar, ${wellness.length} kost/välmåendeloggar och ${weekIndex.length} veckoscheman.`;
+    statusEl.textContent = `Exporterat ${entries.length} styrkepass, ${runs.length} löppass, ${weights.length} viktloggar, ${wellness.length} kost/välmåendeloggar, ${garminDays.length} Garmin-dagar och ${weekIndex.length} veckoscheman.`;
   }catch(e){
     console.error('Export misslyckades:', e);
     showInlineError('dataBackupError', 'Export misslyckades: ' + (e && e.message ? e.message : 'okänt fel') + '.');
@@ -6696,6 +6727,15 @@ document.getElementById('importDataFile').onchange = async (e) => {
       await window.storage.set('wellness:' + item.date, JSON.stringify(item));
       wellnessCount++;
     }
+    let garminDayCount = 0;
+    for(const g of data.garminDays || []){
+      if(!g || !g.date) continue;
+      let cur = null; try{ const r = await window.storage.get('garminday:' + g.date); if(r && r.value) cur = JSON.parse(r.value); }catch(_){}
+      // behåll den nyaste versionen av dagen, men fyll på fält som saknas
+      const merged = (cur && cur.updatedAt && g.updatedAt && cur.updatedAt > g.updatedAt) ? Object.assign({}, g, cur) : Object.assign({}, cur || {}, g);
+      await window.storage.set('garminday:' + g.date, JSON.stringify(merged));
+      garminDayCount++;
+    }
     if(data.planConfig){
       await window.storage.set('plan:config', JSON.stringify(data.planConfig));
     }
@@ -6714,6 +6754,7 @@ document.getElementById('importDataFile').onchange = async (e) => {
     invalidateRunsCache();
     invalidateWeightsCache();
     invalidateWellnessCache();
+    garminDaysCache = null;
     resolvedWeekCache.clear();
     await loadPlanConfig();
     viewedWeekMonday = getMondayOfCurrentWeek();
@@ -6726,7 +6767,7 @@ document.getElementById('importDataFile').onchange = async (e) => {
     await renderSchedule();
     await renderAllStats();
 
-    statusEl.textContent = `Importerat ${entryCount} styrkepass, ${runCount} löppass, ${weightCount} viktloggar, ${wellnessCount} kost/välmåendeloggar och ${weekPlanCount} veckoscheman.`;
+    statusEl.textContent = `Importerat ${entryCount} styrkepass, ${runCount} löppass, ${weightCount} viktloggar, ${wellnessCount} kost/välmåendeloggar, ${garminDayCount} Garmin-dagar och ${weekPlanCount} veckoscheman.`;
   }catch(err){
     console.error('Import misslyckades:', err);
     showInlineError('dataBackupError', 'Import misslyckades: ' + (err && err.message ? err.message : 'ogiltig fil') + '.');
@@ -6777,7 +6818,7 @@ function updateWorkoutDock(){
   const quickVisible = document.getElementById('quickLogCard').style.display !== 'none';
   const hasRows = !!document.querySelector('#quickLogExercises .quick-set-row');
   const strengthActive = document.getElementById('strengthView').classList.contains('active');
-  const shouldShow = hasRows && quickVisible && (strengthActive || workoutHasActiveDraft());
+  const shouldShow = hasRows && quickVisible && workoutHasActiveDraft();
   dock.classList.toggle('show', shouldShow);
   document.body.classList.toggle('workout-dock-visible', shouldShow);
   if(!shouldShow) return;
@@ -6817,7 +6858,8 @@ goToMode = function(mode){
 };
 
 document.getElementById('quickLogExercises').addEventListener('input', () => {
-  if(!quickSessionStart) quickSessionStart = Date.now();
+  quickFormEdited = true;   // spara ändringen tyst – passet startar inte
+  markQuickDirty();
   updateWorkoutDock();
 });
 document.getElementById('quickLogExercises').addEventListener('click', () => setTimeout(updateWorkoutDock,0));
@@ -6854,6 +6896,13 @@ document.getElementById('workoutEndBtn').onclick = async () => {
   updateWorkoutDock();
   await renderHomeDraft();
 };
+document.getElementById('workoutStartBtn').onclick = async () => {
+  quickSessionStart = Date.now();
+  workoutPanelMinimized = false;
+  quickDraftDirty = true; await flushQuickDraft();
+  updateWorkoutUX();
+  await renderHomeDraft();
+};
 const dockEl = document.getElementById('workoutDock');
 dockEl.addEventListener('touchstart',e=>{workoutDockTouchY=e.touches[0].clientY;},{passive:true});
 dockEl.addEventListener('touchend',async e=>{if(workoutDockTouchY!=null && e.changedTouches[0].clientY-workoutDockTouchY>60 && !dockEl.classList.contains('compact')){await ensureWorkoutDraft();workoutPanelMinimized=true;goToMode('home');await renderHomeDraft();updateWorkoutDock();}workoutDockTouchY=null;},{passive:true});
@@ -6877,11 +6926,11 @@ async function saveGithubConfig(){
   return cfg;
 }
 async function buildCloudBackup(){
-  const [entries,runs,weights,wellness]=await Promise.all([loadAllEntries(),loadAllRuns(),loadAllWeights(),loadAllWellness()]);
+  const [entries,runs,weights,wellness,garminDays]=await Promise.all([loadAllEntries(),loadAllRuns(),loadAllWeights(),loadAllWellness(),loadAllGarminDays()]);
   let planConfig=null; try{const r=await window.storage.get('plan:config');if(r&&r.value)planConfig=JSON.parse(r.value);}catch(e){}
   const weekIndex=await loadWeekPlanIndex(), weekPlans={};
   for(const wk of weekIndex){try{const r=await window.storage.get('weekplan:'+wk);if(r&&r.value)weekPlans[wk]=JSON.parse(r.value);}catch(e){}}
-  return {exportedAt:new Date().toISOString(),appVersion:APP_VERSION,entries,runs,weights,wellness,planConfig,weekPlans};
+  return {exportedAt:new Date().toISOString(),appVersion:APP_VERSION,entries,runs,weights,wellness,garminDays,planConfig,weekPlans};
 }
 function githubHeaders(token){return {'Accept':'application/vnd.github+json','Authorization':'Bearer '+token,'X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'};}
 function utf8ToBase64(s){const bytes=new TextEncoder().encode(s);let bin='';bytes.forEach(b=>bin+=String.fromCharCode(b));return btoa(bin);}
@@ -6936,7 +6985,7 @@ document.getElementById('githubRestoreBtn').onclick=async()=>{
   }catch(e){cloudStatus('Återställning misslyckades: '+e.message,'error');}
 };
 const _cloudStorageSet=window.storage.set.bind(window.storage);
-window.storage.set=async function(key,value){const result=await _cloudStorageSet(key,value);if(/^(entry:|run:|weight:|wellness:|plan:config|weekplan:)/.test(String(key)))scheduleCloudBackup();return result;};
+window.storage.set=async function(key,value){const result=await _cloudStorageSet(key,value);if(/^(entry:|run:|weight:|wellness:|garminday:|plan:config|weekplan:)/.test(String(key)))scheduleCloudBackup();return result;};
 window.addEventListener('online',scheduleCloudBackup);
 initGithubCloud();
 
@@ -6998,42 +7047,53 @@ function garminExtract(rec,fields){const out={};for(const f of fields){const v=g
   return out;}
 function garminDiagKeys(data){const r=garminDayRecords(data)[0];if(!r)return '(inga dagsposter) '+JSON.stringify(data).slice(0,160);return Object.keys(r.rec).slice(0,40).join(', ');}
 
-async function garminSyncHealth(cfg,diag){
-  const end=garminIsoDate(new Date()), start=garminDaysAgo(13);
+function garminRanges(daysBack,chunk){ // [[start,end],...] äldst först, max chunk dagar per anrop
+  const out=[]; let endOff=0;
+  while(endOff<daysBack){ const startOff=Math.min(daysBack-1,endOff+chunk-1); out.unshift([garminDaysAgo(startOff),garminDaysAgo(endOff)]); endOff=startOff+1; }
+  return out;
+}
+async function garminSyncHealth(cfg,diag,daysBack){
+  daysBack=daysBack||14;
   const days={};
-  const add=(list,fields,src)=>{let n=0;for(const {date,rec} of list){const v=garminExtract(rec,fields);if(Object.keys(v).length){const cur=days[date]||(days[date]={});for(const [k,x] of Object.entries(v)){if(cur[k]==null)cur[k]=x;}n++;}}diag.push(src+': '+n+' dagar med data');};
+  const add=(list,fields,src)=>{let n=0;for(const {date,rec} of list){const v=garminExtract(rec,fields);if(Object.keys(v).length){const cur=days[date]||(days[date]={});for(const [k,x] of Object.entries(v)){if(cur[k]==null)cur[k]=x;}n++;}}return n;};
   const parts=[
-    ['Steg',`/garmin/usersummary-service/stats/steps/daily/${start}/${end}`,['steps']],
-    ['Sömn',`/garmin/sleep-service/sleep/dailySleepSummariesByDate?startDate=${start}&endDate=${end}`,['sleepSec','sleepScore']],
-    ['Body Battery',`/garmin/wellness-service/wellness/bodyBattery/reports/daily?startDate=${start}&endDate=${end}`,['bbHigh','bbLow','bbNow']],
-    ['Dagssammanfattning',`/garmin/usersummary-service/v2/dailysummaries?startDate=${start}&endDate=${end}`,['steps','restingHR','stress','bbHigh','bbLow','bbNow','sleepSec']],
+    ['Steg',28,(a,b)=>`/garmin/usersummary-service/stats/steps/daily/${a}/${b}`,['steps']],
+    ['Sömn',30,(a,b)=>`/garmin/sleep-service/sleep/dailySleepSummariesByDate?startDate=${a}&endDate=${b}`,['sleepSec','sleepScore']],
+    ['Body Battery',30,(a,b)=>`/garmin/wellness-service/wellness/bodyBattery/reports/daily?startDate=${a}&endDate=${b}`,['bbHigh','bbLow','bbNow']],
+    ['Dagssammanfattning',90,(a,b)=>`/garmin/usersummary-service/v2/dailysummaries?startDate=${a}&endDate=${b}`,['steps','restingHR','stress','bbHigh','bbLow','bbNow','sleepSec']],
   ];
   const errors=[];
-  for(const [name,path,fields] of parts){
-    try{const data=await garminCall(cfg,path,name);add(garminDayRecords(data),fields,name);diag.push('   fält: '+garminDiagKeys(data));}
-    catch(e){errors.push(e.message);diag.push(name+': FEL – '+e.message);}
+  for(const [name,chunk,url,fields] of parts){
+    let n=0,firstData=null,err=null;
+    for(const [a,b] of garminRanges(daysBack,chunk)){
+      try{const data=await garminCall(cfg,url(a,b),name);if(!firstData)firstData=data;n+=add(garminDayRecords(data),fields,name);}
+      catch(e){err=e.message;break;}
+    }
+    if(err){errors.push(err);diag.push(name+': FEL – '+err);}
+    else{diag.push(name+': '+n+' dagar med data');if(firstData)diag.push('   fält: '+garminDiagKeys(firstData));}
   }
   let saved=0;
   for(const [date,v] of Object.entries(days)){
     const prev=await garminGetJSON('garminday:'+date,{});
     const merged=Object.assign(prev,v,{date,updatedAt:new Date().toISOString()});
-    // Garmin rapporterar ibland 0 steg/sömn för dagar utan data – behandla som saknat
     if(merged.sleepSec===0)delete merged.sleepSec;
     await window.storage.set('garminday:'+date,JSON.stringify(merged)); saved++;
   }
   let sleepFilled=0;
   if(cfg.opts.sleep){
+    const cutoff=garminDaysAgo(13); // fyll bara i Kost & välmående för de senaste två veckorna
     for(const [date,v] of Object.entries(days)){
-      if(!v.sleepSec||v.sleepSec<3600)continue;
-      const hours=Math.round(v.sleepSec/3600*4)/4; // närmaste kvart
+      if(date<cutoff||!v.sleepSec||v.sleepSec<3600)continue;
+      const hours=Math.round(v.sleepSec/3600*4)/4;
       const w=await garminGetJSON('wellness:'+date,null);
-      if(w&&w.sleepHours!=null)continue; // rör aldrig manuellt ifyllt värde
+      if(w&&w.sleepHours!=null)continue;
       const entry=w||{date,calories:null,protein:null,sleepHours:null,alcoholUnits:null};
       entry.sleepHours=hours; entry.sleepSource='garmin';
       await window.storage.set('wellness:'+date,JSON.stringify(entry)); sleepFilled++;
     }
     if(sleepFilled&&typeof invalidateWellnessCache==='function')invalidateWellnessCache();
   }
+  garminDaysCache=null;
   return {saved,sleepFilled,errors};
 }
 
@@ -7089,8 +7149,10 @@ async function garminSync(manual){
   try{
     if(manual) await garminCall(cfg,'/health','Anslutning');
     if(cfg.opts.health){
-      try{const h=await garminSyncHealth(cfg,diag);
-        lines.push(`✓ Hälsodata: ${h.saved} dagar`+(h.sleepFilled?` · sömn ifylld för ${h.sleepFilled} dagar`:''));
+      try{const backfilled=await garminGetStr('garmin:backfill90');
+        const h=await garminSyncHealth(cfg,diag,backfilled?14:90);
+        if(!backfilled&&!h.errors.length) await window.storage.set('garmin:backfill90','1');
+        lines.push(`✓ Hälsodata: ${h.saved} dagar`+(backfilled?'':' (historik 90 dagar hämtad)')+(h.sleepFilled?` · sömn ifylld för ${h.sleepFilled} dagar`:''));
         if(h.errors.length){anyError=true;lines.push('⚠ Delvis: '+h.errors.join(' · '));}
       }catch(e){anyError=true;lines.push('✗ '+e.message);}
     }
@@ -7102,7 +7164,8 @@ async function garminSync(manual){
     const now=new Date().toISOString(); await window.storage.set('garmin:lastSync',now);
     lines.unshift('Senast synkad: '+new Date(now).toLocaleString('sv-SE',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}));
     garminStatus(lines.join('\n'),anyError?'error':'ok');
-  }catch(e){ garminStatus('✗ '+e.message,'error'); diag.push('FEL: '+e.message); }
+    await window.storage.set('garmin:lastError',anyError?lines.filter(l=>/^[✗⚠]/.test(l)).join(' · '):'');
+  }catch(e){ garminStatus('✗ '+garminFriendlyError(e.message),'error'); diag.push('FEL: '+e.message); try{await window.storage.set('garmin:lastError',garminFriendlyError(e.message));}catch(_){} }
   finally{
     garminSyncBusy=false;
     await window.storage.set('garmin:diag',diag.join('\n'));
@@ -7111,6 +7174,8 @@ async function garminSync(manual){
     try{ if(typeof renderSchedule==='function') await renderSchedule(); }catch(e){}
     try{ if(typeof renderWellnessHistory==='function') await renderWellnessHistory(); }catch(e){}
     try{ await renderDashboard(); }catch(e){ try{await renderGarminDash();}catch(_){} }
+    try{ await renderGarminCheck(); }catch(e){}
+    try{ if(document.getElementById('statsView').classList.contains('active')) await renderGarminStats(); }catch(e){}
   }
 }
 async function garminAutoSync(){
@@ -7138,11 +7203,154 @@ async function renderGarminDash(){
   if(today.stress) rows.push(`<div class="dash-row"><span>Stress</span><span><strong>${Math.round(today.stress)}</strong></span></div>`);
   if(today.restingHR&&avg('restingHR')&&today.restingHR-avg('restingHR')>=5)
     rows.push('<div class="dash-empty" style="font-size:11px;">Förhöjd vilopuls – överväg ett lättare pass idag.</div>');
-  if(!rows.length){sec.style.display='';el.innerHTML='<div class="dash-empty">Ingen Garmin-data för idag ännu.</div>';return;}
-  sec.style.display=''; el.innerHTML=rows.join('');
+  const alerts=await garminAlerts();
+  const head=alerts.map(a=>`<div class="garmin-alert${a.bad?' bad':''}">${a.text}</div>`).join('');
+  sec.style.display='';
+  el.innerHTML=head+(rows.length?rows.join(''):'<div class="dash-empty">Ingen Garmin-data för idag ännu.</div>')+'<div class="home-mini-chart"><canvas id="homeGarminChart"></canvas></div><div class="dash-empty" style="font-size:11px;margin-top:2px;">Senaste 7 dagarna · staplar = steg, linje = sömn (h)</div>';
+  await renderHomeGarminChart();
 }
 const _garminOrigRenderDashboard=renderDashboard;
 renderDashboard=async function(){ await _garminOrigRenderDashboard.apply(this,arguments); try{await renderGarminDash();}catch(e){console.warn('Garmin-dashboard:',e);} };
+
+
+// ---------- v2.1: Garmin-historik, påminnelser, datakontroll och grafer ----------
+let garminDaysCache=null;
+async function loadAllGarminDays(){
+  if(garminDaysCache) return garminDaysCache;
+  const out=[];
+  try{ const list=await window.storage.list('garminday:');
+    for(const k of (list&&list.keys)||[]){ try{const r=await window.storage.get(k);if(r&&r.value)out.push(JSON.parse(r.value));}catch(e){} } }catch(e){}
+  out.sort((a,b)=>a.date<b.date?-1:1);
+  garminDaysCache=out; return out;
+}
+function garminFriendlyError(msg){
+  msg=String(msg||'');
+  if(/avvisade nyckeln|401|403/.test(msg)&&/Anslutning|token|nyckel/i.test(msg)) return msg+' – Garmin-nyckeln har troligen gått ut. Skapa en ny i Garmin Connect och byt GARMIN_API_KEY i Cloudflare.';
+  return msg;
+}
+async function garminAlerts(){
+  const out=[];
+  const exp=await garminGetStr('garmin:keyExpiry');
+  if(exp){ const days=Math.round((new Date(exp+'T12:00:00')-new Date(garminIsoDate(new Date())+'T12:00:00'))/86400000);
+    if(days<0) out.push({bad:true,text:'⚠ Garmin-nyckeln har gått ut. Skapa en ny i Garmin Connect och byt GARMIN_API_KEY i Cloudflare.'});
+    else if(days<=14) out.push({bad:days<=3,text:`⏳ Garmin-nyckeln går ut om ${days} ${days===1?'dag':'dagar'} (${fmtDate(exp)}). Skapa en ny i Garmin Connect och byt GARMIN_API_KEY i Cloudflare.`}); }
+  const err=await garminGetStr('garmin:lastError');
+  if(err) out.push({bad:true,text:'⚠ Senaste Garmin-synk: '+garminClean(err)});
+  return out;
+}
+async function renderGarminCheck(){
+  const el=document.getElementById('garminCheck'); if(!el) return;
+  const days=[]; for(let i=0;i<14;i++) days.push(await garminGetJSON('garminday:'+garminDaysAgo(i),null));
+  const metrics=[['Steg','steps'],['Sömn','sleepSec'],['Vilopuls','restingHR'],['Body Battery',['bbNow','bbHigh']],['Stress','stress']];
+  const all=await loadAllGarminDays();
+  const rows=metrics.map(([name,f])=>{
+    const has=d=>d&&(Array.isArray(f)?f.some(x=>d[x]!=null):d[f]!=null);
+    const n=days.filter(has).length, cls=n>=10?'ok':n>0?'warn':'bad';
+    const latest=days.find(has); let val='–';
+    if(latest){const k=Array.isArray(f)?f.find(x=>latest[x]!=null):f; const v=latest[k];
+      val=k==='sleepSec'?(Math.floor(v/3600)+' h '+Math.round(v%3600/60)+' min'):Math.round(v).toLocaleString('sv-SE');}
+    return `<tr><td>${name}</td><td class="${cls}">${n}/14 ${cls==='ok'?'✓':cls==='warn'?'!':'✗'}</td><td>${val}</td></tr>`;
+  }).join('');
+  el.innerHTML=`<table><tr><th>Data</th><th>Dagar (14 d)</th><th>Senaste</th></tr>${rows}</table><div class="chart-note" style="margin-top:6px;">Totalt ${all.length} Garmin-dagar sparade${all.length?' sedan '+fmtDate(all[0].date):''}. ✗ betyder att Garmin inte skickat det värdet – skicka då en skärmdump av texten nedan.</div>`;
+}
+
+// --- Gemensamt dataunderlag för grafer ---
+async function garminSeries(daysBack){
+  const g=await loadAllGarminDays(); const byDate={}; g.forEach(d=>byDate[d.date]=d);
+  let wl=[]; try{ wl=await loadAllWellness(); }catch(e){} const wByDate={}; wl.forEach(w=>wByDate[w.date]=w);
+  const out=[];
+  for(let i=daysBack-1;i>=0;i--){ const date=garminDaysAgo(i), d=byDate[date]||{}, w=wByDate[date];
+    const sleepH=d.sleepSec?d.sleepSec/3600:(w&&w.sleepHours!=null?Number(w.sleepHours):null);
+    out.push({date,steps:d.steps!=null?d.steps:null,sleepH,restingHR:d.restingHR??null}); }
+  return out;
+}
+function shortDate(iso){const d=new Date(iso+'T12:00:00');return d.getDate()+'/'+(d.getMonth()+1);}
+function avgOf(arr){const v=arr.filter(x=>typeof x==='number'&&!isNaN(x));return v.length?v.reduce((a,b)=>a+b,0)/v.length:null;}
+function fmtH(h){if(h==null)return '–';const m=Math.round(h*60);return Math.floor(m/60)+' h '+(m%60)+' min';}
+
+let homeGarminChartInst=null;
+async function renderHomeGarminChart(){
+  const c=document.getElementById('homeGarminChart'); if(!c||typeof Chart==='undefined') return;
+  const s7=await garminSeries(7);
+  if(homeGarminChartInst){homeGarminChartInst.destroy();homeGarminChartInst=null;}
+  if(!s7.some(x=>x.steps!=null||x.sleepH!=null)){c.parentElement.style.display='none';return;}
+  c.parentElement.style.display='';
+  const wd=['sö','må','ti','on','to','fr','lö'];
+  homeGarminChartInst=new Chart(c.getContext('2d'),{
+    data:{labels:s7.map(x=>wd[new Date(x.date+'T12:00:00').getDay()]),
+      datasets:[
+        {type:'bar',label:'Steg',data:s7.map(x=>x.steps),backgroundColor:s7.map((x,i)=>i===6?'rgba(232,93,36,.55)':'#E85D24'),borderRadius:4,yAxisID:'y'},
+        {type:'line',label:'Sömn (h)',data:s7.map(x=>x.sleepH!=null?Math.round(x.sleepH*10)/10:null),borderColor:'#8A7CF0',backgroundColor:'#8A7CF0',pointRadius:3,tension:.3,spanGaps:true,yAxisID:'y1'}]},
+    options:{responsive:true,maintainAspectRatio:false,animation:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.dataset.yAxisID==='y1'?'Sömn '+fmtH(ctx.raw):Math.round(ctx.raw).toLocaleString('sv-SE')+' steg'}}},
+      scales:{x:{ticks:{color:'#8B92A0',font:{size:10}},grid:{display:false}},
+        y:{display:false,beginAtZero:true},
+        y1:{display:false,position:'right',suggestedMin:4,suggestedMax:10}}}
+  });
+}
+
+let garminStepsChartInst=null, garminSleepChartInst=null, garminStatsRange='30';
+function weekBuckets(series){
+  const map={};
+  series.forEach(x=>{const k=getWeekKey(x.date);(map[k]=map[k]||[]).push(x);});
+  return Object.keys(map).sort((a,b)=>new Date(a)-new Date(b)).map(k=>({week:k,steps:avgOf(map[k].map(x=>x.steps)),sleepH:avgOf(map[k].map(x=>x.sleepH))}));
+}
+async function renderGarminStats(){
+  const card=document.getElementById('garminStatsCard'); if(!card) return;
+  const all=await garminSeries(182);
+  const hasAny=all.some(x=>x.steps!=null||x.sleepH!=null);
+  card.style.display=hasAny?'':'none'; if(!hasAny||typeof Chart==='undefined') return;
+  document.querySelectorAll('#garminStatsRange button').forEach(b=>b.classList.toggle('active',b.dataset.range===garminStatsRange));
+
+  // KPI: senaste 7 dagar mot 7 dagar innan
+  const last7=all.slice(-7), prev7=all.slice(-14,-7);
+  const kpi=(label,cur,prev,fmt,goodUp)=>{let d='';if(cur!=null&&prev!=null&&prev>0){const pct=(cur-prev)/prev*100;if(Math.abs(pct)>=1){const up=pct>0;d=`<span class="d ${up===goodUp?'dash-up':'dash-down'}">${up?'+':''}${pct.toFixed(0)} %</span>`;}}
+    return `<div class="gstat"><div class="l">${label}</div><div class="v">${cur!=null?fmt(cur):'–'}${d}</div></div>`;};
+  const stepsWithData=all.filter(x=>x.steps!=null), best=stepsWithData.reduce((m,x)=>!m||x.steps>m.steps?x:m,null);
+  const sleepNights=last7.filter(x=>x.sleepH!=null), under7=sleepNights.filter(x=>x.sleepH<7).length;
+  document.getElementById('garminStatsKpis').innerHTML=
+    kpi('Snitt steg · 7 dagar',avgOf(last7.map(x=>x.steps)),avgOf(prev7.map(x=>x.steps)),v=>Math.round(v).toLocaleString('sv-SE'),true)+
+    kpi('Snitt sömn · 7 nätter',avgOf(last7.map(x=>x.sleepH)),avgOf(prev7.map(x=>x.sleepH)),fmtH,true)+
+    `<div class="gstat"><div class="l">Bästa stegdag</div><div class="v">${best?Math.round(best.steps).toLocaleString('sv-SE'):'–'}</div><div class="l">${best?fmtDate(best.date):''}</div></div>`+
+    `<div class="gstat"><div class="l">Nätter under 7 h · 7 nätter</div><div class="v">${sleepNights.length?under7+' / '+sleepNights.length:'–'}</div></div>`;
+
+  let labels,steps,sleep,unitNote;
+  if(garminStatsRange==='30'){ const s=all.slice(-30); labels=s.map(x=>shortDate(x.date)); steps=s.map(x=>x.steps); sleep=s.map(x=>x.sleepH!=null?Math.round(x.sleepH*10)/10:null); unitNote='per dag'; }
+  else { const n=garminStatsRange==='w12'?12:26; const w=weekBuckets(all).slice(-n); labels=w.map(x=>'v'+isoWeekNo(x.week)); steps=w.map(x=>x.steps!=null?Math.round(x.steps):null); sleep=w.map(x=>x.sleepH!=null?Math.round(x.sleepH*10)/10:null); unitNote='snitt per dag, vecka för vecka'; }
+  const avgSteps=avgOf(steps), base=chartBaseOptions();
+  if(garminStepsChartInst) garminStepsChartInst.destroy();
+  garminStepsChartInst=new Chart(document.getElementById('garminStepsChart').getContext('2d'),{
+    data:{labels,datasets:[
+      {type:'bar',label:'Steg ('+unitNote+')',data:steps,backgroundColor:'#E85D24',borderRadius:3},
+      {type:'line',label:'Snitt',data:labels.map(()=>avgSteps!=null?Math.round(avgSteps):null),borderColor:'#8B92A0',borderDash:[5,5],pointRadius:0,fill:false}]},
+    options:Object.assign({},base,{scales:Object.assign({},base.scales,{y:Object.assign({},base.scales.y,{beginAtZero:true})})})});
+  if(garminSleepChartInst) garminSleepChartInst.destroy();
+  garminSleepChartInst=new Chart(document.getElementById('garminSleepChart').getContext('2d'),{
+    type:'line',
+    data:{labels,datasets:[
+      {label:'Sömn, timmar ('+unitNote+')',data:sleep,borderColor:'#8A7CF0',backgroundColor:'rgba(138,124,240,.15)',fill:true,tension:.3,spanGaps:true,pointRadius:garminStatsRange==='30'?2:3},
+      {label:'Mål 7 h',data:labels.map(()=>7),borderColor:'#8B92A0',borderDash:[5,5],pointRadius:0,fill:false}]},
+    options:Object.assign({},base,{scales:Object.assign({},base.scales,{y:Object.assign({},base.scales.y,{suggestedMin:5,suggestedMax:9})})})});
+}
+function isoWeekNo(mondayIso){const d=new Date(mondayIso+'T12:00:00');d.setDate(d.getDate()+3-((d.getDay()+6)%7));const y=new Date(d.getFullYear(),0,4);return 1+Math.round(((d-y)/86400000-3+((y.getDay()+6)%7))/7);}
+document.getElementById('garminStatsRange').addEventListener('click',e=>{const b=e.target.closest('button[data-range]');if(!b)return;garminStatsRange=b.dataset.range;renderGarminStats();});
+const _garminOrigRenderAllStats=renderAllStats;
+renderAllStats=async function(){ await _garminOrigRenderAllStats.apply(this,arguments); try{await renderGarminStats();}catch(e){console.warn('Steg & sömn-statistik:',e);} };
+
+// Nyckelns utgångsdatum
+document.getElementById('garminKeyExpiryInput').addEventListener('change',async e=>{
+  const v=e.target.value; if(v) await window.storage.set('garmin:keyExpiry',v); else { try{await window.storage.delete('garmin:keyExpiry');}catch(_){} }
+  await updateGarminExpiryNote(); try{await renderGarminDash();}catch(_){}
+});
+async function updateGarminExpiryNote(){
+  const el=document.getElementById('garminKeyExpiryNote'); if(!el) return;
+  const exp=await garminGetStr('garmin:keyExpiry');
+  if(!exp){el.textContent='Datumet ser du under Personal API Key i Garmin Connect. Appen påminner dig 14 dagar innan.';el.style.color='';return;}
+  const days=Math.round((new Date(exp+'T12:00:00')-new Date(garminIsoDate(new Date())+'T12:00:00'))/86400000);
+  el.textContent=days<0?'Nyckeln har gått ut.':`${days} dagar kvar – påminnelse visas på Hem 14 dagar innan.`;
+  el.style.color=days<=14?'#f0b75a':'';
+}
+(async()=>{ const exp=await garminGetStr('garmin:keyExpiry'); if(exp) document.getElementById('garminKeyExpiryInput').value=exp; await updateGarminExpiryNote(); await renderGarminCheck(); })();
 
 document.getElementById('garminSyncBtn').onclick=async()=>{
   const b=document.getElementById('garminSyncBtn'); b.disabled=true;
@@ -7190,6 +7398,19 @@ document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==
   await applyRepRangeTuneMigration();
   await applyHypertrophyUXMigration();
     await applyHackSquatAndLegPressMigration();
+  // v2.0.1: städa bort pass som startats automatiskt bara genom att man klickade runt (inga avbockade set)
+  try{
+    const done201=await window.storage.get('migr:autostartCleanup201');
+    if(!done201||!done201.value){
+      const list=await window.storage.list(DRAFT_PREFIX);
+      for(const k of (list.keys||[])){
+        try{const r=await window.storage.get(k); if(!r||!r.value)continue; const d=JSON.parse(r.value);
+          if(d&&d.blocks&&!d.blocks.some(b=>b.rows.some(x=>x.done))){ if(d.edited||d.blocks.some(b=>b.exercise!==b.original||b.note)){d.start=null;await window.storage.set(k,JSON.stringify(d));} else await window.storage.delete(k); }
+        }catch(e){}
+      }
+      await window.storage.set('migr:autostartCleanup201','1');
+    }
+  }catch(e){}
   const todaysPlan = SCHEDULE[todayIndex()];
   if(todaysPlan.mode === 'strength'){ currentDay = todaysPlan.label; }
   viewedWeekMonday = getMondayOfCurrentWeek();
