@@ -1697,7 +1697,9 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
         <div><label>GitHub-användare</label><input id="githubUserInput" autocomplete="username" value="Nybbe84"></div>
         <div><label>Privat repo</label><input id="githubRepoInput" value="traningslogg-data"></div>
         <div class="full"><label>Fine-grained token</label><input id="githubTokenInput" type="password" autocomplete="off" placeholder="github_pat_…"></div>
+        <div class="full"><label>Token går ut</label><input id="githubTokenExpiryInput" type="date"></div>
       </div>
+      <div class="chart-note" id="githubTokenExpiryNote" style="margin-top:4px;">Datumet ser du på GitHub under Settings → Developer settings → Fine-grained tokens. Appen påminner dig 14 dagar innan.</div>
       <div class="cloud-actions" style="margin-top:10px;">
         <button class="btn" id="githubSaveTestBtn">Spara och testa</button>
         <button class="btn secondary" id="githubBackupNowBtn">Säkerhetskopiera nu</button>
@@ -1739,7 +1741,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
       <div class="form-error" id="dataBackupError" style="display:none;"></div>
       <div class="chart-note" id="dataBackupStatus"></div>
       <div class="chart-note" id="lastBackupLabel" style="margin-top:8px;"></div>
-      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 2.1.2</div>
+      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 2.1.3</div>
     </div>
   </div>
 </div>
@@ -1770,7 +1772,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
 <div class="exercise-swap-modal" id="sessionSummaryModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 class="summary-head" id="summaryTitle">Pass klart ✓</h2><button class="swap-close" id="summaryClose">×</button></div><div class="summary-stats" id="summaryStats"></div><div id="summaryBody"></div><button class="btn" id="summaryOk" style="margin-top:14px;">Klar</button></div></div>
 <div class="exercise-swap-modal" id="exerciseSwapModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 id="swapTitle">Byt övning</h2><button class="swap-close" id="swapClose">×</button></div><input id="swapSearch" type="search" placeholder="Sök bland alla övningar..." style="margin-top:12px"><div id="swapRecommendedWrap"><div class="swap-section">Rekommenderade alternativ</div><div class="swap-list" id="swapRecommended"></div></div><div class="swap-section">Alla matchningar</div><div class="swap-list" id="swapResults"></div><div id="swapConfirm" style="display:none"><div class="chart-note" id="swapConfirmText" style="margin-top:14px"></div><div class="swap-actions"><button class="btn" id="swapToday">Bara idag</button><button class="btn secondary" id="swapPermanent">Gör permanent</button></div></div></div></div>
 <script>
-const APP_VERSION = '2.1.2';
+const APP_VERSION = '2.1.3';
 // ---------- FRISTÅENDE LOKAL LAGRING ----------
 // IndexedDB används primärt. localStorage används som reserv.
 const STORAGE_PREFIX = 'traningslogg:';
@@ -7244,6 +7246,10 @@ async function garminAlerts(){
   if(exp){ const days=Math.round((new Date(exp+'T12:00:00')-new Date(garminIsoDate(new Date())+'T12:00:00'))/86400000);
     if(days<0) out.push({bad:true,text:'⚠ Garmin-nyckeln har gått ut. Skapa en ny i Garmin Connect och byt GARMIN_API_KEY i Cloudflare.'});
     else if(days<=14) out.push({bad:days<=3,text:`⏳ Garmin-nyckeln går ut om ${days} ${days===1?'dag':'dagar'} (${fmtDate(exp)}). Skapa en ny i Garmin Connect och byt GARMIN_API_KEY i Cloudflare.`}); }
+  const ghExp=await garminGetStr('github:tokenExpiry');
+  if(ghExp){ const days=Math.round((new Date(ghExp+'T12:00:00')-new Date(garminIsoDate(new Date())+'T12:00:00'))/86400000);
+    if(days<0) out.push({bad:true,text:'⚠ GitHub-token har gått ut – molnbackupen fungerar inte. Skapa en ny token på GitHub och klistra in den under Inställningar → Molnbackup.'});
+    else if(days<=14) out.push({bad:days<=3,text:`⏳ GitHub-token för molnbackup går ut om ${days} ${days===1?'dag':'dagar'} (${fmtDate(ghExp)}). Skapa en ny på GitHub och klistra in den under Inställningar → Molnbackup.`}); }
   const err=await garminGetStr('garmin:lastError');
   if(err) out.push({bad:true,text:'⚠ Senaste Garmin-synk: '+garminClean(err)});
   return out;
@@ -7368,6 +7374,20 @@ async function updateGarminExpiryNote(){
   el.textContent=days<0?'Nyckeln har gått ut.':`${days} dagar kvar – påminnelse visas på Hem 14 dagar innan.`;
   el.style.color=days<=14?'#f0b75a':'';
 }
+// GitHub-tokens utgångsdatum (v2.1.3)
+document.getElementById('githubTokenExpiryInput').addEventListener('change',async e=>{
+  const v=e.target.value; if(v) await window.storage.set('github:tokenExpiry',v); else { try{await window.storage.delete('github:tokenExpiry');}catch(_){} }
+  await updateGithubExpiryNote(); try{await renderGarminDash();}catch(_){}
+});
+async function updateGithubExpiryNote(){
+  const el=document.getElementById('githubTokenExpiryNote'); if(!el) return;
+  const exp=await garminGetStr('github:tokenExpiry');
+  if(!exp){el.textContent='Datumet ser du på GitHub under Settings → Developer settings → Fine-grained tokens. Appen påminner dig 14 dagar innan.';el.style.color='';return;}
+  const days=Math.round((new Date(exp+'T12:00:00')-new Date(garminIsoDate(new Date())+'T12:00:00'))/86400000);
+  el.textContent=days<0?'Token har gått ut – molnbackupen fungerar inte.':`${days} dagar kvar – påminnelse visas på Hem 14 dagar innan.`;
+  el.style.color=days<0?'#e5484d':days<=14?'#f0b75a':'';
+}
+(async()=>{ const g=await garminGetStr('github:tokenExpiry'); if(g) document.getElementById('githubTokenExpiryInput').value=g; await updateGithubExpiryNote(); })();
 (async()=>{ const exp=await garminGetStr('garmin:keyExpiry'); if(exp) document.getElementById('garminKeyExpiryInput').value=exp; await updateGarminExpiryNote(); await renderGarminCheck(); })();
 
 document.getElementById('garminSyncBtn').onclick=async()=>{
