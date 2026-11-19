@@ -1235,7 +1235,7 @@
 .garmin-opts input{width:auto;margin:0}
 #garminCheck table{width:100%;border-collapse:collapse;font-size:12px}#garminCheck td,#garminCheck th{padding:4px 6px;border-bottom:1px solid var(--line);text-align:left}#garminCheck th{color:var(--muted);font-weight:600}#garminCheck .ok{color:var(--good,#3bbf7a)}#garminCheck .warn{color:#e8a33d}#garminCheck .bad{color:var(--danger,#e85b5b)}
 .garmin-alert{font-size:12px;border-radius:9px;padding:7px 9px;margin-bottom:8px;background:rgba(232,163,61,.13);color:#f0b75a}.garmin-alert.bad{background:rgba(232,91,91,.13);color:#ef7a7a}
-.home-mini-chart{position:relative;height:120px;margin-top:8px}
+.home-mini-chart{position:relative;height:160px;margin-top:8px}
 .seg-toggle{display:flex;gap:6px;margin-top:6px}.seg-toggle button{flex:1;border:1px solid var(--line);background:var(--panel-2);color:var(--muted);border-radius:9px;padding:7px 4px;font-size:12px;font-weight:700}.seg-toggle button.active{border-color:var(--accent);color:var(--text)}
 .gstat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.gstat{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:8px 10px}.gstat .l{font-size:11px;color:var(--muted)}.gstat .v{font:700 20px 'Barlow Condensed',sans-serif}.gstat .d{font-size:11px;margin-left:4px}
 #garminDiag{font-size:11px;color:var(--muted);white-space:pre-wrap;word-break:break-word;margin-top:6px}
@@ -1739,7 +1739,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
       <div class="form-error" id="dataBackupError" style="display:none;"></div>
       <div class="chart-note" id="dataBackupStatus"></div>
       <div class="chart-note" id="lastBackupLabel" style="margin-top:8px;"></div>
-      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 2.1.0</div>
+      <div class="chart-note" id="appVersionLabel" style="margin-top:10px;">Appversion 2.1.1</div>
     </div>
   </div>
 </div>
@@ -1770,7 +1770,7 @@ body.workout-dock-visible{padding-bottom:calc(184px + env(safe-area-inset-bottom
 <div class="exercise-swap-modal" id="sessionSummaryModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 class="summary-head" id="summaryTitle">Pass klart ✓</h2><button class="swap-close" id="summaryClose">×</button></div><div class="summary-stats" id="summaryStats"></div><div id="summaryBody"></div><button class="btn" id="summaryOk" style="margin-top:14px;">Klar</button></div></div>
 <div class="exercise-swap-modal" id="exerciseSwapModal" aria-hidden="true"><div class="exercise-swap-sheet"><div class="swap-top"><h2 id="swapTitle">Byt övning</h2><button class="swap-close" id="swapClose">×</button></div><input id="swapSearch" type="search" placeholder="Sök bland alla övningar..." style="margin-top:12px"><div id="swapRecommendedWrap"><div class="swap-section">Rekommenderade alternativ</div><div class="swap-list" id="swapRecommended"></div></div><div class="swap-section">Alla matchningar</div><div class="swap-list" id="swapResults"></div><div id="swapConfirm" style="display:none"><div class="chart-note" id="swapConfirmText" style="margin-top:14px"></div><div class="swap-actions"><button class="btn" id="swapToday">Bara idag</button><button class="btn secondary" id="swapPermanent">Gör permanent</button></div></div></div></div>
 <script>
-const APP_VERSION = '2.1.0';
+const APP_VERSION = '2.1.1';
 // ---------- FRISTÅENDE LOKAL LAGRING ----------
 // IndexedDB används primärt. localStorage används som reserv.
 const STORAGE_PREFIX = 'traningslogg:';
@@ -7206,7 +7206,7 @@ async function renderGarminDash(){
   const alerts=await garminAlerts();
   const head=alerts.map(a=>`<div class="garmin-alert${a.bad?' bad':''}">${a.text}</div>`).join('');
   sec.style.display='';
-  el.innerHTML=head+(rows.length?rows.join(''):'<div class="dash-empty">Ingen Garmin-data för idag ännu.</div>')+'<div class="home-mini-chart"><canvas id="homeGarminChart"></canvas></div><div class="dash-empty" style="font-size:11px;margin-top:2px;">Senaste 7 dagarna · staplar = steg, linje = sömn (h)</div>';
+  el.innerHTML=head+(rows.length?rows.join(''):'<div class="dash-empty">Ingen Garmin-data för idag ännu.</div>')+'<div class="home-mini-chart"><canvas id="homeGarminChart"></canvas></div><div class="dash-empty" style="font-size:11px;margin-top:2px;">Senaste 7 dagarna · staplar = steg (vänster), linje = sömn (höger) · streckat = mål 10 000 steg / 8 h</div>';
   await renderHomeGarminChart();
 }
 const _garminOrigRenderDashboard=renderDashboard;
@@ -7276,16 +7276,25 @@ async function renderHomeGarminChart(){
   if(!s7.some(x=>x.steps!=null||x.sleepH!=null)){c.parentElement.style.display='none';return;}
   c.parentElement.style.display='';
   const wd=['sö','må','ti','on','to','fr','lö'];
+  const STEP_GOAL=10000, SLEEP_GOAL=8;
+  const maxSteps=Math.max(STEP_GOAL,...s7.map(x=>x.steps||0));
+  const stepTop=Math.ceil(maxSteps*1.1/2500)*2500;
+  const sleepVals=s7.map(x=>x.sleepH).filter(v=>v!=null);
+  const sleepMin=Math.max(0,Math.floor(Math.min(SLEEP_GOAL-2,...sleepVals))), sleepMax=Math.ceil(Math.max(SLEEP_GOAL+1,...sleepVals));
+  const kFmt=v=>v>=1000?(v/1000).toLocaleString('sv-SE',{maximumFractionDigits:1})+'k':v;
   homeGarminChartInst=new Chart(c.getContext('2d'),{
     data:{labels:s7.map(x=>wd[new Date(x.date+'T12:00:00').getDay()]),
       datasets:[
-        {type:'bar',label:'Steg',data:s7.map(x=>x.steps),backgroundColor:s7.map((x,i)=>i===6?'rgba(232,93,36,.55)':'#E85D24'),borderRadius:4,yAxisID:'y'},
-        {type:'line',label:'Sömn (h)',data:s7.map(x=>x.sleepH!=null?Math.round(x.sleepH*10)/10:null),borderColor:'#8A7CF0',backgroundColor:'#8A7CF0',pointRadius:3,tension:.3,spanGaps:true,yAxisID:'y1'}]},
+        {type:'line',label:'Mål steg',data:s7.map(()=>STEP_GOAL),borderColor:'rgba(232,93,36,.55)',borderWidth:1.5,borderDash:[5,4],pointRadius:0,pointHitRadius:0,fill:false,yAxisID:'y',order:0},
+        {type:'line',label:'Mål sömn',data:s7.map(()=>SLEEP_GOAL),borderColor:'rgba(138,124,240,.55)',borderWidth:1.5,borderDash:[2,4],pointRadius:0,pointHitRadius:0,fill:false,yAxisID:'y1',order:0},
+        {type:'line',label:'Sömn (h)',data:s7.map(x=>x.sleepH!=null?Math.round(x.sleepH*10)/10:null),borderColor:'#8A7CF0',backgroundColor:'#8A7CF0',pointRadius:3,tension:.3,spanGaps:true,yAxisID:'y1',order:1},
+        {type:'bar',label:'Steg',data:s7.map(x=>x.steps),backgroundColor:s7.map((x,i)=>i===6?'rgba(232,93,36,.45)':x.steps>=STEP_GOAL?'#E85D24':'rgba(232,93,36,.8)'),borderRadius:4,yAxisID:'y',order:2}]},
     options:{responsive:true,maintainAspectRatio:false,animation:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.dataset.yAxisID==='y1'?'Sömn '+fmtH(ctx.raw):Math.round(ctx.raw).toLocaleString('sv-SE')+' steg'}}},
+      layout:{padding:{top:4}},
+      plugins:{legend:{display:false},tooltip:{filter:i=>!/^Mål/.test(i.dataset.label),callbacks:{label:ctx=>ctx.dataset.yAxisID==='y1'?'Sömn '+fmtH(ctx.raw):Math.round(ctx.raw).toLocaleString('sv-SE')+' steg'}}},
       scales:{x:{ticks:{color:'#8B92A0',font:{size:10}},grid:{display:false}},
-        y:{display:false,beginAtZero:true},
-        y1:{display:false,position:'right',suggestedMin:4,suggestedMax:10}}}
+        y:{position:'left',min:0,max:stepTop,ticks:{color:'#c0663f',font:{size:9},maxTicksLimit:5,callback:kFmt},grid:{color:'rgba(46,50,59,.6)'},border:{display:false}},
+        y1:{position:'right',min:sleepMin,max:sleepMax,ticks:{color:'#9a8ff0',font:{size:9},stepSize:1,callback:v=>v+' h'},grid:{display:false},border:{display:false}}}}
   });
 }
 
